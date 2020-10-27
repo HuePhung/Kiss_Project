@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "474731412703",
+    "firebase_url": "https://projectkiss-49a52.firebaseio.com",
+    "project_id": "projectkiss-49a52",
+    "storage_bucket": "projectkiss-49a52.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474731412703:android:f2cc898dacfdbae98ffd6a",
+        "android_client_info": {
+          "package_name": "de.project_kiss"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "474731412703-0jaqhkucq3prs2tngm953fof4i3q0t33.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVpnyYQZL0XI2TzmZ2ewuuiHtZzKRyKT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "474731412703-0jaqhkucq3prs2tngm953fof4i3q0t33.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
