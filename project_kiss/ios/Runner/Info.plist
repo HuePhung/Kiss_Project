@@ -41,5 +41,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+    <string>Project Kiss benötigt Zugriff auf Ihre Kamera um die Inhaltsstoffe der Produkte abzulesen.</string>
 </dict>
 </plist>

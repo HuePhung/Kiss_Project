@@ -1,6 +1,15 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'cameraScreen.dart';
+
+List<CameraDescription> cameras = [];
+
+Future<void> main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
+
   runApp(MyApp());
 }
 
@@ -20,7 +29,7 @@ class MyApp extends StatelessWidget {
                 color: Colors.white,
               ),
               new Container(
-                color: Colors.white,
+                child: CameraScreen(cameras),
               ),
               new Container(
                 color: Colors.white,
@@ -49,4 +58,6 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
+
 }
