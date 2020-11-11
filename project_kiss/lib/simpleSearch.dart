@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'csv_reader.dart';
+import 'levenshtein.dart';
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -19,23 +19,23 @@ class _SecondScreenState extends State<SecondScreen> {
   @override
   void initState() {
     super.initState();
-
     _ingridientsListItems = new List<String>();
-
     loadCSV();
+
   }
 
   void loadCSV() async {
     var myCSV = CSV.from(path :'assets/cosing.csv', delimiter: ",", title:false);
     bool hasData = await myCSV.initFinished;
     // debugPrint('Step 2, hasData: $hasData');
-
-    for (var i=70; i < 200; i++){
+    for (var i=9; i < myCSV.data.length; i++){
       _ingridientsListItems.add(myCSV.data[i][1]);
     }
+
   }
 
   _SecondScreenState() {
+
     _searchEdit.addListener(() {
       if (_searchEdit.text.isEmpty) {
         setState(() {
@@ -84,6 +84,7 @@ class _SecondScreenState extends State<SecondScreen> {
   }
 
   Widget _listView() {
+
     return new Flexible(
       child: new ListView.builder(
           itemCount: _ingridientsListItems.length,
@@ -104,10 +105,12 @@ class _SecondScreenState extends State<SecondScreen> {
     _searchListItems = new List<String>();
     for (int i = 0; i < _ingridientsListItems.length; i++) {
       var item = _ingridientsListItems[i];
-
-      if (item.toLowerCase().contains(_searchText.toLowerCase())) {
+      int distance = Levenshtein.findDistance(item.toLowerCase(), _searchText.toLowerCase());
+      if(distance <= 3){
+        print(distance);
         _searchListItems.add(item);
       }
+
     }
     return _searchAddList();
   }
