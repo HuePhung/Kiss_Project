@@ -1,5 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:project_kiss/historyScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'cameraScreen.dart';
 
@@ -17,6 +20,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return new MaterialApp(
       color: Colors.white,
       home: DefaultTabController(
@@ -32,11 +38,16 @@ class MyApp extends StatelessWidget {
                 child: CameraScreen(cameras),
               ),
               new Container(
-                color: Colors.white,
-              ),
+                  child: HistoryScreen(),
+                ),
             ],
           ),
           bottomNavigationBar: new TabBar(
+            onTap: (int) {
+              if(int == 3){
+
+              }
+            },
             tabs: [
               Tab(
                 icon: new Icon(Icons.search),
