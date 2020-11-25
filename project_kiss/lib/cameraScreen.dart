@@ -6,38 +6,45 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_final/api/cameraShotToFile.dart';
+import 'package:exif/exif.dart';
+import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
+import 'package:test_final/api/firebase_text_api.dart';
 
-Future<void> main() async{
-  // WidgetsFlutterBinding.ensureInitialized();
-  //cameras = await availableCameras();
-}
+class CameraScreen extends StatefulWidget {
+  final CameraDescription camera;
 
-class CameraScreen extends StatefulWidget{
-  List<CameraDescription> cameras = [];
-
-  CameraScreen(List<CameraDescription> list){
-    this.cameras = list;
-  }
+  const CameraScreen({
+    Key key, @required this.camera}) : super(key: key);
 
   @override
-  _CameraScreenState createState() => _CameraScreenState(cameras);
+  CameraScreenState  createState() => CameraScreenState(camera: camera);
 }
 
-class _CameraScreenState extends State<CameraScreen>{
-  CameraController controller;
+class CameraScreenState extends State<CameraScreen> {
+  final CameraDescription camera;
+  CameraController _controller;
+  Future<void> _initializeControllerFuture;
 
-  List<CameraDescription> cameras = [];
-
-  _CameraScreenState(List<CameraDescription> list){
-    this.cameras = list;
-  }
+  CameraScreenState({Key key, @required this.camera});
 
   @override
   void initState(){
     super.initState();
-    controller = CameraController(cameras[0], ResolutionPreset.high, enableAudio: false);
-    controller.initialize().then((_) {
+
+    // To display the current output from the camera,
+    // create a CameraController.
+    _controller = CameraController(
+      // Get a specific camera from the list of available cameras.
+      this.camera,
+      // Define the resolution to use.
+      ResolutionPreset.high,
+      // disable audio capturing
+      enableAudio: false,
+    );
+
+    // Next, initialize the controller. This returns a Future.
+    _initializeControllerFuture = _controller.initialize().then((_) {
       if (!mounted) {
         return;
       }
@@ -47,11 +54,12 @@ class _CameraScreenState extends State<CameraScreen>{
 
   @override
   void dispose() {
-    controller?.dispose();
+    // Dispose of the controller when the widget is disposed.
+    _controller.dispose();
     super.dispose();
   }
 
-  addStringToSF(String imagePath) async {
+  /* addStringToSF(String imagePath) async {
     if(imagePath != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("testImagePath", imagePath);
@@ -60,103 +68,318 @@ class _CameraScreenState extends State<CameraScreen>{
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("testImagePath", "");
     }
+  }*/
 
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  addStringToSFList(String imagePath) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    List<String> prefList = prefs.getStringList("imagePathList");
+
+    if(prefList == null){
+      prefList = [];
+    }
+
+    if(imagePath != null) {
+      prefList.add(imagePath);
+    } else {
+      prefList.add("undefined");
+    }
+
+    prefs.setStringList("imagePathList", prefList);
+  }
+
+  Future<File> fixExifRotation(String imagePath) async {
+    debugPrint("in fixExif");
+
+    final originalFile = File(imagePath);
+    List<int> imageBytes = await originalFile.readAsBytes();
+
+    final originalImage = img.decodeImage(imageBytes);
+
+    final height = originalImage.height;
+    final width = originalImage.width;
+
+    // Let's check for the image size
+    // This will be true also for upside-down photos but it's ok for me
+    if (height >= width) {
+      // I'm interested in portrait photos so
+      // I'll just return here
+      return originalFile;
+    }
+
+    // We'll use the exif package to read exif data
+    // This is map of several exif properties
+    // Let's check 'Image Orientation'
+    final exifData = await readExifFromBytes(imageBytes);
+
+    img.Image fixedImage;
+
+    if (height < width) {
+      debugPrint('Rotating image necessary');
+
+      /* exifData.keys.forEach((element){
+        debugPrint(element);
+      });
+
+      debugPrint(exifData["ComponentsConfiguration"].toString());*/
+
+      // rotate
+      /*if (exifData['Image Orientation'].printable.contains('Horizontal')) {
+        fixedImage = img.copyRotate(originalImage, 90);
+      } else if (exifData['Image Orientation'].printable.contains('180')) {
+        fixedImage = img.copyRotate(originalImage, -90);
+      } else if (exifData['Image Orientation'].printable.contains('CCW')) {
+        fixedImage = img.copyRotate(originalImage, 180);
+      } else {
+        fixedImage = img.copyRotate(originalImage, 0);
+      }*/
+
+      // TODO in the final build on devices check for right orientation
+      fixedImage = img.copyRotate(originalImage, 90);
+    }
+
+    // Here you can select whether you'd like to save it as png
+    // or jpg with some compression
+    // I choose jpg with 100% quality
+    final fixedFile =
+    await originalFile.writeAsBytes(img.encodeJpg(fixedImage));
+
+    return fixedFile;
+  }
+
+  File _image;
+  final picker = ImagePicker();
+  bool _noImageChosen = false;
+
+  Future getImage(String newPath) async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        File(pickedFile.path).copy(newPath);
+        _image = File(newPath); // hier wird das Bild zum File
+        //
+        _noImageChosen = false;
+      } else {
+        debugPrint('No image selected.');
+        _image = null;
+        _noImageChosen = true;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if(!controller.value.isInitialized){
+    if(!_controller.value.isInitialized){
       return Container();
     }
 
-    // return AspectRatio(
-    //  aspectRatio: controller.value.aspectRatio,
-    //  child: CameraPreview(controller),
-    //);
-
-    var ImagePath;
-
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.88,//690,
-            child:AspectRatio(
-                aspectRatio: controller.value.aspectRatio,
-                child: CameraPreview(controller)
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+                height: MediaQuery.of(context).size.height * 0.88,
+                child: AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: FutureBuilder<void>(
+                    future: _initializeControllerFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        // If the Future is complete, display the preview.
+                        return CameraPreview(_controller);
+                      } else {
+                        // Otherwise, display a loading indicator.
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
+                )
             ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.05,//40,
-            child:Scaffold(
+            Container(
+              height: MediaQuery.of(context).size.height * 0.05,
+              child: Scaffold(
                 backgroundColor: Colors.black,
-                floatingActionButton: FloatingActionButton.extended(
-                  onPressed:() async {
-                    // add functionality here later
-                    try {
+                floatingActionButton: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    FloatingActionButton.extended(
+                      heroTag: "choose",
+                      // Provide an onPressed callback.
+                      onPressed: () async {
+                        // Take the Picture in a try / catch block. If anything goes wrong,
+                        // catch the error.
+                        try {
+                          // Find the local app directory using the `path_provider` plugin.
+                          final String directoryPath = await _localPath;
 
-                      final path = join(
-                        (await getTemporaryDirectory()).path, //Temporary path
-                        '${DateTime.now()}.png',
-                      );
-                      ImagePath = path;
-                      await addStringToSF(path);
-                      await controller.takePicture(path); //take photo
-                      // mithilfe imagepicker
-                      await CameraShotToFile.createFile();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DisplayPictureScreen(imagePath: ImagePath)
-                          )
-                      );
-                    } catch (e) {
-                      print(e);
-                    }
-                  },
-                  label: Text('Schieße ein Foto', style: TextStyle(color: Colors.black)),
-                  icon: Icon(Icons.camera_alt, color: Colors.black),
-                  backgroundColor: Colors.white,
+                          // Construct the path where the image should be saved using the
+                          // pattern package.
+                          final path = join(
+                            // Store the picture in the local app directory.
+                            directoryPath,
+                            '${DateTime.now()}.png',
+                          );
+
+                          // getting the image using the gallery chooser
+                          // copying the chosen image to local app directory
+                          await getImage(path);
+
+                          if(_image != null) {
+
+                            // saving path to device storage
+                            await addStringToSFList(path);
+
+                            // maybe fixing rotation
+                            //await fixExifRotation(path);
+                            File fileImageFromGallery = File(path); // die Fkt um ein File zu erhalten
+                            final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
+                            print(textFromGallery);
+                            // If the picture was chosen, display it on a new screen.
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    DisplayPictureScreen(
+                                        appBarTitle: 'Ausgewähltes Produkt',
+                                        imagePath: path,
+                                        ingredients: tempList()), // tempList => list of ingredients per item
+                              ),
+                            );
+                          } else if(_image == null && _noImageChosen) {
+                            /*Navigator.push(
+                                  context,
+                                    MaterialPageRoute(builder: (context) =>
+                                        AlertDialog(
+                                          title: Text("Fehler: Es wurde kein Bild ausgewählt."),
+                                          actions: [
+                                            FlatButton(
+                                              child: Text("OK"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                },
+                                            ),
+                                          ],
+                                        )
+                                    ),
+                              );*/
+
+                            final snackbar = SnackBar(
+                                content: Text("Fehler: Du hast kein Bild ausgewählt."),
+                                backgroundColor: Colors.red,
+                                duration: Duration(seconds: 3),
+                                margin: EdgeInsets.all(18.0),
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(25)))
+                            );
+
+                            Scaffold.of(context).showSnackBar(snackbar);
+                          }
+
+                        } catch (e) {
+                          // If an error occurs, log the error to the console.
+                          print(e);
+                        }
+                      },
+                      label: Icon(Icons.photo_library, color: Colors.black),
+                      backgroundColor: Colors.white,
+                    ),
+                    FloatingActionButton.extended(
+                      heroTag: "make",
+                      // Provide an onPressed callback.
+                      onPressed: () async {
+                        // Take the Picture in a try / catch block. If anything goes wrong,
+                        // catch the error.
+                        try {
+                          // Ensure that the camera is initialized.
+                          await _initializeControllerFuture;
+
+                          // Find the local app directory using the `path_provider` plugin.
+                          final String directoryPath = await _localPath;
+
+                          // Construct the path where the image should be saved using the
+                          // pattern package.
+                          final path = join(
+                            // Store the picture in the local app directory.
+                            directoryPath,
+                            '${DateTime.now()}.png',
+                          );
+
+                          // saving path to device storage
+                          //await addStringToSF(path);
+                          await addStringToSFList(path);
+
+                          // Attempt to take a picture and log where it's been saved.
+                          await _controller.takePicture(path);
+                          await fixExifRotation(path);
+                          File fileImageFromCam = File(path); // die Fkt um ein File zu erhalten
+                          final textFromCam = await FirebaseMLApi.recogniseText(fileImageFromCam);
+                          print(textFromCam);
+                          // If the picture was taken, display it on a new screen.
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DisplayPictureScreen(appBarTitle: 'Gescanntes Produkt', imagePath: path, ingredients: tempList()), // tempList => list of ingredients per item
+                            ),
+                          );
+                        } catch (e) {
+                          // If an error occurs, log the error to the console.
+                          print(e);
+                        }
+                      },
+                      label: Text('Schieße ein Foto', style: TextStyle(color: Colors.black)),
+                      icon: Icon(Icons.camera_alt, color: Colors.black),
+                      backgroundColor: Colors.white,
+                    ),
+                  ],
                 ),
-                floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
+                floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                //resizeToAvoidBottomInset: true,
+                //resizeToAvoidBottomPadding: true,
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        )
     );
   }
 }
 
 class DisplayPictureScreen extends StatelessWidget {
+  final String appBarTitle;
   final String imagePath;
-  const DisplayPictureScreen({Key key, this.imagePath}) : super(key: key);
+  final List<Ingredient> ingredients;
+  const DisplayPictureScreen({Key key, @required this.appBarTitle, @required this.imagePath, @required this.ingredients}) : super(key: key);
 
-  /*addStringToSF() async {
-    if(imagePath != null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("testImagePath", imagePath);
-    }
-  }*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text('Gescanntes Produkt'),
+            title: Text(appBarTitle),
             backgroundColor: Colors.black),
         // The image is stored as a file on the device. Use the `Image.file`
         // constructor with the given path to display the image.
         body: Center(
-          child: SingleChildScrollView(scrollDirection: Axis.vertical, child: Column(
+          child: SingleChildScrollView(scrollDirection: Axis.vertical/*, padding: EdgeInsets.all(20.0)*/ ,child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
             children:  [
-              Image.file(
-                  File(imagePath),
-                  width: 250,
-                  height: 250
+              Container(
+                  padding: EdgeInsets.all(20.0),
+                  child: Image.file(
+                    File(imagePath),
+                    width: 250,
+                    height: 250,
+                  )
               ),
               Text(
                 "Inhaltsstoffe",
@@ -168,84 +391,14 @@ class DisplayPictureScreen extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(20.0),
                 child: DataTable(
-                  columns: [
-                    DataColumn(label: Text("Inhaltsstoff")),
-                    DataColumn(label: Text("Einstufung")),
-                  ],
-                  rows: [
-                    DataRow(
-                      cells: [
-                        DataCell(Text("Name 1")),
-                        DataCell(Text("gefährlich")),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text("Name 2")),
-                        DataCell(Text("ungefährlich")),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text("Name 3")),
-                        DataCell(Text("hautverträglich")),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text("Name 1")),
-                        DataCell(Text("gefährlich")),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text("Name 2")),
-                        DataCell(Text("ungefährlich")),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text("Name 3")),
-                        DataCell(Text("hautverträglich")),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text("Name 1")),
-                        DataCell(Text("gefährlich")),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text("Name 2")),
-                        DataCell(Text("ungefährlich")),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text("Name 3")),
-                        DataCell(Text("hautverträglich")),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text("Name 1")),
-                        DataCell(Text("gefährlich")),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text("Name 2")),
-                        DataCell(Text("ungefährlich")),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(Text("Name 3")),
-                        DataCell(Text("hautverträglich")),
-                      ],
-                    ),
-                  ],
+                    columns: [
+                      DataColumn(label: Text("Inhaltsstoff")),
+                      DataColumn(label: Text("Einstufung")),
+                    ],
+                    rows: ingredients.map((ingredient) => DataRow(cells: [
+                      DataCell(Text(ingredient.name)),
+                      DataCell(Text(ingredient.rating))
+                    ])).toList()
                 ),
               ),
             ],
@@ -254,3 +407,34 @@ class DisplayPictureScreen extends StatelessWidget {
         ));
   }
 }
+
+tempList(){
+  List<Ingredient> temp = [
+    Ingredient(name: 'Name 1', rating: 'gefährlich'),
+    Ingredient(name: 'Name 2', rating: 'ungefährlich'),
+    Ingredient(name: 'Name 3', rating: 'hautverträglich'),
+    Ingredient(name: 'Name 4', rating: 'gefährlich'),
+    Ingredient(name: 'Name 5', rating: 'ungefährlich'),
+    Ingredient(name: 'Name 6', rating: 'hautverträglich'),
+    Ingredient(name: 'Name 7', rating: 'gefährlich'),
+    Ingredient(name: 'Name 8', rating: 'ungefährlich'),
+    Ingredient(name: 'Name 9', rating: 'hautverträglich'),
+  ];
+
+  return temp;
+}
+
+class Ingredient {
+  String name;
+  String rating;
+
+  Ingredient({this.name, this.rating});
+}
+
+/*return DataRow(
+        cells: [
+          DataCell(Text(key)),
+          DataCell(Text(value)),
+        ],
+      );
+    });*/

@@ -24,14 +24,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  camera:
+  camera: ^0.5.8+11
   path_provider:
   path: ^1.7.0
   exif: ^1.0.3
   image: ^2.1.18
+  image_picker: ^0.6.7+14
   shared_preferences: ^0.5.12+4
+  flutter_image_compress: ^0.7.0
   firebase_ml_vision: ^0.9.9
-  image_picker: ^0.6.7+11
 
 
   # The following adds the Cupertino Icons font to your application.
