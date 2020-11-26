@@ -22,23 +22,22 @@ class CSV {
 
     String rawString= await rootBundle.loadString(path);
     List<String> rawData = LineSplitter().convert(rawString);
-    //print(rawData.length);
-    /// row length is the length of the map as the map has the same number of lines in the CSV File
+
     this.rowsCount = rawData.length; // row length
 
-    /// If ParseTitle is false, We skip, we split those strings by our delimiter
+    /// Split by delimiter
     for (int i = this.title ? 1 : 0; i < this.rowsCount; i++) {
       this.data.add(rawData[i].split(this.delimiter));
     }
 
-    /// column length is the length of any inner array
-    this.columnCount = this.data[890].length;
+    /// column length
+    this.columnCount = this.data[0].length;
 
   }
 
-  /// This ensures that we can await the instance of this Reader making it more flexible
+  ///  Await the instance of Reader
   Future get initFinished => _futureDone;
 
-  /// Allowing access of any cell by using X[i][k]
+  /// Access cells directly
   operator [](int i) => this.data[i];
 }
