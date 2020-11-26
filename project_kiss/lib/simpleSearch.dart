@@ -140,13 +140,14 @@ class _SecondScreenState extends State<SecondScreen> {
         }*/
 
         //levenResults = leven.search(_searchText.toUpperCase(), 5).keys.toList();
-        //print(leven.searchForOneWord(_searchText.toUpperCase(), 1));
+
         //print(leven.root.root.children);
       }
     }
     if(tempItem == null){
       tempItem = "no result";
     }
+    print(leven.searchForOneWord("ALCOHOL", 1));
     levenResults = leven.search(_searchText.toUpperCase(), 2).keys.toList();
 
     _searchListItems = levenResults;

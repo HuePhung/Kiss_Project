@@ -37,19 +37,24 @@ class FastLevenshtein {
   }
 
   //calls search function but instead of returning a map it only returns the word the smallest distance.
-  String searchForOneWord(String word, int maxDistance){
-    MapEntry<String, int> min = null;
+  List<String> searchForOneWord(String word, int maxDistance){
+    MapEntry<String, TrieNode> min = null;
     Map<String, TrieNode> res = search(word, maxDistance);
-
+    List<String> returnVal = List();
     for(MapEntry entry in res.entries){
-      if(min == null || entry.value < min.value){
+      TrieNode node = entry.value;
+      if(min == null || node.distance < min.value.distance){
         min = entry;
       }
     }
     if(min == null){
-      return "error";
+      returnVal.add("error");
+      return returnVal;
     }
-    return min.key;
+
+    returnVal.add(min.key);
+    returnVal.addAll(min.value.info);
+    return returnVal;
   }
   //function should only get called via search() func.
   Map<String,TrieNode> searchRecursive(TrieNode node, String letter, String word, List<int> prevRow, Map<String,TrieNode> results, int maxDistance){ //hier
