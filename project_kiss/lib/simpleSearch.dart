@@ -36,7 +36,8 @@ class _SecondScreenState extends State<SecondScreen> {
     // debugPrint('Step 2, hasData: $hasData');
     for (var i=0; i < myCSV.data.length; i++){
       _ingridientsListItems.add(myCSV.data[i][0]);
-      leven.root.add(myCSV.data[i][0]);
+      List<String> additionalInfo = myCSV.data[i].sublist(1);
+      leven.root.add(myCSV.data[i][0], additionalInfo);
       if(i<20){
         //print(myCSV.data[i][0]);
         //leven.root.add(myCSV.data[i][0]);

@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:core';
 class TrieNode {
   String word;
@@ -10,6 +9,8 @@ class TrieNode {
   TrieNode();
   TrieNode.withLetter(this.char);
   toString() => "($char, $children)";
+  List<String> info = List();
+  int distance;
 }
 
 class Trie {
@@ -19,7 +20,7 @@ class Trie {
     root.isRoot = true;
   }
 
-  void add(String word) {
+  void add(String word, List<String> list) {
     Map children = root.children;
     TrieNode currParent = root;
     //currParent = root;
@@ -42,6 +43,7 @@ class Trie {
 
       if (i == word.length - 1) {
         node.isLeafNode = true;
+        node.info = list;
       }
     }
   }
@@ -57,6 +59,7 @@ class Trie {
       else
         return null;
     }
+
     return node;
   }
 }

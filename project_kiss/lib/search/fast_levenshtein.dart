@@ -23,9 +23,9 @@ class FastLevenshtein {
   }
 
   //returns map with all the words that are similar to the param. word together with the distance
-  Map<String,int> search(String word, int maxDistance){
+  Map<String, TrieNode> search(String word, int maxDistance){ //hier
     List<int> currentRow = new List(word.length+1);
-    Map<String,int> results = new Map();
+    Map<String,TrieNode> results = new Map(); //hier
     for(int j=0;j<currentRow.length;j++){
       currentRow[j] = j;
     }
@@ -39,7 +39,7 @@ class FastLevenshtein {
   //calls search function but instead of returning a map it only returns the word the smallest distance.
   String searchForOneWord(String word, int maxDistance){
     MapEntry<String, int> min = null;
-    Map<String, int> res = search(word, maxDistance);
+    Map<String, TrieNode> res = search(word, maxDistance);
 
     for(MapEntry entry in res.entries){
       if(min == null || entry.value < min.value){
@@ -52,7 +52,7 @@ class FastLevenshtein {
     return min.key;
   }
   //function should only get called via search() func.
-  Map<String,int> searchRecursive(TrieNode node, String letter, String word, List<int> prevRow, Map<String,int> results, int maxDistance){
+  Map<String,TrieNode> searchRecursive(TrieNode node, String letter, String word, List<int> prevRow, Map<String,TrieNode> results, int maxDistance){ //hier
     int columns = word.length+1;
     List<int> currRow = [prevRow[0]+1];
 
@@ -81,7 +81,9 @@ class FastLevenshtein {
         currParent = currParent.parent;
       }
       //results.add(reverseString(actualWord));
-      results.putIfAbsent(reverseString(actualWord), () => currRow[currRow.length-1]);
+      print(node.info);
+      node.distance = currRow[currRow.length-1];
+      results.putIfAbsent(reverseString(actualWord), () => node );
     }
 
     //if any entries in the row are less than the maximum cost, then recursively search each branch of the trie
@@ -109,9 +111,9 @@ class FastLevenshtein {
     }
     return sb.toString();
   }
-  void setWordList(List<String> words){
-    for(String word in words){
-      root.add(word);
-    }
-  }
+//void setWordList(List<String> words){
+// for(String word in words){
+//  root.add(word);
+//}
+//}
 }
