@@ -86,7 +86,7 @@ class FastLevenshtein {
         currParent = currParent.parent;
       }
       //results.add(reverseString(actualWord));
-      print(node.info);
+      //print(node.info);
       node.distance = currRow[currRow.length-1];
       results.putIfAbsent(reverseString(actualWord), () => node );
     }
@@ -115,6 +115,66 @@ class FastLevenshtein {
       sb.write(s[i]);
     }
     return sb.toString();
+  }
+
+  List<List<String>> getIndividualItems(String startString){
+    List<List<String>> ret = List();
+    if (startString.contains(",")){
+      print("Comma!");
+      List<String> ingridients;
+      ingridients = startString.split(",");
+      //Delete Whitespace:
+      for (int i=0; i < ingridients.length; i++){
+        ingridients[i] = ingridients[i].trim();
+        ingridients[i] = ingridients[i].toUpperCase();
+       ret.add(this.searchForOneWord(ingridients[i], 2));
+      }
+      return ret;
+    }
+    else {
+
+      print("No comma!");
+      List <String> spaceDevided = startString.split(" ");
+
+      //for(int i = 0; i < spaceDevided.length; i++){
+      //  if(this.searchForOneWord(spaceDevided[i], 2)[0] != "error"){
+      //    ret.add(this.searchForOneWord(spaceDevided[i], 2));
+      //  }
+     // }
+
+      //von vorne:
+      int i = 0;
+
+      while ( i < spaceDevided.length){
+
+        //von hinten:
+        for (int n = spaceDevided.length; n >= i ; n--){
+
+          //Um aus Liste an einzelnen Wörtern ein String ohne komma zu machen
+          String searchString = spaceDevided.sublist(i,n).toString().replaceAll(",", "");
+
+         // print(searchString);
+         print(searchString);
+          if(this.searchForOneWord(searchString, 2)[0] != "error"){
+            ret.add(this.searchForOneWord(searchString, 2));
+            i = n ;
+
+            break;
+          }
+
+          //für denn fall das nur errors für ein wort gefunden werden:
+          if(i == n && this.searchForOneWord(searchString, 2)[0] == "error" ){
+
+            i = n ;
+          }
+
+        }
+
+      }
+      
+      
+      return ret;
+    }
   }
 //void setWordList(List<String> words){
 // for(String word in words){

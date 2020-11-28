@@ -38,13 +38,13 @@ class _SecondScreenState extends State<SecondScreen> {
       _ingridientsListItems.add(myCSV.data[i][0]);
       List<String> additionalInfo = myCSV.data[i].sublist(1);
       leven.root.add(myCSV.data[i][0], additionalInfo);
-      if(i<20){
-        //print(myCSV.data[i][0]);
-        //leven.root.add(myCSV.data[i][0]);
-      }
+
 
     }
-    //leven.setWordList(_ingridientsListItems);
+    // Test um den String der  Texterkennung zu zerlegen
+    print(leven.getIndividualItems("HYDROLYZED BEE LARVA EXTRACT ALCOHOL ABALONE EXTRACT"));
+
+
   }
 
   _SecondScreenState() {
