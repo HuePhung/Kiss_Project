@@ -153,17 +153,18 @@ class FastLevenshtein {
           //Um aus Liste an einzelnen Wörtern ein String ohne komma zu machen
           String searchString = spaceDevided.sublist(i,n).toString().replaceAll(",", "");
 
+          List<String> searchResult = this.searchForOneWord(searchString, 2);
          // print(searchString);
          print(searchString);
-          if(this.searchForOneWord(searchString, 2)[0] != "error"){
-            ret.add(this.searchForOneWord(searchString, 2));
+          if(searchResult[0] != "error"){
+            ret.add(searchResult);
             i = n ;
 
             break;
           }
 
           //für denn fall das nur errors für ein wort gefunden werden:
-          if(i == n && this.searchForOneWord(searchString, 2)[0] == "error" ){
+          if(i == n && searchResult[0] == "error" ){
 
             i = n ;
           }
