@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:project_kiss/search/fast_levenshtein.dart';
+import 'package:project_kiss/search/ingredient.dart';
 
 
 void main(){
@@ -41,9 +42,8 @@ void main(){
       ["vwx"]
     ];
     //ACT
- 
     for (int i=0; i < 8; i++){
-      lev.root.add(testList[i], additionalInfoTest[i]);
+      lev.root.add(testList[i], new Ingredient.onlyFunc(testList[i], additionalInfoTest[i][0]));
     }
     //ASSERT
     List<String> levenTestResults = lev.search("jane", 0).keys.toList();

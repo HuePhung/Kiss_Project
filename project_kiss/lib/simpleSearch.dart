@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_kiss/search/ingredient.dart';
 import 'csv_reader.dart';
 import 'search/levenshtein.dart';
 import 'search/fast_levenshtein.dart';
@@ -37,12 +38,12 @@ class _SecondScreenState extends State<SecondScreen> {
     for (var i=0; i < myCSV.data.length; i++){
       _ingridientsListItems.add(myCSV.data[i][0]);
       List<String> additionalInfo = myCSV.data[i].sublist(1);
-      leven.root.add(myCSV.data[i][0], additionalInfo);
+      leven.root.add(myCSV.data[i][0], new Ingredient(myCSV.data[i][0], myCSV.data[i][2], myCSV.data[i][3], myCSV.data[i][4]));
 
 
     }
     // Test um den String der  Texterkennung zu zerlegen
-    print(leven.getIndividualItems("HYDROLYZED BEE LARVA EXTRACT ALCOHOL ABALONE EXTRACT"));
+    //print(leven.getIndividualItems("HYDROLYZED BEE LARVA EXTRACT ALCOHOL ABALONE EXTRACT"));
 
 
   }
@@ -119,35 +120,10 @@ class _SecondScreenState extends State<SecondScreen> {
     List<String> levenResults;
     String tempItem;
     int max = 5;
-    for (int i = 0; i < _ingridientsListItems.length; i++) {
-      var item = _ingridientsListItems[i];
-      //all the random cases for broken strings in the dataset that i have encountered
-      if (item != '""' &&
-          _searchText.isNotEmpty &&
-          item != '"' &&
-          item != '' &&
-          item != ' ' &&
-          item != '  ') {
-        /*int distance = Levenshtein.findDistance(
-            item.toLowerCase(), _searchText.toLowerCase());
-        //if distance is smaller than 5, look for the smallest distance and add it to the list. the list should return one or zero answers
-        if (distance <= 5) {
-          if(distance < max){
-            //print(item.length);
-            tempItem = item;
-            max = distance;
-          }
-        }*/
-
-        //levenResults = leven.search(_searchText.toUpperCase(), 5).keys.toList();
-
-        //print(leven.root.root.children);
-      }
-    }
     if(tempItem == null){
       tempItem = "no result";
     }
-    print(leven.searchForOneWord("ALCOHOL", 1));
+    print(leven.searchForOneIngredient("CANNABINOLK", 1));
     levenResults = leven.search(_searchText.toUpperCase(), 2).keys.toList();
 
     _searchListItems = levenResults;

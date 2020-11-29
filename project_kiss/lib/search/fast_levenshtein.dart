@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'dart:core';
+import 'package:project_kiss/search/ingredient.dart';
+
 import 'trie_data_structure.dart';
 class FastLevenshtein {
   List<String> testList = [
@@ -35,12 +37,12 @@ class FastLevenshtein {
     }
     return results;
   }
-
   //calls search function but instead of returning a map it only returns the word the smallest distance.
-  List<String> searchForOneWord(String word, int maxDistance){
+  Ingredient searchForOneIngredient(String word, int maxDistance){
     MapEntry<String, TrieNode> min = null;
     Map<String, TrieNode> res = search(word, maxDistance);
-    List<String> returnVal = List();
+    //List<String> returnVal = List();
+    Ingredient result;
     for(MapEntry entry in res.entries){
       TrieNode node = entry.value;
       if(min == null || node.distance < min.value.distance){
@@ -48,13 +50,12 @@ class FastLevenshtein {
       }
     }
     if(min == null){
-      returnVal.add("error");
-      return returnVal;
+      //we should come up with a better solution
+      return new Ingredient("error", "error", "error", "error");
     }
+    result = min.value.ingredient;
+    return result;
 
-    returnVal.add(min.key);
-    returnVal.addAll(min.value.info);
-    return returnVal;
   }
   //function should only get called via search() func.
   Map<String,TrieNode> searchRecursive(TrieNode node, String letter, String word, List<int> prevRow, Map<String,TrieNode> results, int maxDistance){ //hier
@@ -85,8 +86,7 @@ class FastLevenshtein {
         }
         currParent = currParent.parent;
       }
-      //results.add(reverseString(actualWord));
-      //print(node.info);
+
       node.distance = currRow[currRow.length-1];
       results.putIfAbsent(reverseString(actualWord), () => node );
     }
@@ -117,7 +117,7 @@ class FastLevenshtein {
     return sb.toString();
   }
 
-  List<List<String>> getIndividualItems(String startString){
+  /*List<List<String>> getIndividualItems(String startString){
     List<List<String>> ret = List();
     if (startString.contains(",")){
       print("Comma!");
@@ -176,7 +176,7 @@ class FastLevenshtein {
       
       return ret;
     }
-  }
+  }*/
 //void setWordList(List<String> words){
 // for(String word in words){
 //  root.add(word);

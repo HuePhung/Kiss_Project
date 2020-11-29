@@ -1,6 +1,10 @@
 import 'dart:core';
+
+import 'package:project_kiss/search/ingredient.dart';
 class TrieNode {
-  String word;
+  Ingredient ingredient;
+
+  List<String> info = List();
   String char;
   Map<String,TrieNode> children = new Map();
   bool isLeafNode = false;
@@ -9,7 +13,6 @@ class TrieNode {
   TrieNode();
   TrieNode.withLetter(this.char);
   toString() => "($char, $children)";
-  List<String> info = List();
   int distance;
 }
 
@@ -20,7 +23,7 @@ class Trie {
     root.isRoot = true;
   }
 
-  void add(String word, List<String> list) {
+  void add(String word, Ingredient ingredient) {
     Map children = root.children;
     TrieNode currParent = root;
     //currParent = root;
@@ -43,7 +46,7 @@ class Trie {
 
       if (i == word.length - 1) {
         node.isLeafNode = true;
-        node.info = list;
+        node.ingredient = ingredient;
       }
     }
   }
