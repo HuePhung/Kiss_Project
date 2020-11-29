@@ -43,7 +43,7 @@ class _SecondScreenState extends State<SecondScreen> {
 
     }
     // Test um den String der  Texterkennung zu zerlegen
-    //print(leven.getIndividualItems("HYDROLYZED BEE LARVA EXTRACT ALCOHOL ABALONE EXTRACT"));
+    print(leven.getIndividualItems("HYDROLYZED BEE LARVA EXTRACT ALCOHOL ABALONE EXTRACT"));
 
 
   }

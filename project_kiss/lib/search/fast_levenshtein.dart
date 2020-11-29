@@ -117,17 +117,17 @@ class FastLevenshtein {
     return sb.toString();
   }
 
-  /*List<List<String>> getIndividualItems(String startString){
-    List<List<String>> ret = List();
+  List<Ingredient> getIndividualItems(String startString){
+    List<Ingredient> ret = List();
     if (startString.contains(",")){
       print("Comma!");
-      List<String> ingridients;
-      ingridients = startString.split(",");
+      List<String> ingridientsString;
+      ingridientsString = startString.split(",");
       //Delete Whitespace:
-      for (int i=0; i < ingridients.length; i++){
-        ingridients[i] = ingridients[i].trim();
-        ingridients[i] = ingridients[i].toUpperCase();
-       ret.add(this.searchForOneWord(ingridients[i], 2));
+      for (int i=0; i < ingridientsString.length; i++){
+        ingridientsString[i] = ingridientsString[i].trim();
+        ingridientsString[i] = ingridientsString[i].toUpperCase();
+       ret.add(this.searchForOneIngredient(ingridientsString[i], 2));
       }
       return ret;
     }
@@ -153,10 +153,10 @@ class FastLevenshtein {
           //Um aus Liste an einzelnen Wörtern ein String ohne komma zu machen
           String searchString = spaceDevided.sublist(i,n).toString().replaceAll(",", "");
 
-          List<String> searchResult = this.searchForOneWord(searchString, 2);
+          Ingredient searchResult = this.searchForOneIngredient(searchString, 2);
          // print(searchString);
          print(searchString);
-          if(searchResult[0] != "error"){
+          if(searchResult.name != "error"){
             ret.add(searchResult);
             i = n ;
 
@@ -164,7 +164,7 @@ class FastLevenshtein {
           }
 
           //für denn fall das nur errors für ein wort gefunden werden:
-          if(i == n && searchResult[0] == "error" ){
+          if(i == n && searchResult.name == "error" ){
 
             i = n ;
           }
@@ -176,7 +176,7 @@ class FastLevenshtein {
       
       return ret;
     }
-  }*/
+  }
 //void setWordList(List<String> words){
 // for(String word in words){
 //  root.add(word);
