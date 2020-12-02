@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:test_final/historyScreen.dart';
+import 'historyScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'cameraScreen.dart';

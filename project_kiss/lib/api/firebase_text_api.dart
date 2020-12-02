@@ -30,11 +30,12 @@ class FirebaseMLApi {
         text = text + '\n';
       }
     }
-    String pattern = r'INGREDIENTS[\s\S]*(\sml)'; //INGREDIENTS[\s\S]*ml
+   /* String pattern = r'INGREDIENTS[\s\S]*(\sml)'; //INGREDIENTS[\s\S]*ml
     RegExp re = new RegExp(pattern, caseSensitive: false);
     Match match = re.firstMatch(text);
     String finale = text.substring(match.start, match.end);
     text = finale;
+    return text;*/
     return text;
 
   }

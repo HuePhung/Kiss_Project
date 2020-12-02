@@ -9,7 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:test_final/api/firebase_text_api.dart';
+import 'package:test_final/search/csv_reader.dart';
+import 'package:test_final/search/fast_levenshtein.dart';
+import 'package:test_final/search/ingredient.dart';
+import 'package:test_final/search/levenshtein.dart';
+import 'api/firebase_text_api.dart';
 
 class CameraScreen extends StatefulWidget {
   final CameraDescription camera;
@@ -22,6 +26,24 @@ class CameraScreen extends StatefulWidget {
 }
 
 class CameraScreenState extends State<CameraScreen> {
+FastLevenshtein leven;
+
+  void loadCSV() async {
+    var myCSV = CSV.from(path :'assets/cosing.csv', delimiter: ";", title:false);
+    bool hasData = await myCSV.initFinished;
+    // debugPrint('Step 2, hasData: $hasData');
+    for (var i=0; i < myCSV.data.length; i++){
+      //ingridientsListItems.add(myCSV.data[i][0]);
+      leven.root.add(myCSV.data[i][0], new Ingredient(myCSV.data[i][0], myCSV.data[i][2], myCSV.data[i][3], myCSV.data[i][4]));
+
+
+    }
+    // Test um den String der  Texterkennung zu zerlegen
+    //print(leven.getIndividualItems("HYDROLYZED BEE LARVA EXTRACT ALCOHOL ABALONE EXTRACT"));
+
+
+  }
+
   final CameraDescription camera;
   CameraController _controller;
   Future<void> _initializeControllerFuture;
@@ -32,6 +54,8 @@ class CameraScreenState extends State<CameraScreen> {
   void initState(){
     super.initState();
 
+    leven = new FastLevenshtein();
+    loadCSV();
     // To display the current output from the camera,
     // create a CameraController.
     _controller = CameraController(
@@ -242,6 +266,8 @@ class CameraScreenState extends State<CameraScreen> {
                             File fileImageFromGallery = File(path); // die Fkt um ein File zu erhalten
                             final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
                             print(textFromGallery);
+                            List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
+                            print(ingredients);
                             // If the picture was chosen, display it on a new screen.
                             Navigator.push(
                               context,
@@ -250,7 +276,7 @@ class CameraScreenState extends State<CameraScreen> {
                                     DisplayPictureScreen(
                                         appBarTitle: 'Ausgewähltes Produkt',
                                         imagePath: path,
-                                        ingredients: tempList()), // tempList => list of ingredients per item
+                                        ingredients: tempList(ingredients)), // tempList => list of ingredients per item
                               ),
                             );
                           } else if(_image == null && _noImageChosen) {
@@ -322,12 +348,13 @@ class CameraScreenState extends State<CameraScreen> {
                           await fixExifRotation(path);
                           File fileImageFromCam = File(path); // die Fkt um ein File zu erhalten
                           final textFromCam = await FirebaseMLApi.recogniseText(fileImageFromCam);
+                          List <Ingredient> ingredients = leven.getIndividualItems(textFromCam);
                           print(textFromCam);
                           // If the picture was taken, display it on a new screen.
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DisplayPictureScreen(appBarTitle: 'Gescanntes Produkt', imagePath: path, ingredients: tempList()), // tempList => list of ingredients per item
+                              builder: (context) => DisplayPictureScreen(appBarTitle: 'Gescanntes Produkt', imagePath: path, ingredients: tempList(ingredients)), // tempList => list of ingredients per item
                             ),
                           );
                         } catch (e) {
@@ -393,11 +420,11 @@ class DisplayPictureScreen extends StatelessWidget {
                 child: DataTable(
                     columns: [
                       DataColumn(label: Text("Inhaltsstoff")),
-                      DataColumn(label: Text("Einstufung")),
+                     // DataColumn(label: Text("Einstufung")),
                     ],
                     rows: ingredients.map((ingredient) => DataRow(cells: [
                       DataCell(Text(ingredient.name)),
-                      DataCell(Text(ingredient.rating))
+                     // DataCell(Text(ingredient.rating))
                     ])).toList()
                 ),
               ),
@@ -408,28 +435,18 @@ class DisplayPictureScreen extends StatelessWidget {
   }
 }
 
-tempList(){
-  List<Ingredient> temp = [
-    Ingredient(name: 'Name 1', rating: 'gefährlich'),
-    Ingredient(name: 'Name 2', rating: 'ungefährlich'),
-    Ingredient(name: 'Name 3', rating: 'hautverträglich'),
-    Ingredient(name: 'Name 4', rating: 'gefährlich'),
-    Ingredient(name: 'Name 5', rating: 'ungefährlich'),
-    Ingredient(name: 'Name 6', rating: 'hautverträglich'),
-    Ingredient(name: 'Name 7', rating: 'gefährlich'),
-    Ingredient(name: 'Name 8', rating: 'ungefährlich'),
-    Ingredient(name: 'Name 9', rating: 'hautverträglich'),
-  ];
+tempList(List<Ingredient> ingredients){
+  List<Ingredient> temp = ingredients;
 
   return temp;
 }
 
-class Ingredient {
+/*class Ingredient {
   String name;
   String rating;
 
   Ingredient({this.name, this.rating});
-}
+}*/
 
 /*return DataRow(
         cells: [
