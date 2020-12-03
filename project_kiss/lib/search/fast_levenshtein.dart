@@ -120,7 +120,7 @@ class FastLevenshtein {
   List<Ingredient> getIndividualItems(String startString){
     List<Ingredient> ret = List();
     if (startString.contains(",")){
-      print("Comma!");
+    //  print("Comma!");
       List<String> ingridientsString;
       ingridientsString = startString.split(",");
       //Delete Whitespace:
@@ -133,7 +133,7 @@ class FastLevenshtein {
     }
     else {
 
-      print("No comma!");
+     // print("No comma!");
       List <String> spaceDevided = startString.split(" ");
 
       //for(int i = 0; i < spaceDevided.length; i++){
@@ -155,7 +155,7 @@ class FastLevenshtein {
 
           Ingredient searchResult = this.searchForOneIngredient(searchString, 2);
          // print(searchString);
-         print(searchString);
+         //print(searchString);
           if(searchResult.name != "error"){
             ret.add(searchResult);
             i = n ;
