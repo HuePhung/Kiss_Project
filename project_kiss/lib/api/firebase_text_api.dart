@@ -48,8 +48,7 @@ class FirebaseMLApi {
     } else{
       index= 0;
     }
-
-
+    
     String returnText = "";
     for(int i = index  ; i < recogTextList.length; i++){
       returnText = returnText +  recogTextList[i] + " ";
