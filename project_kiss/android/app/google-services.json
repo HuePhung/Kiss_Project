@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "201865619332",
+    "firebase_url": "https://kisstextui.firebaseio.com",
+    "project_id": "kisstextui",
+    "storage_bucket": "kisstextui.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201865619332:android:ab7241b1e265a4f992dfd1",
+        "android_client_info": {
+          "package_name": "com.example.kiss_ui_text"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "201865619332-0v5dtn31o3h2raq7bpt2og578m7130q4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCJthh3PadWmfUrmAC2v4pn9R7cTif1v4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "201865619332-0v5dtn31o3h2raq7bpt2og578m7130q4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

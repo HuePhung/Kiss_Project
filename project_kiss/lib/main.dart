@@ -1,112 +1,95 @@
-import 'dart:io';
-
-import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-
-import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'historyScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-// Global variable for storing the list of
-// cameras available
-List<CameraDescription> cameras = [];
+import 'cameraScreen.dart';
+
+CameraDescription camera;
 
 Future<void> main() async {
-  try {
-    WidgetsFlutterBinding.ensureInitialized();
-    // Retrieve the device cameras
-    cameras = await availableCameras();
-  } on CameraException catch (e) {
-    print(e);
+
+  WidgetsFlutterBinding.ensureInitialized();
+  List<CameraDescription> cameras = await availableCameras();
+  camera = cameras.first;
+
+  final bool exists = await listExists();
+
+  if(!exists){
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> list = [];
+
+    prefs.setStringList("imagePathList", list);
   }
-  runApp(FacePage());
+
+  runApp(MyApp());
 }
 
-class FacePage extends StatefulWidget {
-  @override
-  createState() => _FacePageState();
+Future<bool> listExists() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  if(prefs.getStringList("imagePathList") == null){
+    return false;
+  }
+  else return true;
 }
 
-class _FacePageState extends State<FacePage> {
-  File _imageFile;
-  List<Face> _faces;
-
-  void _getImageAndDetectedFaces() async {
-    final imageFile = await ImagePicker.pickImage(
-      source: ImageSource.gallery,
-    );
-    final image = FirebaseVisionImage.fromFile(imageFile);
-    final faceDetector =
-    FirebaseVision.instance.faceDetector(
-      FaceDetectorOptions(
-        mode: FaceDetectorMode.accurate,
-        enableLandmarks: true,
-      ),
-    );
-    final faces = await faceDetector.detectInImage(image);
-    setState( () {
-      if (mounted) {
-        _imageFile = imageFile;
-        _faces = faces;
-      }
-    });
-  }
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Text Detector'),
-      ),
-      body: ImageAndFaces(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _getImageAndDetectedFaces,
-        tooltip: 'Pick an image',
-        child: Icon(Icons.add_a_photo),
-      ),
-    );
-  }
-}
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    return new MaterialApp(
+      color: Colors.white,
+      home: DefaultTabController(
+        length: 3,
+        initialIndex: 1,
+        child: new Scaffold(
+          body: TabBarView(
+            children: [
+              new Container(
+                color: Colors.white,
+                child: Center(child: Text("More to come...", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+              ),
+              new Container(
+                child: CameraScreen(camera: camera),
+              ),
+              new Container(
+                child: HistoryScreen(),
+              ),
+            ],
+          ),
+          bottomNavigationBar: new TabBar(
+            onTap: (int) {
+              if(int == 3){
 
-class ImageAndFaces extends StatelessWidget{
-  ImageAndFaces({this.imageFile, this.faces});
-  final File imageFile;
-  final List<Face> faces;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      Flexible(
-          flex:2,
-          child: Container(
-            constraints: BoxConstraints.expand(),
-            child: Image.file(
-              imageFile,
-              fit: BoxFit.cover,
-            ),
-          )
-      ),
-      Flexible(
-        flex: 1,
-        child: ListView(
-          children: faces.map<Widget>((f) => FaceCoordinates(f)).toList(),
+              }
+            },
+            tabs: [
+              Tab(
+                icon: new Icon(Icons.search),
+              ),
+              Tab(
+                icon: new Icon(Icons.camera_alt),
+              ),
+              Tab(
+                icon: new Icon(Icons.history),
+              )
+            ],
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.grey[700],
+            indicatorSize: TabBarIndicatorSize.label,
+            indicatorPadding: EdgeInsets.all(5.0),
+            indicatorColor: Colors.white,
+          ),
+          backgroundColor: Colors.black,
         ),
       ),
-
-    ]
-
     );
   }
+
+
 }
-
-class FaceCoordinates extends StatelessWidget {
-  FaceCoordinates(this.face);
-  final Face face;
-
-  @override
-  Widget build(BuildContext context) {
-    final pos = face.boundingBox;
-    return ListTile(
-      title: Text('(${pos.top}, ${pos.left}, ${pos.bottom}, ${pos.right})' ),
-    );
-  }
-}
-
