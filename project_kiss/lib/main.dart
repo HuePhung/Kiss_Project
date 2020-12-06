@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'historyScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'searchScreen.dart';
 import 'cameraScreen.dart';
 
 CameraDescription camera;
@@ -51,8 +51,7 @@ class MyApp extends StatelessWidget {
           body: TabBarView(
             children: [
               new Container(
-                color: Colors.white,
-                child: Center(child: Text("More to come...", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                child: SearchScreen(),
               ),
               new Container(
                 child: CameraScreen(camera: camera),

@@ -26,9 +26,9 @@ class CameraScreen extends StatefulWidget {
 }
 
 class CameraScreenState extends State<CameraScreen> {
-FastLevenshtein leven;
+//FastLevenshtein leven;
 
-  void loadCSV() async {
+  /*void loadCSV() async {
     var myCSV = CSV.from(path :'assets/cosing.csv', delimiter: ";", title:false);
     bool hasData = await myCSV.initFinished;
     // debugPrint('Step 2, hasData: $hasData');
@@ -42,7 +42,7 @@ FastLevenshtein leven;
     //print(leven.getIndividualItems("HYDROLYZED BEE LARVA EXTRACT ALCOHOL ABALONE EXTRACT"));
 
 
-  }
+  }*/
 
   final CameraDescription camera;
   CameraController _controller;
@@ -53,9 +53,9 @@ FastLevenshtein leven;
   @override
   void initState(){
     super.initState();
-
-    leven = new FastLevenshtein();
-    loadCSV();
+    FastLevenshtein.init();
+    //leven = new FastLevenshtein();
+    //loadCSV();
     // To display the current output from the camera,
     // create a CameraController.
     _controller = CameraController(
@@ -266,7 +266,8 @@ FastLevenshtein leven;
                             File fileImageFromGallery = File(path); // die Fkt um ein File zu erhalten
                             final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
                             print(textFromGallery);
-                            List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
+                            //List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
+                            List <Ingredient> ingredients = FastLevenshtein.getIndividualItems(textFromGallery);
                             print(ingredients);
                             // If the picture was chosen, display it on a new screen.
                             Navigator.push(
@@ -348,7 +349,8 @@ FastLevenshtein leven;
                           await fixExifRotation(path);
                           File fileImageFromCam = File(path); // die Fkt um ein File zu erhalten
                           final textFromCam = await FirebaseMLApi.recogniseText(fileImageFromCam);
-                          List <Ingredient> ingredients = leven.getIndividualItems(textFromCam);
+                          //List <Ingredient> ingredients = leven.getIndividualItems(textFromCam);
+                          List <Ingredient> ingredients = FastLevenshtein.getIndividualItems(textFromCam);
                           print(textFromCam);
                           // If the picture was taken, display it on a new screen.
                           Navigator.push(

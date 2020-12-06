@@ -34,14 +34,16 @@ class FirebaseMLApi {
     }
 
     //Start nach "Ingredients"
-    FastLevenshtein startLeven = new FastLevenshtein();
+    //FastLevenshtein startLeven = new FastLevenshtein();
     List<String> recogTextList = text.split(" ");
 
     for (var i=0; i <recogTextList.length; i++){
       //ingridientsListItems.add(myCSV.data[i][0]);
-      startLeven.root.add(recogTextList[i].toUpperCase(), new Ingredient("dummy", "dummy", "dummy", i.toString()));
+      //startLeven.root.add(recogTextList[i].toUpperCase(), new Ingredient("dummy", "dummy", "dummy", i.toString()));
+      FastLevenshtein.root.add(recogTextList[i].toUpperCase(), new Ingredient("dummy", "dummy", "dummy", i.toString()));
     }
-    Ingredient searchResult = startLeven.searchForOneIngredient("INGREDIENTS", 3);
+    //Ingredient searchResult = startLeven.searchForOneIngredient("INGREDIENTS", 3);
+    Ingredient searchResult = FastLevenshtein.searchForOneIngredient("INGREDIENTS", 3);
     int index;
     if (searchResult.date != "error"){
       index = int.parse(searchResult.date) +1; // +1 da "INGREDIENTS" ausschließen
