@@ -9,10 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:test_final/api/firebase_ml_api.dart';
+import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/search/csv_reader.dart';
 import 'package:test_final/search/ingredient.dart';
+import 'package:test_final/detailScreen.dart';
 
 
 class CameraScreen extends StatefulWidget {
@@ -262,8 +263,8 @@ class CameraScreenState extends State<CameraScreen> {
                             //await fixExifRotation(path);
                             File fileImageFromGallery = File(path); // die Fkt um ein File zu erhalten
                             final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
-                            //List<Ingredient> testDb = leven.getIndividualItems(textFromGallery);
-                            print(textFromGallery);
+                            List<Ingredient> testDb = leven.getIndividualItems(textFromGallery);
+                            //print(textFromGallery);
                             //print(testDb);
                             // If the picture was chosen, display it on a new screen.
                             Navigator.push(
@@ -273,7 +274,8 @@ class CameraScreenState extends State<CameraScreen> {
                                     DisplayPictureScreen(
                                         appBarTitle: 'Ausgewähltes Produkt',
                                         imagePath: path,
-                                        ingredients: tempList()), // tempList => list of ingredients per item
+                                        ingredients: testDb,
+                                    ),//tempList()), // tempList => list of ingredients per item
                               ),
                             );
                           } else if(_image == null && _noImageChosen) {
@@ -431,12 +433,22 @@ class DisplayPictureScreen extends StatelessWidget {
                 padding: EdgeInsets.all(20.0),
                 child: DataTable(
                     columns: [
-                      DataColumn(label: Text("Inhaltsstoff")),
-                      DataColumn(label: Text("Einstufung")),
+                      DataColumn(label: Text("Name")),
+                      //DataColumn(label: Text("Einstufung")),
                     ],
                     rows: ingredients.map((ingredient) => DataRow(cells: [
-                      DataCell(Text(ingredient.name)),
-                      DataCell(Text(ingredient.desc))
+                      DataCell(
+                          Text(ingredient.name),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                 builder: (context) => DetailScreen(appBarTitle: "Inhaltsstoff", ingredient: ingredient,),
+                                ),
+                            );
+                          },
+                      ),
+                      //DataCell(Text(ingredient.desc))
                     ])).toList()
                 ),
               ),
