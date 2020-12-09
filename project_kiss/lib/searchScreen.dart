@@ -1,27 +1,35 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:test_final/search/trie_data_structure.dart';
-
-
 class SearchScreen extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
     return _SearchScreenState();
   }
+
 }
 class _SearchScreenState extends State<SearchScreen> {
   var _searchEdit = new TextEditingController();
   bool _isSearch = true;
   String _searchText = "";
   List<Ingredient> _ingredients;
+  var kbController = KeyboardVisibilityController();
+
   @override
   void initState() {
     super.initState();
     _ingredients = new List<Ingredient>();
+    /*print('Keyboard visibility direct query: ${kbController.isVisible}');
+    kbController.onChange.listen((bool visible) {});
+    if(kbController.isVisible)
+      FocusScope.of(context).unfocus();*/
+
+
   }
-  _SearchScreenState(){
+  _SearchScreenState() {
     _searchEdit.addListener(() {
       if (_searchEdit.text.isEmpty) {
         setState(() {
@@ -37,67 +45,99 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     });
   }
-
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Suche nach Inhaltsstoffen"),
-        backgroundColor: Colors.black
-      ),
-      body: new Container(
-        margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
-        child: new Column(
-          children: <Widget>[
-            _searchBox(),
-            _isSearch ? _listView(): _searchIngredients()
-          ],
-        ),
-      ),
+    /*if(kbController.isVisible){
+      if(!FocusScope.of(context).hasPrimaryFocus && FocusScope.of(context).focusedChild != null){
+        //FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus.unfocus();
+      }
+    }*/
+    return GestureDetector(
+      onTap: (){
+        FocusScope.of(context).unfocus();
+      },
+        child: Scaffold(
+          appBar: AppBar(
+              title: Text("Suche nach Inhaltsstoffen"),
+              backgroundColor: Colors.black
+          ),
+          body: Container(
+              margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+              child: Column(
+                children: <Widget>[
+                  _searchBox(),
+                  _isSearch ? _listView() : _searchIngredients(),
+                ],
+              ),
+
+            ),
+
+      )
     );
   }
+
   Widget _searchBox() {
-    return new Container(
+    return Container(
       decoration: BoxDecoration(border: Border.all(width: 1.0)),
-      child: new TextField(
+      child: TextField(
         controller: _searchEdit,
         decoration: InputDecoration(
           hintText: "Search",
-          hintStyle: new TextStyle(color: Colors.grey[300]),
+          hintStyle: TextStyle(color: Colors.grey[300]),
         ),
         textAlign: TextAlign.center,
       ),
     );
   }
-  Widget _listView() {
 
-    return new Flexible(
-      child: new ListView.builder(
+  Widget _listView() {
+    return Flexible(
+      child: ListView.builder(
           itemCount: _ingredients?.length,
           itemBuilder: (BuildContext context, int index) {
-            return new GestureDetector(
-              onTap: (){
+            return GestureDetector(
+              onTap: () {
                 //TODO this is where we switch to the ingredient screen
                 print(_ingredients[index]);
               },
-            child: new Card(
-            color: Colors.lightGreenAccent[100],
-            elevation: 5.0,
-            child: new Container(
-            margin: EdgeInsets.all(15.0),
-            child: new Text("${_ingredients[index].name}"),
-            ),
-            ),
+              child: Card(
+                color: Colors.lightGreenAccent[100],
+                elevation: 5.0,
+                child: Container(
+                  margin: EdgeInsets.all(15.0),
+                  child: Text("${_ingredients[index].name}"),
+                ),
+              ),
             );
           }),
     );
   }
-  Widget _searchIngredients(){
+
+  Widget _searchIngredients() {
     _ingredients.clear();
-    List<TrieNode> list = FastLevenshtein.search(_searchText.toUpperCase(), 3).values.toList();
-    for(int i=0;i<list.length;i++){
+    List<TrieNode> list = new List();
+    if(_searchText.isNotEmpty) {
+      list = FastLevenshtein
+          .search(_searchText.toUpperCase(), 3)
+          .values
+          .toList();
+    }
+    for (int i = 0; i < list.length; i++) {
       _ingredients.add(list[i].ingredient);
     }
     return _listView();
   }
+
+  /*Widget test() {
+    return KeyboardVisibilityBuilder(
+        builder: (context, isKeyboardVisible) {
+          if(isKeyboardVisible){
+            //FocusScope.of(context).unfocus();
+          }
+          return Text(
+            'The keyboard is: ${isKeyboardVisible ? 'VISIBLE' : 'NOT VISIBLE'}',
+          );
+        });
+  }*/
 }

@@ -3,18 +3,16 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:test_final/search/csv_reader.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/search/ingredient.dart';
-import 'package:test_final/search/levenshtein.dart';
 import 'api/firebase_text_api.dart';
-
 class CameraScreen extends StatefulWidget {
   final CameraDescription camera;
 
@@ -23,6 +21,7 @@ class CameraScreen extends StatefulWidget {
 
   @override
   CameraScreenState  createState() => CameraScreenState(camera: camera);
+
 }
 
 class CameraScreenState extends State<CameraScreen> {
@@ -49,13 +48,16 @@ class CameraScreenState extends State<CameraScreen> {
   Future<void> _initializeControllerFuture;
 
   CameraScreenState({Key key, @required this.camera});
+  var keyboardController = KeyboardVisibilityController();
 
   @override
   void initState(){
     super.initState();
     FastLevenshtein.init();
+    //FocusScope.of(context).unfocus();
     //leven = new FastLevenshtein();
     //loadCSV();
+
     // To display the current output from the camera,
     // create a CameraController.
     _controller = CameraController(
@@ -65,8 +67,8 @@ class CameraScreenState extends State<CameraScreen> {
       ResolutionPreset.high,
       // disable audio capturing
       enableAudio: false,
-    );
 
+    );
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize().then((_) {
       if (!mounted) {
@@ -200,6 +202,11 @@ class CameraScreenState extends State<CameraScreen> {
 
   @override
   Widget build(BuildContext context) {
+    keyboardController.onChange;
+    if(keyboardController.isVisible){
+      FocusScope.of(context).unfocus();
+    }
+
     if(!_controller.value.isInitialized){
       return Container();
     }
@@ -375,10 +382,13 @@ class CameraScreenState extends State<CameraScreen> {
                 //resizeToAvoidBottomPadding: true,
               ),
             ),
+            //test()
           ],
+
         )
     );
   }
+
 }
 
 class DisplayPictureScreen extends StatelessWidget {
@@ -435,12 +445,23 @@ class DisplayPictureScreen extends StatelessWidget {
           ),
         ));
   }
+
 }
 
 tempList(List<Ingredient> ingredients){
   List<Ingredient> temp = ingredients;
 
   return temp;
+}
+Widget test() {
+  return KeyboardVisibilityBuilder(
+
+      builder: (context, isKeyboardVisible) {
+        print('The keyboard is: ${isKeyboardVisible ? 'VISIBLE' : 'NOT VISIBLE'}');
+        return Text(
+          'The keyboard is: ${isKeyboardVisible ? 'VISIBLE' : 'NOT VISIBLE'}',
+        );
+      });
 }
 
 /*class Ingredient {
