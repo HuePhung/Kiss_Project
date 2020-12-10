@@ -202,6 +202,7 @@ class CameraScreenState extends State<CameraScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //if keyboard is still exposed when entering the camera screen, dismiss it
     keyboardController.onChange;
     if(keyboardController.isVisible){
       FocusScope.of(context).unfocus();
@@ -215,7 +216,9 @@ class CameraScreenState extends State<CameraScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
+            //expanded fixed the overflow exception with the keyboard
+            Expanded(
+              child: Container(
                 height: MediaQuery.of(context).size.height * 0.88,
                 child: AspectRatio(
                   aspectRatio: _controller.value.aspectRatio,
@@ -232,6 +235,7 @@ class CameraScreenState extends State<CameraScreen> {
                     },
                   ),
                 )
+            ),
             ),
             Container(
               height: MediaQuery.of(context).size.height * 0.05,
