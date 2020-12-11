@@ -49,6 +49,9 @@ class FastLevenshtein {
     MapEntry<String, TrieNode> min = null;
     Map<String, TrieNode> res = search(word, maxDistance);
     //List<String> returnVal = List();
+    if(res.length == 1){
+      return res.values.first.ingredient;
+    }
     Ingredient result;
     for(MapEntry entry in res.entries){
       TrieNode node = entry.value;
@@ -123,6 +126,10 @@ class FastLevenshtein {
     }
     return sb.toString();
   }
+  static int calcDistance(String word){
+    var dst = (word.length / 4);
+    return dst.toInt();
+  }
 
   static List<Ingredient> getIndividualItems(String startString){
     List<Ingredient> ret = List();
@@ -134,12 +141,13 @@ class FastLevenshtein {
       for (int i=0; i < ingridientsString.length; i++){
         ingridientsString[i] = ingridientsString[i].trim();
         ingridientsString[i] = ingridientsString[i].toUpperCase();
-       ret.add(searchForOneIngredient(ingridientsString[i], 2));
+        Ingredient result = searchForOneIngredient(ingridientsString[i], 2);
+        if(result.name != "error")
+            ret.add(result);
       }
       return ret;
     }
     else {
-
      // print("No comma!");
       List <String> spaceDevided = startString.split(" ");
 
@@ -156,14 +164,12 @@ class FastLevenshtein {
 
         //von hinten:
         for (int n = spaceDevided.length; n >= i ; n--){
-
           //Um aus Liste an einzelnen Wörtern ein String ohne komma zu machen
           String searchString = spaceDevided.sublist(i,n).toString().replaceAll(",", "");
-
           Ingredient searchResult = searchForOneIngredient(searchString, 2);
          // print(searchString);
-         //print(searchString);
           if(searchResult.name != "error"){
+            //print("lol ${searchResult.name}");
             ret.add(searchResult);
             i = n ;
 

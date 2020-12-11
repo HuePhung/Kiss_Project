@@ -119,7 +119,7 @@ class _SearchScreenState extends State<SearchScreen> {
     List<TrieNode> list = new List();
     if(_searchText.isNotEmpty) {
       list = FastLevenshtein
-          .search(_searchText.toUpperCase(), 3)
+          .search(_searchText.toUpperCase(),  3)
           .values
           .toList();
     }

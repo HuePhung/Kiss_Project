@@ -9,7 +9,6 @@ class Ingredient{
 
   @override
   String toString() {
-    // TODO: implement toString
     return "NAME: $name DESCRIPTION: $desc FUNCTION: $function DATE: $date";
   }
 }
