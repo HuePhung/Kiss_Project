@@ -10,9 +10,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/search/ingredient.dart';
-import 'api/firebase_text_api.dart';
+import 'package:test_final/detailScreen.dart';
+
+
 class CameraScreen extends StatefulWidget {
   final CameraDescription camera;
 
@@ -21,7 +24,6 @@ class CameraScreen extends StatefulWidget {
 
   @override
   CameraScreenState  createState() => CameraScreenState(camera: camera);
-
 }
 
 class CameraScreenState extends State<CameraScreen> {
@@ -67,8 +69,8 @@ class CameraScreenState extends State<CameraScreen> {
       ResolutionPreset.high,
       // disable audio capturing
       enableAudio: false,
-
     );
+    
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize().then((_) {
       if (!mounted) {
@@ -276,10 +278,10 @@ class CameraScreenState extends State<CameraScreen> {
                             //await fixExifRotation(path);
                             File fileImageFromGallery = File(path); // die Fkt um ein File zu erhalten
                             final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
-                            print(textFromGallery);
+                            //print(textFromGallery);
                             //List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
                             List <Ingredient> ingredients = FastLevenshtein.getIndividualItems(textFromGallery);
-                            print(ingredients);
+                            //print(ingredients);
                             // If the picture was chosen, display it on a new screen.
                             Navigator.push(
                               context,
@@ -362,14 +364,31 @@ class CameraScreenState extends State<CameraScreen> {
                           final textFromCam = await FirebaseMLApi.recogniseText(fileImageFromCam);
                           //List <Ingredient> ingredients = leven.getIndividualItems(textFromCam);
                           List <Ingredient> ingredients = FastLevenshtein.getIndividualItems(textFromCam);
-                          print(textFromCam);
                           // If the picture was taken, display it on a new screen.
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DisplayPictureScreen(appBarTitle: 'Gescanntes Produkt', imagePath: path, ingredients: tempList(ingredients)), // tempList => list of ingredients per item
-                            ),
-                          );
+                          //List<Ingredient> testDb = leven.getIndividualItems(textFromCam);
+                          //print(testDb);
+                          if(textFromCam != " ") {
+                            print(textFromCam);
+                            // If the picture was taken, display it on a new screen.
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DisplayPictureScreen(appBarTitle: 'Gescanntes Produkt', imagePath: path, ingredients: tempList(ingredients)), // tempList => list of ingredients per item
+                              ),
+                            )
+                          } else {
+                            final snackbarCam = SnackBar(
+                                content: Text("Fehler: Es wurde kein Text erkannt."),
+                                backgroundColor: Colors.red,
+                                duration: Duration(seconds: 3),
+                                margin: EdgeInsets.all(18.0),
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(25)))
+                            );
+
+                            Scaffold.of(context).showSnackBar(snackbarCam);
+                          }
                         } catch (e) {
                           // If an error occurs, log the error to the console.
                           print(e);
@@ -386,13 +405,10 @@ class CameraScreenState extends State<CameraScreen> {
                 //resizeToAvoidBottomPadding: true,
               ),
             ),
-            //test()
           ],
-
         )
     );
   }
-
 }
 
 class DisplayPictureScreen extends StatelessWidget {
@@ -449,23 +465,12 @@ class DisplayPictureScreen extends StatelessWidget {
           ),
         ));
   }
-
 }
 
 tempList(List<Ingredient> ingredients){
   List<Ingredient> temp = ingredients;
 
   return temp;
-}
-Widget test() {
-  return KeyboardVisibilityBuilder(
-
-      builder: (context, isKeyboardVisible) {
-        print('The keyboard is: ${isKeyboardVisible ? 'VISIBLE' : 'NOT VISIBLE'}');
-        return Text(
-          'The keyboard is: ${isKeyboardVisible ? 'VISIBLE' : 'NOT VISIBLE'}',
-        );
-      });
 }
 
 /*class Ingredient {

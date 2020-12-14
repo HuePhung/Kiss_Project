@@ -169,7 +169,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DisplayPictureScreen(appBarTitle: index.toString() ,imagePath: imagePath, ingredients: tempList(ingredients))
+                                  builder: (context) => DisplayPictureScreen(appBarTitle: index.toString() ,imagePath: imagePath, ingredients: tempList())
                               )
                           );
 
