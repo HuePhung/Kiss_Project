@@ -55,16 +55,37 @@ class Trie {
 
   TrieNode searchNode(String word) {
     TrieNode node;
+    word = word.toUpperCase();
+    Map<String,TrieNode> children = root.children;
     for (int i = 0; i < word.length; i++) {
       String c = word[i];
-      if (root.children.containsKey(c)) {
-        node = root.children[c];
-        root.children = node.children;
+      if (children.containsKey(c)) {
+        node = children[c];
+        children = node.children;
       }
       else
         return null;
     }
 
     return node;
+  }
+  String buildWord(TrieNode node){
+    TrieNode currParent = node.parent;
+    String actualWord = node.char;
+    while(currParent != null){
+      if(currParent.parent != null){
+        actualWord += currParent.char;
+      }
+      currParent = currParent.parent;
+    }
+    return reverseString(actualWord);
+  }
+  //needed to print
+  static String reverseString(String s) {
+    var sb = new StringBuffer();
+    for(var i = s.length - 1; i >= 0; --i) {
+      sb.write(s[i]);
+    }
+    return sb.toString();
   }
 }

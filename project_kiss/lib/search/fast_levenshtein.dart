@@ -66,6 +66,25 @@ class FastLevenshtein {
     return result;
 
   }
+  static List<Ingredient> autoComplete(String word){
+    List<Ingredient> list = new List();
+    TrieNode node = root.searchNode(word);
+    if(node != null){
+      list = recursiveForAutoComplete(node, list);
+    }
+    return list;
+  }
+  //function should only get called via autoComplete() func.
+  static List<Ingredient> recursiveForAutoComplete(TrieNode node, List<Ingredient> list){
+    List<Ingredient> ret = list;
+    for(TrieNode child in node.children.values){
+      if(child.isLeafNode){
+        ret.add(child.ingredient);
+      }
+      recursiveForAutoComplete(child, ret);
+    }
+    return ret;
+  }
   //function should only get called via search() func.
   static Map<String,TrieNode> searchRecursive(TrieNode node, String letter, String word, List<int> prevRow, Map<String,TrieNode> results, int maxDistance){ //hier
     int columns = word.length+1;
@@ -87,19 +106,11 @@ class FastLevenshtein {
     //if the last entry in the row indicates the optimal cost is less than the maximum cost, and there is a word in this trie node, then add it.
     //if(currRow[currRow.length-1] <= maxCost && node.char != null){
     if(currRow[currRow.length-1] <= maxDistance && node.isLeafNode){
-      TrieNode currParent = node.parent;
-      String actualWord = node.char;
-      while(currParent != null){
-        if(currParent.parent != null){
-          actualWord += currParent.char;
-        }
-        currParent = currParent.parent;
-      }
-
       node.distance = currRow[currRow.length-1];
-      results.putIfAbsent(reverseString(actualWord), () => node );
+      results.putIfAbsent(root.buildWord(node), () => node );
     }
-
+      //node.distance = currRow[currRow.length-1];
+      //results.putIfAbsent(root.buildWord(node), () => node );
     //if any entries in the row are less than the maximum cost, then recursively search each branch of the trie
     if(currRow.reduce(min) <= maxDistance){
       for(String letter in node.children.keys){
@@ -117,14 +128,7 @@ class FastLevenshtein {
     else
       return z;
   }
-  //needed to print out the results
-  static String reverseString(String s) {
-    var sb = new StringBuffer();
-    for(var i = s.length - 1; i >= 0; --i) {
-      sb.write(s[i]);
-    }
-    return sb.toString();
-  }
+
   static int calcDistance(String word){
     var dst = (word.length / 4);
     return dst.toInt();

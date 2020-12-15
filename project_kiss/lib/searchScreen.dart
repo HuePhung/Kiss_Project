@@ -23,12 +23,6 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     _ingredients = new List<Ingredient>();
-    /*print('Keyboard visibility direct query: ${kbController.isVisible}');
-    kbController.onChange.listen((bool visible) {});
-    if(kbController.isVisible)
-      FocusScope.of(context).unfocus();*/
-
-
   }
   _SearchScreenState() {
     _searchEdit.addListener(() {
@@ -48,12 +42,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    /*if(kbController.isVisible){
-      if(!FocusScope.of(context).hasPrimaryFocus && FocusScope.of(context).focusedChild != null){
-        //FocusScope.of(context).unfocus();
-        FocusManager.instance.primaryFocus.unfocus();
-      }
-    }*/
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
@@ -123,28 +111,19 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _searchIngredients() {
     _ingredients.clear();
-    List<TrieNode> list = new List();
+    //List<TrieNode> list = new List();
     if(_searchText.isNotEmpty) {
-      list = FastLevenshtein
+      /*list = FastLevenshtein
           .search(_searchText.toUpperCase(),  3)
           .values
-          .toList();
+          .toList();*/
+      _ingredients = FastLevenshtein
+          .autoComplete(_searchText);
     }
-    for (int i = 0; i < list.length; i++) {
+
+    /*for (int i = 0; i < list.length; i++) {
       _ingredients.add(list[i].ingredient);
-    }
+    }*/
     return _listView();
   }
-
-  /*Widget test() {
-    return KeyboardVisibilityBuilder(
-        builder: (context, isKeyboardVisible) {
-          if(isKeyboardVisible){
-            //FocusScope.of(context).unfocus();
-          }
-          return Text(
-            'The keyboard is: ${isKeyboardVisible ? 'VISIBLE' : 'NOT VISIBLE'}',
-          );
-        });
-  }*/
 }
