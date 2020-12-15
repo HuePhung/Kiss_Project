@@ -4,6 +4,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:test_final/search/trie_data_structure.dart';
+import 'package:test_final/detailScreen.dart';
 class SearchScreen extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -100,6 +101,12 @@ class _SearchScreenState extends State<SearchScreen> {
               onTap: () {
                 //TODO this is where we switch to the ingredient screen
                 print(_ingredients[index]);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                    builder: (context) => DetailScreen(appBarTitle: "Inhaltsstoff", ingredient: _ingredients[index],),
+                ),
+                );
               },
               child: Card(
                 color: Colors.lightGreenAccent[100],

@@ -26,8 +26,7 @@ class FastLevenshtein {
     for (var i = 0; i < myCSV.data.length; i++) {
       //ingridientsListItems.add(myCSV.data[i][0]);
       root.add(myCSV.data[i][0], new Ingredient(
-          myCSV.data[i][0], myCSV.data[i][2], myCSV.data[i][3],
-          myCSV.data[i][4]));
+          myCSV.data[i][0], myCSV.data[i][1], myCSV.data[i][3], myCSV.data[i][4]));
     }
   }
 

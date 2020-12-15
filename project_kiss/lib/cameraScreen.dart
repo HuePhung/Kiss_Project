@@ -290,7 +290,7 @@ class CameraScreenState extends State<CameraScreen> {
                                     DisplayPictureScreen(
                                         appBarTitle: 'Ausgewähltes Produkt',
                                         imagePath: path,
-                                        ingredients: tempList(ingredients)), // tempList => list of ingredients per item
+                                        ingredients: ingredients), // tempList => list of ingredients per item
                               ),
                             );
                           } else if(_image == null && _noImageChosen) {
@@ -373,9 +373,9 @@ class CameraScreenState extends State<CameraScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => DisplayPictureScreen(appBarTitle: 'Gescanntes Produkt', imagePath: path, ingredients: tempList(ingredients)), // tempList => list of ingredients per item
+                                builder: (context) => DisplayPictureScreen(appBarTitle: 'Gescanntes Produkt', imagePath: path, ingredients: ingredients), // tempList => list of ingredients per item
                               ),
-                            )
+                            );
                           } else {
                             final snackbarCam = SnackBar(
                                 content: Text("Fehler: Es wurde kein Text erkannt."),
@@ -451,12 +451,22 @@ class DisplayPictureScreen extends StatelessWidget {
                 padding: EdgeInsets.all(20.0),
                 child: DataTable(
                     columns: [
-                      DataColumn(label: Text("Inhaltsstoff")),
-                     // DataColumn(label: Text("Einstufung")),
+                      DataColumn(label: Text("Name")),
+                      //DataColumn(label: Text("Einstufung")),
                     ],
                     rows: ingredients.map((ingredient) => DataRow(cells: [
-                      DataCell(Text(ingredient.name)),
-                     // DataCell(Text(ingredient.rating))
+                      DataCell(
+                        Text(ingredient.name),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailScreen(appBarTitle: "Inhaltsstoff", ingredient: ingredient,),
+                            ),
+                          );
+                        },
+                      ),
+                      //DataCell(Text(ingredient.desc))
                     ])).toList()
                 ),
               ),
