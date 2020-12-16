@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:test_final/search/ingredient.dart';
-import 'cameraScreen.dart';
+import 'package:test_final/cameraScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String imagePath = "";
@@ -78,7 +77,6 @@ class HistoryScreen extends StatefulWidget{
 class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientMixin<HistoryScreen> {
   //List items = getDummyList();
   List<String> pathList = ["0"];
-  List<Ingredient> ingredients;
   //Future<List<String>> _pathList;
 
   Future<SharedPreferences> _prefs;
@@ -92,7 +90,6 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
     debugPrint("in initState");
     //getStringListSF();
     _prefs = getPrefs();
-     ingredients =[];
   }
 
   @override
@@ -105,8 +102,45 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
 
         return new Scaffold(
           appBar: AppBar(
-              title: Text("Historie"),
-              backgroundColor: Colors.black
+            title: Text("Historie"),
+            actions: <Widget>[
+              IconButton(
+                icon: new Icon(Icons.delete),
+                onPressed: () async {
+                  return await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Historie löschen"),
+                        content: Text("Möchtest du wirklich alle Einträge löschen?"),
+                        actions: <Widget>[
+                          FlatButton(
+                            onPressed: () async{
+                              for (int idx = 0; idx < imagePathList.length; idx++) {
+                                String deleteByIdx = imagePathList[idx];
+                                File(deleteByIdx).deleteSync();
+                              }
+                              setState(() {
+                                imagePathList.clear();
+                              });
+                              await prefs.setStringList("imagePathList", imagePathList);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("ALLE LÖSCHEN"),
+
+                          ),
+                          FlatButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: const Text("ABBRECHEN"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              )
+            ],
+            backgroundColor: Colors.black,
           ),
           body: Container(
             padding: const EdgeInsets.all(20.0),
@@ -169,7 +203,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DisplayPictureScreen(appBarTitle: index.toString() ,imagePath: imagePath, ingredients: tempList(ingredients))
+                                  builder: (context) => DisplayPictureScreen(appBarTitle: index.toString() ,imagePath: imagePath, ingredients: tempList())
                               )
                           );
 
