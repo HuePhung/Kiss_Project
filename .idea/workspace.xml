@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c9b8a319-230a-4b6d-a4c3-c9478958d057" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/executionHistory/executionHistory.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/fileChanges/last-build.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/fileHashes/fileHashes.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/checksums/checksums.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/vcs-1/gc.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project_kiss/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project_kiss/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project_kiss/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/pubspec.lock" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1lC7CfTAbXy3xlSVBrBzCSt2gZR" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/project_kiss" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c9b8a319-230a-4b6d-a4c3-c9478958d057" name="Default Changelist" comment="" />
+      <created>1607089092356</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1607089092356</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="987" y="370" key="FileChooserDialogImpl" timestamp="1607194966120">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="987" y="370" key="FileChooserDialogImpl/0.0.2560.1400/2560.202.1920.1040@0.0.2560.1400" timestamp="1607194966120" />
+    <state x="3300" y="477" key="FileChooserDialogImpl/0.0.2560.1400/2560.202.1920.1040@2560.202.1920.1040" timestamp="1607189073392" />
+  </component>
+</project>

@@ -18,24 +18,27 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"
 
 
 dependencies:
   flutter:
     sdk: flutter
-
+  camera: ^0.5.8+11
+  path_provider:
+  path: ^1.7.0
+  exif: ^1.0.3
+  image: ^2.1.18
+  image_picker: ^0.6.7+14
+  shared_preferences: ^0.5.12+4
+  flutter_image_compress: ^0.7.0
+  firebase_ml_vision: ^0.9.9
+  flutter_keyboard_visibility: ^4.0.0
+  auto_size_text: ^2.1.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
-  cloud_firestore: ^0.13.0+1
-  flutter_camera_ml_vision: ^2.2.4
-  firebase_ml_vision: ^0.9.8
-  camera: ^0.5.7+4
-  path_provider: ^1.6.7
-  intl: ^0.16.1
-  image_picker: ^0.4.12
 
 dev_dependencies:
   flutter_test:
@@ -53,8 +56,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+      - assets/cosing.csv
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
