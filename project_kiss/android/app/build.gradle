@@ -60,6 +60,11 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility "1.8"
+    }
+    ndkVersion '21.3.6528147'
 }
 
 flutter {

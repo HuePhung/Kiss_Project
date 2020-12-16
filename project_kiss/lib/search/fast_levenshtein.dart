@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:core';
 import 'package:test_final/search/ingredient.dart';
-
+import 'csv_reader.dart';
 import 'trie_data_structure.dart';
 class FastLevenshtein {
   List<String> testList = [
@@ -14,18 +14,24 @@ class FastLevenshtein {
     "lane",
     "tone"
   ];
-  Trie root = new Trie();
-  void init(){
-
-    /*for(String word in testList){
-      root.add(word);
+  static Trie root = new Trie();
+  static void init(){
+    loadCSV();
+  }
+  static void loadCSV() async {
+    var myCSV = CSV.from(
+        path: 'assets/cosing.csv', delimiter: ";", title: false);
+    bool hasData = await myCSV.initFinished;
+    // debugPrint('Step 2, hasData: $hasData');
+    for (var i = 0; i < myCSV.data.length; i++) {
+      //ingridientsListItems.add(myCSV.data[i][0]);
+      root.add(myCSV.data[i][0], new Ingredient(
+          myCSV.data[i][0], myCSV.data[i][1], myCSV.data[i][3], myCSV.data[i][4]));
     }
-    print(search("jane", 2));
-    print(searchForOneWord("jane", 2));*/
   }
 
   //returns map with all the words that are similar to the param. word together with the distance
-  Map<String, TrieNode> search(String word, int maxDistance){ //hier
+  static Map<String, TrieNode> search(String word, int maxDistance){ //hier
     List<int> currentRow = new List(word.length+1);
     Map<String,TrieNode> results = new Map(); //hier
     for(int j=0;j<currentRow.length;j++){
@@ -38,10 +44,13 @@ class FastLevenshtein {
     return results;
   }
   //calls search function but instead of returning a map it only returns the word the smallest distance.
-  Ingredient searchForOneIngredient(String word, int maxDistance){
+  static Ingredient searchForOneIngredient(String word, int maxDistance){
     MapEntry<String, TrieNode> min = null;
     Map<String, TrieNode> res = search(word, maxDistance);
     //List<String> returnVal = List();
+    if(res.length == 1){
+      return res.values.first.ingredient;
+    }
     Ingredient result;
     for(MapEntry entry in res.entries){
       TrieNode node = entry.value;
@@ -57,8 +66,27 @@ class FastLevenshtein {
     return result;
 
   }
+  static List<Ingredient> autoComplete(String word){
+    List<Ingredient> list = new List();
+    TrieNode node = root.searchNode(word);
+    if(node != null){
+      list = recursiveForAutoComplete(node, list);
+    }
+    return list;
+  }
+  //function should only get called via autoComplete() func.
+  static List<Ingredient> recursiveForAutoComplete(TrieNode node, List<Ingredient> list){
+    List<Ingredient> ret = list;
+    for(TrieNode child in node.children.values){
+      if(child.isLeafNode){
+        ret.add(child.ingredient);
+      }
+      recursiveForAutoComplete(child, ret);
+    }
+    return ret;
+  }
   //function should only get called via search() func.
-  Map<String,TrieNode> searchRecursive(TrieNode node, String letter, String word, List<int> prevRow, Map<String,TrieNode> results, int maxDistance){ //hier
+  static Map<String,TrieNode> searchRecursive(TrieNode node, String letter, String word, List<int> prevRow, Map<String,TrieNode> results, int maxDistance){ //hier
     int columns = word.length+1;
     List<int> currRow = [prevRow[0]+1];
 
@@ -78,19 +106,11 @@ class FastLevenshtein {
     //if the last entry in the row indicates the optimal cost is less than the maximum cost, and there is a word in this trie node, then add it.
     //if(currRow[currRow.length-1] <= maxCost && node.char != null){
     if(currRow[currRow.length-1] <= maxDistance && node.isLeafNode){
-      TrieNode currParent = node.parent;
-      String actualWord = node.char;
-      while(currParent != null){
-        if(currParent.parent != null){
-          actualWord += currParent.char;
-        }
-        currParent = currParent.parent;
-      }
-
       node.distance = currRow[currRow.length-1];
-      results.putIfAbsent(reverseString(actualWord), () => node );
+      results.putIfAbsent(root.buildWord(node), () => node );
     }
-
+      //node.distance = currRow[currRow.length-1];
+      //results.putIfAbsent(root.buildWord(node), () => node );
     //if any entries in the row are less than the maximum cost, then recursively search each branch of the trie
     if(currRow.reduce(min) <= maxDistance){
       for(String letter in node.children.keys){
@@ -100,7 +120,7 @@ class FastLevenshtein {
     return results;
   }
   //needed to calc the min distance for levenshtein
-  int findMin(int x, int y, int z){
+  static int findMin(int x, int y, int z){
     if(x <= y && x <= z)
       return x;
     if(y <= x && y <= z)
@@ -108,16 +128,13 @@ class FastLevenshtein {
     else
       return z;
   }
-  //needed to print out the results
-  String reverseString(String s) {
-    var sb = new StringBuffer();
-    for(var i = s.length - 1; i >= 0; --i) {
-      sb.write(s[i]);
-    }
-    return sb.toString();
+
+  static int calcDistance(String word){
+    var dst = (word.length / 4);
+    return dst.toInt();
   }
 
-  List<Ingredient> getIndividualItems(String startString){
+  static List<Ingredient> getIndividualItems(String startString){
     List<Ingredient> ret = List();
     if (startString.contains(",")){
     //  print("Comma!");
@@ -127,12 +144,13 @@ class FastLevenshtein {
       for (int i=0; i < ingridientsString.length; i++){
         ingridientsString[i] = ingridientsString[i].trim();
         ingridientsString[i] = ingridientsString[i].toUpperCase();
-       ret.add(this.searchForOneIngredient(ingridientsString[i], 2));
+        Ingredient result = searchForOneIngredient(ingridientsString[i], 2);
+        if(result.name != "error")
+            ret.add(result);
       }
       return ret;
     }
     else {
-
      // print("No comma!");
       List <String> spaceDevided = startString.split(" ");
 
@@ -149,14 +167,12 @@ class FastLevenshtein {
 
         //von hinten:
         for (int n = spaceDevided.length; n >= i ; n--){
-
           //Um aus Liste an einzelnen Wörtern ein String ohne komma zu machen
           String searchString = spaceDevided.sublist(i,n).toString().replaceAll(",", "");
-
-          Ingredient searchResult = this.searchForOneIngredient(searchString, 2);
+          Ingredient searchResult = searchForOneIngredient(searchString, 2);
          // print(searchString);
-         //print(searchString);
           if(searchResult.name != "error"){
+            //print("lol ${searchResult.name}");
             ret.add(searchResult);
             i = n ;
 
@@ -168,18 +184,9 @@ class FastLevenshtein {
 
             i = n ;
           }
-
         }
-
       }
-      
-      
       return ret;
     }
   }
-//void setWordList(List<String> words){
-// for(String word in words){
-//  root.add(word);
-//}
-//}
 }
