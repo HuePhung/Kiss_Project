@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +9,10 @@ import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:test_final/api/firebase_ml_api.dart';
+import 'package:test_final/api/recordDate.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/search/csv_reader.dart';
 import 'package:test_final/search/ingredient.dart';
-
 
 class CameraScreen extends StatefulWidget {
   final CameraDescription camera;
@@ -240,13 +239,15 @@ class CameraScreenState extends State<CameraScreen> {
                         try {
                           // Find the local app directory using the `path_provider` plugin.
                           final String directoryPath = await _localPath;
-
+                          //alter current date and save as basename
+                          final currentDate = await RecordDate.recordDateNow();
+                          print(currentDate);
                           // Construct the path where the image should be saved using the
                           // pattern package.
                           final path = join(
                             // Store the picture in the local app directory.
                             directoryPath,
-                            '${DateTime.now()}.png',
+                            '${DateTime.now()}' + '.' + currentDate +'.png',
                           );
 
                           // getting the image using the gallery chooser
@@ -260,7 +261,7 @@ class CameraScreenState extends State<CameraScreen> {
 
                             // maybe fixing rotation
                             //await fixExifRotation(path);
-                            File fileImageFromGallery = File(path); // die Fkt um ein File zu erhalten
+                            File fileImageFromGallery = File(path); // die Fkt um File zu erhalten
                             final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
                             //List<Ingredient> testDb = leven.getIndividualItems(textFromGallery);
                             print(textFromGallery);
@@ -327,13 +328,15 @@ class CameraScreenState extends State<CameraScreen> {
 
                           // Find the local app directory using the `path_provider` plugin.
                           final String directoryPath = await _localPath;
-
+                          //alter current date and save as basename
+                          final currentDate = await RecordDate.recordDateNow();
+                          print(currentDate);
                           // Construct the path where the image should be saved using the
                           // pattern package.
                           final path = join(
                             // Store the picture in the local app directory.
                             directoryPath,
-                            '${DateTime.now()}.png',
+                            '${DateTime.now()}' + '.' + currentDate +'.png',
                           );
 
                           // saving path to device storage

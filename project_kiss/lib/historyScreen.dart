@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_final/cameraScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path/path.dart' as p;
 
 String imagePath = "";
 List<String> imagePathList = [];
@@ -103,43 +104,6 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
         return new Scaffold(
           appBar: AppBar(
             title: Text("Historie"),
-            actions: <Widget>[
-              IconButton(
-                icon: new Icon(Icons.delete),
-                onPressed: () async {
-                  return await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Historie löschen"),
-                        content: Text("Möchtest du wirklich alle Einträge löschen?"),
-                        actions: <Widget>[
-                          FlatButton(
-                            onPressed: () async{
-                              for (int idx = 0; idx < imagePathList.length; idx++) {
-                                String deleteByIdx = imagePathList[idx];
-                                File(deleteByIdx).deleteSync();
-                              }
-                              setState(() {
-                                imagePathList.clear();
-                              });
-                              await prefs.setStringList("imagePathList", imagePathList);
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text("ALLE LÖSCHEN"),
-
-                          ),
-                          FlatButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text("ABBRECHEN"),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              )
-            ],
             backgroundColor: Colors.black,
           ),
           body: Container(
@@ -220,7 +184,11 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Image.file(File(imagePathList[index]), width: 125, height: 125),
-                            Text(index.toString() , textAlign: TextAlign.end, style: TextStyle(fontSize: 15),)
+                            Text(
+                              p.extension(imagePathList[index].toString(), 4).substring(1, 11),
+                              textAlign: TextAlign.end,
+                              style: TextStyle(fontSize: 11),
+                            )
                           ],
                         ),
                       )
