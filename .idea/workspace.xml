@@ -6,33 +6,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee2f32d7-67b1-4430-a6bb-70dfd44fb11b" name="Default Changelist" comment="Merged main into branch showRecordDate">
-      <change afterPath="$PROJECT_DIR$/.idea/Kiss_Project.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/executionHistory/executionHistory.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/fileChanges/last-build.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/fileHashes/fileHashes.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/checksums/checksums.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/vcs-1/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/android/settings_aar.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/lib/detailScreen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/lib/searchScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/lib/api/firebase_text_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/lib/api/firebase_text_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/lib/cameraScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/lib/cameraScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/lib/search/fast_levenshtein.dart" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/lib/search/fast_levenshtein.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/lib/search/ingredient.dart" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/lib/search/ingredient.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/lib/search/trie_data_structure.dart" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/lib/search/trie_data_structure.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project_kiss/lib/historyScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/lib/historyScreen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

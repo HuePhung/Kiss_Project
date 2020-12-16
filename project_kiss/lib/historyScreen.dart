@@ -104,6 +104,43 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
         return new Scaffold(
           appBar: AppBar(
             title: Text("Historie"),
+            actions: <Widget>[
+              IconButton(
+                icon: new Icon(Icons.delete),
+                onPressed: () async {
+                  return await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Historie löschen"),
+                        content: Text("Möchtest du wirklich alle Einträge löschen?"),
+                        actions: <Widget>[
+                          FlatButton(
+                            onPressed: () async{
+                              for (int idx = 0; idx < imagePathList.length; idx++) {
+                                String deleteByIdx = imagePathList[idx];
+                                File(deleteByIdx).deleteSync();
+                              }
+                              setState(() {
+                                imagePathList.clear();
+                              });
+                              await prefs.setStringList("imagePathList", imagePathList);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("ALLE LÖSCHEN"),
+
+                          ),
+                          FlatButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: const Text("ABBRECHEN"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              )
+            ],
             backgroundColor: Colors.black,
           ),
           body: Container(
