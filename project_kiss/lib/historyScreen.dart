@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_final/cameraScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_final/search/ingredient.dart';
 
 String imagePath = "";
 List<String> imagePathList = [];
@@ -78,7 +79,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
   //List items = getDummyList();
   List<String> pathList = ["0"];
   //Future<List<String>> _pathList;
-
+  List<Ingredient> ingredients;
   Future<SharedPreferences> _prefs;
 
   @override
@@ -90,6 +91,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
     debugPrint("in initState");
     //getStringListSF();
     _prefs = getPrefs();
+    ingredients = [];
   }
 
   @override
@@ -203,7 +205,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DisplayPictureScreen(appBarTitle: index.toString() ,imagePath: imagePath, ingredients: tempList())
+                                  builder: (context) => DisplayPictureScreen(appBarTitle: index.toString() ,imagePath: imagePath, ingredients: ingredients)
                               )
                           );
 
