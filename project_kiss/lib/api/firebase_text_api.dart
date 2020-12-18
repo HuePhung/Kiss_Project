@@ -2,19 +2,23 @@ import 'dart:io';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/search/ingredient.dart';
+//import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 
 class FirebaseMLApi {
   static Future<String> recogniseText(File imageFile) async {
     if (imageFile == null) {
       return 'No selected image';
     } else {
+      //print(imageFile.path);
       final visionImage = FirebaseVisionImage.fromFile(imageFile);
       final textRecognizer = FirebaseVision.instance.textRecognizer();
+      //print(textRecognizer.hashCode);
       try {
         final visionText = await textRecognizer.processImage(visionImage);
         await textRecognizer.close();
 
         final text = extractText(visionText);
+        print(visionText.text);
         return text.isEmpty ? 'No text found in the image' : text;
       } catch (error) {
         return error.toString();
@@ -33,6 +37,7 @@ class FirebaseMLApi {
       }
     }
 
+   // print(text);
     //Start nach "Ingredients"
     //FastLevenshtein startLeven = new FastLevenshtein();
     List<String> recogTextList = text.split(" ");
