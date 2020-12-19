@@ -216,161 +216,11 @@ class CameraScreenState extends State<CameraScreen> {
       return Container();
     }
 
-    return Container(
+    return SafeArea(
+      child: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.purple,
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 50)),
-
-                onPressed: ()async {
-                  // Take the Picture in a try / catch block. If anything goes wrong,
-                  // catch the error.
-                  try {
-                    // Ensure that the camera is initialized.
-                    await _initializeControllerFuture;
-
-                    // Find the local app directory using the `path_provider` plugin.
-                    final String directoryPath = await _localPath;
-
-                    // Construct the path where the image should be saved using the
-                    // pattern package.
-                    final path = join(
-                      // Store the picture in the local app directory.
-                      directoryPath,
-                      '${DateTime.now()}.png',
-                    );
-
-                    // saving path to device storage
-                    //await addStringToSF(path);
-                    await addStringToSFList(path);
-
-                    // Attempt to take a picture and log where it's been saved.
-                    await _controller.takePicture(path);
-                    //await fixExifRotation(path);
-                    File fileImageFromCam =  await FlutterExifRotation.rotateImage(path: path);//File(path); // die Fkt um ein File zu erhalten
-                   // print(path);
-                    final textFromCam = await FirebaseMLApi.recogniseText(fileImageFromCam);
-
-                    //List <Ingredient> ingredients = leven.getIndividualItems(textFromCam);
-                    List <Ingredient> ingredients = FastLevenshtein.getIndividualItems(textFromCam);
-                    // If the picture was taken, display it on a new screen.
-                    //List<Ingredient> testDb = leven.getIndividualItems(textFromCam);
-                    //print(testDb);
-                    if(textFromCam != " ") { //!=
-                      print(textFromCam);
-                      // If the picture was taken, display it on a new screen.
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DisplayPictureScreen(appBarTitle: 'Gescanntes Produkt', imagePath: path, ingredients: ingredients), // tempList => list of ingredients per item
-                        ),
-                      );
-                    } else {
-                      final snackbarCam = SnackBar(
-                          content: Text("Fehler: Es wurde kein Text erkannt."),
-                          backgroundColor: Colors.red,
-                          duration: Duration(seconds: 3),
-                          margin: EdgeInsets.all(18.0),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(25)))
-                      );
-
-                      Scaffold.of(context).showSnackBar(snackbarCam);
-                    }
-                  } catch (e) {
-                    // If an error occurs, log the error to the console.
-                    print(e);
-                  }
-                }, child: Text(' Take Picture')),
-
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: Colors.purple,
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 50)),
-
-                onPressed: ()async {
-                  // Take the Picture in a try / catch block. If anything goes wrong,
-                  // catch the error.
-                  try {
-                    // Find the local app directory using the `path_provider` plugin.
-                    final String directoryPath = await _localPath;
-
-                    // Construct the path where the image should be saved using the
-                    // pattern package.
-                    final path = join(
-                      // Store the picture in the local app directory.
-                      directoryPath,
-                      '${DateTime.now()}.png',
-                    );
-
-                    // getting the image using the gallery chooser
-                    // copying the chosen image to local app directory
-                    await getImage(path);
-
-                    if(_image != null) {
-
-                      // saving path to device storage
-                      await addStringToSFList(path);
-
-                      // maybe fixing rotation
-                      //await fixExifRotation(path);
-                      File fileImageFromGallery = await FlutterExifRotation.rotateImage(path: path); // die Fkt um ein File zu erhalten
-                      final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
-                      //print(textFromGallery);
-                      //List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
-                      List <Ingredient> ingredients = FastLevenshtein.getIndividualItems(textFromGallery);
-                      //print(ingredients);
-                      // If the picture was chosen, display it on a new screen.
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              DisplayPictureScreen(
-                                  appBarTitle: 'Ausgewähltes Produkt',
-                                  imagePath: path,
-                                  ingredients: ingredients), // tempList => list of ingredients per item
-                        ),
-                      );
-                    } else if(_image == null && _noImageChosen) {
-                      /*Navigator.push(
-                                  context,
-                                    MaterialPageRoute(builder: (context) =>
-                                        AlertDialog(
-                                          title: Text("Fehler: Es wurde kein Bild ausgewählt."),
-                                          actions: [
-                                            FlatButton(
-                                              child: Text("OK"),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                },
-                                            ),
-                                          ],
-                                        )
-                                    ),
-                              );*/
-
-                      final snackbar = SnackBar(
-                          content: Text("Fehler: Du hast kein Bild ausgewählt."),
-                          backgroundColor: Colors.red,
-                          duration: Duration(seconds: 3),
-                          margin: EdgeInsets.all(18.0),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(25)))
-                      );
-
-                      Scaffold.of(context).showSnackBar(snackbar);
-                    }
-
-                  } catch (e) {
-                    // If an error occurs, log the error to the console.
-                    print(e);
-                  }}, child: Text(' Choose from gallery')),
-
             //expanded fixed the overflow exception with the keyboard
             Expanded(
               child: Container(
@@ -429,7 +279,7 @@ class CameraScreenState extends State<CameraScreen> {
 
                             // maybe fixing rotation
                             //await fixExifRotation(path);
-                            File fileImageFromGallery = File(path); // die Fkt um ein File zu erhalten
+                            File fileImageFromGallery = await FlutterExifRotation.rotateImage(path: path);//File(path); // die Fkt um ein File zu erhalten
                             final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
                             //print(textFromGallery);
                             //List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
@@ -512,15 +362,17 @@ class CameraScreenState extends State<CameraScreen> {
 
                           // Attempt to take a picture and log where it's been saved.
                           await _controller.takePicture(path);
-                          await fixExifRotation(path);
-                          File fileImageFromCam = File(path); // die Fkt um ein File zu erhalten
+                          //await fixExifRotation(path);
+                          File fileImageFromCam =  await FlutterExifRotation.rotateImage(path: path);//File(path); // die Fkt um ein File zu erhalten
+                          // print(path);
                           final textFromCam = await FirebaseMLApi.recogniseText(fileImageFromCam);
+
                           //List <Ingredient> ingredients = leven.getIndividualItems(textFromCam);
                           List <Ingredient> ingredients = FastLevenshtein.getIndividualItems(textFromCam);
                           // If the picture was taken, display it on a new screen.
                           //List<Ingredient> testDb = leven.getIndividualItems(textFromCam);
                           //print(testDb);
-                          if(textFromCam != " ") {
+                          if(textFromCam != " ") { //!=
                             print(textFromCam);
                             // If the picture was taken, display it on a new screen.
                             Navigator.push(
@@ -560,6 +412,7 @@ class CameraScreenState extends State<CameraScreen> {
             ),
           ],
         )
+    ),
     );
   }
 }
