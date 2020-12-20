@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:test_final/search/ingredient.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class DetailScreen extends StatelessWidget {
   final appBarTitle;
   final Ingredient ingredient;
 
-  DetailScreen({Key key, @required this.appBarTitle, @required this.ingredient});
+  DetailScreen(
+      {Key key, @required this.appBarTitle, @required this.ingredient});
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +19,16 @@ class DetailScreen extends StatelessWidget {
         backgroundColor: Colors.black,
       ),
       body: Center(
-        child: Container(//SingleChildScrollView(
+        child: Container( //SingleChildScrollView(
           //scrollDirection: Axis.vertical,
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
@@ -32,7 +39,7 @@ class DetailScreen extends StatelessWidget {
                 //width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(20.0),
                 child: Text(
-                    ingredient.name,
+                  ingredient.name,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20,
@@ -42,15 +49,17 @@ class DetailScreen extends StatelessWidget {
               ),
               Container(
                 //height: MediaQuery.of(context).size.height * 0.7,
-               // width: MediaQuery.of(context).size.width,
+                // width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(20.0),
                 child: Table(
                   defaultVerticalAlignment: TableCellVerticalAlignment.top,
                   children: [
                     TableRow(
                       children: [
-                        Text("Beschreibung"),
-                        Text(ingredient.desc != "" ? ingredient.desc : "Keine Beschreibung gefunden."),
+                        Text("Description"),
+                        Text(ingredient.desc != ""
+                            ? ingredient.desc
+                            : "No description found"),
                       ],
                     ),
                     TableRow(
@@ -67,7 +76,7 @@ class DetailScreen extends StatelessWidget {
                     ),
                     TableRow(
                       children: [
-                        Text("Funktion"),
+                        Text("Function"),
                         Text(ingredient.function),
                       ],
                     ),
@@ -75,16 +84,18 @@ class DetailScreen extends StatelessWidget {
                 ),
               ),
               Container(
-              //  height: MediaQuery.of(context).size.height * 0.1,
-               // width: MediaQuery.of(context).size.width,
+                //  height: MediaQuery.of(context).size.height * 0.1,
+                // width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(20.0),
                 child: ElevatedButton(
-                  child: Text("Google Mich!"),
+                  child: Text("Google me!"),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.black),
 
                   ),
-                  onPressed: () {},
+                  onPressed: (){
+                    _launchURL();
+                  },
                 ),
               ),
             ],
@@ -92,5 +103,15 @@ class DetailScreen extends StatelessWidget {
         ),
       ),
     );
+
+  }
+
+  _launchURL() async {
+    var url = 'https://www.google.com/search?q=${ingredient.name.toLowerCase()}';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

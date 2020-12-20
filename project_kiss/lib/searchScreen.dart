@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/search/ingredient.dart';
-import 'package:test_final/search/trie_data_structure.dart';
 import 'package:test_final/detailScreen.dart';
 class SearchScreen extends StatefulWidget{
   @override
@@ -48,7 +47,7 @@ class _SearchScreenState extends State<SearchScreen> {
       },
         child: Scaffold(
           appBar: AppBar(
-              title: Text("Suche nach Inhaltsstoffen"),
+              title: Text("Search for ingredients"),
               backgroundColor: Colors.black
           ),
           body: Container(
@@ -92,7 +91,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                    builder: (context) => DetailScreen(appBarTitle: "Inhaltsstoff", ingredient: _ingredients[index],),
+                    builder: (context) => DetailScreen(appBarTitle: "Ingredient", ingredient: _ingredients[index],),
                 ),
                 );
               },
@@ -111,19 +110,11 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _searchIngredients() {
     _ingredients.clear();
-    //List<TrieNode> list = new List();
     if(_searchText.isNotEmpty) {
-      /*list = FastLevenshtein
-          .search(_searchText.toUpperCase(),  3)
-          .values
-          .toList();*/
       _ingredients = FastLevenshtein
           .autoComplete(_searchText);
     }
 
-    /*for (int i = 0; i < list.length; i++) {
-      _ingredients.add(list[i].ingredient);
-    }*/
     return _listView();
   }
 }
