@@ -47,7 +47,7 @@ class _SearchScreenState extends State<SearchScreen> {
       },
         child: Scaffold(
           appBar: AppBar(
-              title: Text("Search for ingredients"),
+              title: Text("Search for Ingredients"),
               backgroundColor: Colors.black
           ),
           body: Container(
@@ -67,14 +67,22 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _searchBox() {
     return Container(
-      decoration: BoxDecoration(border: Border.all(width: 1.0)),
+      margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+      padding: EdgeInsets.only(left: 20),
+      decoration: BoxDecoration(
+          border: Border.all(width: 1.0),
+          borderRadius: BorderRadius.all(Radius.circular(5.0)),//TODO: color search box while typing (maybe use TextFormField)
+          //color: Colors.grey[300],
+      ),
       child: TextField(
         controller: _searchEdit,
         decoration: InputDecoration(
           hintText: "Search",
-          hintStyle: TextStyle(color: Colors.grey[300]),
+          hintStyle: TextStyle(color: Colors.grey[500]),
+          icon: Icon(Icons.search, ),
+
         ),
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.left,
       ),
     );
   }
@@ -95,13 +103,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 );
               },
-              child: Card(
-                color: Colors.lightGreenAccent[100],
-                elevation: 5.0,
-                child: Container(
-                  margin: EdgeInsets.all(15.0),
-                  child: Text("${_ingredients[index].name}"),
-                ),
+              child: Container(
+                padding: EdgeInsets.only(top: 30,left: 20),
+                height: 50,
+                // margin: EdgeInsets.all(15.0),
+                child: Text("${_ingredients[index].name}", style: TextStyle(fontSize: 20),),
               ),
             );
           }),
