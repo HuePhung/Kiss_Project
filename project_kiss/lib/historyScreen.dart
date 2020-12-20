@@ -104,7 +104,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
 
         return new Scaffold(
           appBar: AppBar(
-            title: Text("Historie"),
+            title: Text("History"),
             actions: <Widget>[
               IconButton(
                 icon: new Icon(Icons.delete),
@@ -113,8 +113,8 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text("Historie löschen"),
-                        content: Text("Möchtest du wirklich alle Einträge löschen?"),
+                        title: Text("Delete History"),
+                        content: Text("Are you sure you want to delete all entries?"),
                         actions: <Widget>[
                           FlatButton(
                             onPressed: () async{
@@ -128,12 +128,12 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                               await prefs.setStringList("imagePathList", imagePathList);
                               Navigator.of(context).pop();
                             },
-                            child: const Text("ALLE LÖSCHEN"),
+                            child: const Text("DELETE ALL"),
 
                           ),
                           FlatButton(
                             onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text("ABBRECHEN"),
+                            child: const Text("CANCEL"),
                           ),
                         ],
                       );
@@ -169,16 +169,16 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text("Bestätigen"),
-                          content: const Text("Bist du sicher, dass du diesen Eintrag löschen möchtest?"),
+                          title: const Text("Confirm"),
+                          content: const Text("Are you sure you want to delete this entry?"),
                           actions: <Widget>[
                             FlatButton(
                                 onPressed: () => Navigator.of(context).pop(true),
-                                child: const Text("LÖSCHEN")
+                                child: const Text("DELETE")
                             ),
                             FlatButton(
                               onPressed: () => Navigator.of(context).pop(false),
-                              child: const Text("ABBRECHEN"),
+                              child: const Text("CANCEL"),
                             ),
                           ],
                         );
@@ -235,7 +235,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
       } else {
         return Scaffold(
           appBar: AppBar(
-            title: Text("Historie"),
+            title: Text("History"),
             backgroundColor: Colors.black,
           ),
           body: Container(
@@ -243,7 +243,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
             width: MediaQuery.of(context).size.width,
             color: Colors.white,
             alignment: Alignment.center,
-            child: new Text("Du hast bisher keine Produkte gescannt.", textAlign: TextAlign.center, style: TextStyle(fontSize: 17)),
+            child: new Text("You haven't scanned any products yet.", textAlign: TextAlign.center, style: TextStyle(fontSize: 17)),
           ),
         );
       }
