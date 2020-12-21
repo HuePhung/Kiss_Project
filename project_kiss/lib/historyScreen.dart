@@ -159,9 +159,10 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                   background: Container(
                     color: Colors.red,
                     alignment: AlignmentDirectional.centerEnd,
+                    padding: EdgeInsets.only(right: 30),
                     child: Icon(
                         Icons.delete,
-                        color: Colors.white
+                        color: Colors.white,
                     ),
                   ),
                   confirmDismiss: (DismissDirection direction) async {
