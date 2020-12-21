@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ImpressumScreen extends StatelessWidget {
   ImpressumScreen({Key key});
@@ -17,33 +18,52 @@ class ImpressumScreen extends StatelessWidget {
           builder: (BuildContext context, BoxConstraints viewportConstrains) {
             return SingleChildScrollView(
               child: ConstrainedBox(
-                  constraints:
-                      BoxConstraints(minHeight: viewportConstrains.maxHeight),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.all(20),
-                        child: Text(
-                          "lorem ipsum",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
+                constraints:
+                    BoxConstraints(minHeight: viewportConstrains.maxHeight),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
+                        "Database",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      Container(
-                        padding: EdgeInsets.all(20),
-                        child: Text(
-                          "lorem ipsum",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.normal),
-                        ),
-                      )
-                    ],
-                  )),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
+                        "The included data is optained from the public database CosIng. CosIng includes all data since the adoption of the Cosmetics Directive in 1976.",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.normal),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
+                        "Text recognition",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
+                        "All text recognition is done with Firebase Vision, which is a machine learning tool for character recognition",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.normal),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             );
           },
         ),
