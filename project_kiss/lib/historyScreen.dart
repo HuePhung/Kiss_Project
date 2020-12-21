@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_final/cameraScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_final/search/ingredient.dart';
 import 'package:path/path.dart' as p;
+
 
 String imagePath = "";
 List<String> imagePathList = [];
@@ -79,7 +81,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
   //List items = getDummyList();
   List<String> pathList = ["0"];
   //Future<List<String>> _pathList;
-
+  List<Ingredient> ingredients;
   Future<SharedPreferences> _prefs;
 
   @override
@@ -91,6 +93,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
     debugPrint("in initState");
     //getStringListSF();
     _prefs = getPrefs();
+    ingredients = [];
   }
 
   @override
@@ -103,7 +106,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
 
         return new Scaffold(
           appBar: AppBar(
-            title: Text("Historie"),
+            title: Text("History"),
             actions: <Widget>[
               IconButton(
                 icon: new Icon(Icons.delete),
@@ -112,8 +115,8 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text("Historie löschen"),
-                        content: Text("Möchtest du wirklich alle Einträge löschen?"),
+                        title: Text("Delete History"),
+                        content: Text("Are you sure you want to delete all entries?"),
                         actions: <Widget>[
                           FlatButton(
                             onPressed: () async{
@@ -127,12 +130,12 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                               await prefs.setStringList("imagePathList", imagePathList);
                               Navigator.of(context).pop();
                             },
-                            child: const Text("ALLE LÖSCHEN"),
+                            child: const Text("DELETE ALL"),
 
                           ),
                           FlatButton(
                             onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text("ABBRECHEN"),
+                            child: const Text("CANCEL"),
                           ),
                         ],
                       );
@@ -158,9 +161,10 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                   background: Container(
                     color: Colors.red,
                     alignment: AlignmentDirectional.centerEnd,
+                    padding: EdgeInsets.only(right: 30),
                     child: Icon(
                         Icons.delete,
-                        color: Colors.white
+                        color: Colors.white,
                     ),
                   ),
                   confirmDismiss: (DismissDirection direction) async {
@@ -168,16 +172,16 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text("Bestätigen"),
-                          content: const Text("Bist du sicher, dass du diesen Eintrag löschen möchtest?"),
+                          title: const Text("Confirm"),
+                          content: const Text("Are you sure you want to delete this entry?"),
                           actions: <Widget>[
                             FlatButton(
                                 onPressed: () => Navigator.of(context).pop(true),
-                                child: const Text("LÖSCHEN")
+                                child: const Text("DELETE")
                             ),
                             FlatButton(
                               onPressed: () => Navigator.of(context).pop(false),
-                              child: const Text("ABBRECHEN"),
+                              child: const Text("CANCEL"),
                             ),
                           ],
                         );
@@ -204,7 +208,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DisplayPictureScreen(appBarTitle: index.toString() ,imagePath: imagePath, ingredients: tempList())
+                                  builder: (context) => DisplayPictureScreen(appBarTitle: index.toString() ,imagePath: imagePath, ingredients: ingredients)
                               )
                           );
 
@@ -238,7 +242,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
       } else {
         return Scaffold(
           appBar: AppBar(
-            title: Text("Historie"),
+            title: Text("History"),
             backgroundColor: Colors.black,
           ),
           body: Container(
@@ -246,7 +250,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
             width: MediaQuery.of(context).size.width,
             color: Colors.white,
             alignment: Alignment.center,
-            child: new Text("Du hast bisher keine Produkte gescannt.", textAlign: TextAlign.center, style: TextStyle(fontSize: 17)),
+            child: new Text("You haven't scanned any products yet.", textAlign: TextAlign.center, style: TextStyle(fontSize: 17)),
           ),
         );
       }
