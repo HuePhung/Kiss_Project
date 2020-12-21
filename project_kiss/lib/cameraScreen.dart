@@ -1,15 +1,15 @@
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:test_final/api/firebase_ml_api.dart';
+import 'package:test_final/api/recordDate.dart';
 import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/impressumScreen.dart';
@@ -237,14 +237,55 @@ class CameraScreenState extends State<CameraScreen> {
                         }
                       },
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 50, right: 20),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: FloatingActionButton.extended(
-                        onPressed: () {
-                          Navigator.push(
+                  )
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.05,
+              child: Scaffold(
+                backgroundColor: Colors.black,
+                floatingActionButton: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    FloatingActionButton.extended(
+                      heroTag: "choose",
+                      // Provide an onPressed callback.
+                      onPressed: () async {
+                        // Take the Picture in a try / catch block. If anything goes wrong,
+                        // catch the error.
+                        try {
+                          // Find the local app directory using the `path_provider` plugin.
+                          final String directoryPath = await _localPath;
+                          //alter current date and save as basename
+                          final currentDate = await RecordDate.recordDateNow();
+                          print(currentDate);
+                          // Construct the path where the image should be saved using the
+                          // pattern package.
+                          final path = join(
+                            // Store the picture in the local app directory.
+                            directoryPath,
+                            '${DateTime.now()}' + '.' + currentDate +'.png',
+                          );
+
+                          // getting the image using the gallery chooser
+                          // copying the chosen image to local app directory
+                          await getImage(path);
+
+                          if(_image != null) {
+
+                            // saving path to device storage
+                            await addStringToSFList(path);
+
+                            // maybe fixing rotation
+                            //await fixExifRotation(path);
+                            File fileImageFromGallery = File(path); // die Fkt um File zu erhalten
+                            final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
+                            //print(textFromGallery);
+                            //List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
+                            List <Ingredient> ingredients = FastLevenshtein.getIndividualItems(textFromGallery);
+                            //print(ingredients);
+                            // If the picture was chosen, display it on a new screen.
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ImpressumScreen()));
@@ -350,6 +391,7 @@ class CameraScreenState extends State<CameraScreen> {
 
                           Scaffold.of(context).showSnackBar(snackbar);
                         }
+
                       } catch (e) {
                         // If an error occurs, log the error to the console.
                         print(e);
@@ -370,13 +412,15 @@ class CameraScreenState extends State<CameraScreen> {
 
                         // Find the local app directory using the `path_provider` plugin.
                         final String directoryPath = await _localPath;
-
+                        //alter current date and save as basename
+                          final currentDate = await RecordDate.recordDateNow();
+                          print(currentDate);
                         // Construct the path where the image should be saved using the
                         // pattern package.
                         final path = join(
                           // Store the picture in the local app directory.
                           directoryPath,
-                          '${DateTime.now()}.png',
+                          '${DateTime.now()}' + '.' + currentDate +'.png',
                         );
 
                         // saving path to device storage
@@ -398,6 +442,7 @@ class CameraScreenState extends State<CameraScreen> {
                         //print(testDb);
                         if (textFromCam != " ") {
                           print(textFromCam);
+                          
                           // If the picture was taken, display it on a new screen.
                           Navigator.push(
                             context,

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:test_final/cameraScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_final/search/ingredient.dart';
+import 'package:path/path.dart' as p;
+
 
 String imagePath = "";
 List<String> imagePathList = [];
@@ -223,7 +225,11 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Image.file(File(imagePathList[index]), width: 125, height: 125),
-                            Text(index.toString() , textAlign: TextAlign.end, style: TextStyle(fontSize: 15),)
+                            Text(
+                              p.extension(imagePathList[index].toString(), 4).substring(1, 11),
+                              textAlign: TextAlign.end,
+                              style: TextStyle(fontSize: 11),
+                            )
                           ],
                         ),
                       )
