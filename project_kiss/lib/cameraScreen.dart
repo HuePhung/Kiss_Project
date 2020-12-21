@@ -291,7 +291,7 @@ class CameraScreenState extends State<CameraScreen> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     DisplayPictureScreen(
-                                        appBarTitle: 'Ausgewähltes Produkt',
+                                        appBarTitle: 'Selected product',
                                         imagePath: path,
                                         ingredients: ingredients), // tempList => list of ingredients per item
                               ),
@@ -315,7 +315,7 @@ class CameraScreenState extends State<CameraScreen> {
                               );*/
 
                             final snackbar = SnackBar(
-                                content: Text("Fehler: Du hast kein Bild ausgewählt."),
+                                content: Text("Error: You have not selected an image."),
                                 backgroundColor: Colors.red,
                                 duration: Duration(seconds: 3),
                                 margin: EdgeInsets.all(18.0),
@@ -382,12 +382,12 @@ class CameraScreenState extends State<CameraScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => DisplayPictureScreen(appBarTitle: 'Gescanntes Produkt', imagePath: path, ingredients: ingredients), // tempList => list of ingredients per item
+                                builder: (context) => DisplayPictureScreen(appBarTitle: 'Scanned product', imagePath: path, ingredients: ingredients), // tempList => list of ingredients per item
                               ),
                             );
                           } else {
                             final snackbarCam = SnackBar(
-                                content: Text("Fehler: Es wurde kein Text erkannt."),
+                                content: Text("Error: No text was recognized."),
                                 backgroundColor: Colors.red,
                                 duration: Duration(seconds: 3),
                                 margin: EdgeInsets.all(18.0),
@@ -403,7 +403,7 @@ class CameraScreenState extends State<CameraScreen> {
                           print(e);
                         }
                       },
-                      label: Text('Schieße ein Foto', style: TextStyle(color: Colors.black)),
+                      label: Text('Take a picture', style: TextStyle(color: Colors.black)),
                       icon: Icon(Icons.camera_alt, color: Colors.black),
                       backgroundColor: Colors.white,
                     ),
@@ -451,7 +451,7 @@ class DisplayPictureScreen extends StatelessWidget {
                   )
               ),
               Text(
-                "Inhaltsstoffe",
+                "Ingredients",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20
@@ -471,7 +471,7 @@ class DisplayPictureScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetailScreen(appBarTitle: "Inhaltsstoff", ingredient: ingredient,),
+                              builder: (context) => DetailScreen(appBarTitle: "Ingredient", ingredient: ingredient,),
                             ),
                           );
                         },
