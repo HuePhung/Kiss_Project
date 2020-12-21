@@ -16,7 +16,7 @@ import 'package:test_final/search/ingredient.dart';
 import 'package:test_final/detailScreen.dart';
 
 import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
-
+//import 'package:vibration/vibration.dart';
 
 class CameraScreen extends StatefulWidget {
   final CameraDescription camera;
@@ -342,6 +342,10 @@ class CameraScreenState extends State<CameraScreen> {
                         // Take the Picture in a try / catch block. If anything goes wrong,
                         // catch the error.
                         try {
+
+                          /*if (await Vibration.hasVibrator()) {
+                            Vibration.vibrate(amplitude: 10);
+                          }*/
                           // Ensure that the camera is initialized.
                           await _initializeControllerFuture;
 
@@ -372,7 +376,7 @@ class CameraScreenState extends State<CameraScreen> {
                           // If the picture was taken, display it on a new screen.
                           //List<Ingredient> testDb = leven.getIndividualItems(textFromCam);
                           //print(testDb);
-                          if(textFromCam != " ") { //!=
+                          if(textFromCam.trim() != "") { //!=
                             print(textFromCam);
                             // If the picture was taken, display it on a new screen.
                             Navigator.push(
