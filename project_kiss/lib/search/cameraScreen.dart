@@ -1,18 +1,18 @@
 import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:test_final/api/recordDate.dart';
 import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/impressumScreen.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:test_final/detailScreen.dart';
 
@@ -26,6 +26,23 @@ class CameraScreen extends StatefulWidget {
 }
 
 class CameraScreenState extends State<CameraScreen> {
+//FastLevenshtein leven;
+
+  /*void loadCSV() async {
+    var myCSV = CSV.from(path :'assets/cosing.csv', delimiter: ";", title:false);
+    bool hasData = await myCSV.initFinished;
+    // debugPrint('Step 2, hasData: $hasData');
+    for (var i=0; i < myCSV.data.length; i++){
+      //ingridientsListItems.add(myCSV.data[i][0]);
+      leven.root.add(myCSV.data[i][0], new Ingredient(myCSV.data[i][0], myCSV.data[i][2], myCSV.data[i][3], myCSV.data[i][4]));
+
+
+    }
+    // Test um den String der  Texterkennung zu zerlegen
+    //print(leven.getIndividualItems("HYDROLYZED BEE LARVA EXTRACT ALCOHOL ABALONE EXTRACT"));
+
+
+  }*/
 
   final CameraDescription camera;
   CameraController _controller;
@@ -333,7 +350,6 @@ class CameraScreenState extends State<CameraScreen> {
 
                           Scaffold.of(context).showSnackBar(snackbar);
                         }
-
                       } catch (e) {
                         // If an error occurs, log the error to the console.
                         print(e);
@@ -354,15 +370,13 @@ class CameraScreenState extends State<CameraScreen> {
 
                         // Find the local app directory using the `path_provider` plugin.
                         final String directoryPath = await _localPath;
-                        //alter current date and save as basename
-                          final currentDate = await RecordDate.recordDateNow();
-                          print(currentDate);
+
                         // Construct the path where the image should be saved using the
                         // pattern package.
                         final path = join(
                           // Store the picture in the local app directory.
                           directoryPath,
-                          '${DateTime.now()}' + '.' + currentDate +'.png',
+                          '${DateTime.now()}.png',
                         );
 
                         // saving path to device storage
@@ -384,7 +398,6 @@ class CameraScreenState extends State<CameraScreen> {
                         //print(testDb);
                         if (textFromCam != " ") {
                           print(textFromCam);
-
                           // If the picture was taken, display it on a new screen.
                           Navigator.push(
                             context,
