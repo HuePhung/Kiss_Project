@@ -12,7 +12,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
 import 'package:test_final/search/fast_levenshtein.dart';
-import 'package:test_final/search/impressumScreen.dart';
+import 'package:test_final/impressumScreen.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:test_final/detailScreen.dart';
 
