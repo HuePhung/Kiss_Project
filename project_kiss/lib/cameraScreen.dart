@@ -14,7 +14,7 @@ import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/impressumScreen.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:test_final/search/ingredient.dart';
-import 'package:test_final/detailScreen.dart';
+import 'package:test_final/scanscreen.dart';
 
 class CameraScreen extends StatefulWidget {
   final CameraDescription camera;
@@ -433,76 +433,6 @@ class CameraScreenState extends State<CameraScreen> {
   }
 }
 
-class DisplayPictureScreen extends StatelessWidget {
-  final String appBarTitle;
-  final String imagePath;
-  final List<Ingredient> ingredients;
-  const DisplayPictureScreen(
-      {Key key,
-      @required this.appBarTitle,
-      @required this.imagePath,
-      @required this.ingredients})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(appBarTitle), backgroundColor: Colors.black),
-      // The image is stored as a file on the device. Use the `Image.file`
-      // constructor with the given path to display the image.
-      body: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical /*, padding: EdgeInsets.all(20.0)*/,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                  padding: EdgeInsets.all(20.0),
-                  child: Image.file(
-                    File(imagePath),
-                    width: 250,
-                    height: 250,
-                  )),
-              Text(
-                "Ingredients",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              Container(
-                padding: EdgeInsets.all(20.0),
-                child: DataTable(
-                    columns: [
-                      DataColumn(label: Text("Name")),
-                      //DataColumn(label: Text("Einstufung")),
-                    ],
-                    rows: ingredients
-                        .map((ingredient) => DataRow(cells: [
-                              DataCell(
-                                Text(ingredient.name),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => DetailScreen(
-                                        appBarTitle: "Ingredient",
-                                        ingredient: ingredient,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              //DataCell(Text(ingredient.desc))
-                            ]))
-                        .toList()),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 tempList(List<Ingredient> ingredients) {
   List<Ingredient> temp = ingredients;
