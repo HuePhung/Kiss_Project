@@ -126,12 +126,12 @@ class ScanNameState extends State<ScanName>{
   Widget build(BuildContext context)=> FutureBuilder(
     future: _prefs,
       builder: (context, snapshot){
-      return _editTitleTextField();
+        return _editTitleTextField();
       });
 
   Widget _editTitleTextField(){
     if (_isEditingText)
-        Center(
+        return Center(
         child: TextField(
           onSubmitted: (newValue) async{
             SharedPreferences prefs = await _prefs;
