@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class DetailScreen extends StatelessWidget {
   final appBarTitle;
   final Ingredient ingredient;
@@ -19,95 +18,131 @@ class DetailScreen extends StatelessWidget {
         backgroundColor: Colors.black,
       ),
       body: Center(
-        child: Container( //SingleChildScrollView(
-          //scrollDirection: Axis.vertical,
-          height: MediaQuery
-              .of(context)
-              .size
-              .height,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                //height: MediaQuery.of(context).size.height * 0.1,
-                //width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.all(20.0),
-                child: Text(
-                  ingredient.name,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Container(
-                //height: MediaQuery.of(context).size.height * 0.7,
-                // width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.all(20.0),
-                child: Table(
-                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                  children: [
-                    TableRow(
-                      children: [
-                        Text("Description"),
-                        Text(ingredient.desc != ""
-                            ? ingredient.desc
-                            : "No description found"),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        Divider(
-                          color: Colors.grey[600],
-                          height: 15,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints:
+                    BoxConstraints(minHeight: viewportConstraints.maxHeight),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      //height: MediaQuery.of(context).size.height * 0.1,
+                      //width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(20.0),
+                      child: Text(
+                        ingredient.name,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Divider(
-                          color: Colors.grey[600],
-                          height: 15,
-                        ),
-                      ],
+                      ),
                     ),
-                    TableRow(
-                      children: [
-                        Text("Function"),
-                        Text(ingredient.function),
-                      ],
+                    Container(
+                      //height: MediaQuery.of(context).size.height * 0.7,
+                      // width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(20.0),
+                      child: Table(
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.top,
+                        children: [
+                          TableRow(
+                            children: [
+                              Text("Description"),
+                              Text(ingredient.desc != ""
+                                  ? ingredient.desc
+                                  : "No description found"),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                              Divider(
+                                color: Colors.grey[600],
+                                height: 15,
+                              ),
+                              Divider(
+                                color: Colors.grey[600],
+                                height: 15,
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                              Text("Function"),
+                              Text(ingredient.function),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                              Divider(
+                                color: Colors.grey[600],
+                                height: 15,
+                              ),
+                              Divider(
+                                color: Colors.grey[600],
+                                height: 15,
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                              Text("Allergic"),
+                              Container(
+                                child: Column(
+                                  children: [
+                                    Checkbox(
+                                        value: false,
+                                        onChanged: (bool value) {
+                                          //Code for marking ingredient as "allergic" goes here
+                                          //value of Checkbox() musst be changed too or the box will not appear as checked
+                                        }),
+                                    Text(
+                                      "Click this button if you are allergic to this substance",
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      //  height: MediaQuery.of(context).size.height * 0.1,
+                      // width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.only(left: 100, right: 100),
+                      child: ElevatedButton(
+                        child: Row(children: <Widget>[
+                          Icon(Icons.search),
+                          Text("Web search")
+                        ]),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.black),
+                        ),
+                        onPressed: () {
+                          _launchURL();
+                        },
+                      ),
                     ),
                   ],
                 ),
               ),
-              Container(
-                //  height: MediaQuery.of(context).size.height * 0.1,
-                // width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.all(20.0),
-                child: ElevatedButton(
-                  child: Text("Google me!"),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.black),
-
-                  ),
-                  onPressed: (){
-                    _launchURL();
-                  },
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
-
   }
 
   _launchURL() async {
-    var url = 'https://www.google.com/search?q=${ingredient.name.toLowerCase()}';
+    var url =
+        'https://www.google.com/search?q=${ingredient.name.toLowerCase()}';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
