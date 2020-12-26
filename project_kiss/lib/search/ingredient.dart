@@ -9,7 +9,7 @@ class Ingredient{
   bool isAllergic = false;
   Ingredient(this.name, this.desc, this.function, this.date);
   Ingredient.onlyFunc(this.name,this.function);
-  void setAllergy(bool isAllergic) async{
+  /*void setAllergy(bool isAllergic) async{
     this.isAllergic = isAllergic;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(name, isAllergic);
@@ -26,7 +26,7 @@ class Ingredient{
     if(prefs.remove(name) != null) {
       prefs.remove(name);
     }
-  }
+  }*/
   @override
   String toString() {
     return "NAME: $name DESCRIPTION: $desc FUNCTION: $function DATE: $date";
