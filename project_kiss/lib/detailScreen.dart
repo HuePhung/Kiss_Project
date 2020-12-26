@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -94,12 +95,7 @@ class DetailScreen extends StatelessWidget {
                               Container(
                                 child: Column(
                                   children: [
-                                    Checkbox(
-                                        value: false,
-                                        onChanged: (bool value) {
-                                          //Code for marking ingredient as "allergic" goes here
-                                          //value of Checkbox() musst be changed too or the box will not appear as checked
-                                        }),
+                                    CheckBoxWid(ingredient),
                                     Text(
                                       "Click this button if you are allergic to this substance",
                                       style: TextStyle(color: Colors.red),
@@ -149,4 +145,76 @@ class DetailScreen extends StatelessWidget {
       throw 'Could not launch $url';
     }
   }
+}
+class CheckBoxWid extends StatefulWidget {
+  final Ingredient ingredient;
+  CheckBoxWid(this.ingredient);
+  @override
+  _CheckBoxState createState() => _CheckBoxState(ingredient);
+}
+//names of the allergy items are stored in a shared prefrences list.
+class _CheckBoxState extends State<CheckBoxWid> {
+  Ingredient ingredient;
+  bool allergyTest = false;
+  List<String> allergyNames = [];
+
+  SharedPreferences prefs;
+  _CheckBoxState(this.ingredient);
+  @override
+  void initState(){
+    super.initState();
+     _initPrefs();
+  }
+  void _initPrefs() async{
+    prefs = await SharedPreferences.getInstance();
+  }
+  Widget build(BuildContext context){
+    return Center(
+        child: Checkbox(
+        value: ingredient.isAllergic,
+        onChanged: (value) {
+          allergyNames = prefs.getStringList("allergyList");
+      setState((){
+
+        if(value) {
+          allergyNames.add(ingredient.name);
+        }
+        else {
+          allergyNames.remove(ingredient.name);
+        }
+        ingredient.isAllergic = value;
+      });
+          prefs.setStringList("allergyList", allergyNames);
+    },
+    ),
+    );
+  }
+  /*@override
+  Widget build(BuildContext context) => FutureBuilder(
+      future: ingredient.getAllergyStatus(),
+      builder: (context, snapshot){
+        if(snapshot.hasData){
+          allergyTest = snapshot.data;
+          //SharedPreferences prefs = snapshot.data;
+        }
+        return Center(
+          child: Checkbox(
+            value: allergyTest,
+            onChanged: (value) {
+              setState((){
+                if(value) {
+                  ingredient.setAllergy(value);
+                  allergyNames.add(ingredient.name);
+                }
+                else {
+                  ingredient.isAllergic = value;
+                  ingredient.removeAllergyFromPrefs();
+                  allergyNames.remove(ingredient.name);
+                }
+                prefs.setStringList("allergyList", allergyNames);
+              });
+            },
+          ),
+        );
+      });*/
 }

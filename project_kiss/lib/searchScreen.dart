@@ -4,6 +4,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:test_final/detailScreen.dart';
+import 'package:test_final/search/trie_data_structure.dart';
 class SearchScreen extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -16,7 +17,6 @@ class _SearchScreenState extends State<SearchScreen> {
   bool _isSearch = true;
   String _searchText = "";
   List<Ingredient> _ingredients;
-  var kbController = KeyboardVisibilityController();
 
   @override
   void initState() {
@@ -48,12 +48,25 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Scaffold(
           appBar: AppBar(
               title: Text("Search for ingredients"),
-              backgroundColor: Colors.black
+              backgroundColor: Colors.black,
           ),
           body: Container(
               margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
               child: Column(
                 children: <Widget>[
+                  const SizedBox(height: 30),
+                  RaisedButton(
+                    onPressed: ()
+                    {
+                      setState(()
+                      {
+                        //TODO still doesnt completely work, for example if theres still text in the text field it wont show the ingredients
+                        _ingredients = FastLevenshtein.getAllergyList();
+                      });
+
+                    },
+                    child: const Text('Allergies', style: TextStyle(fontSize: 20)),
+                  ),
                   _searchBox(),
                   _isSearch ? _listView() : _searchIngredients(),
                 ],
@@ -61,7 +74,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
             ),
 
-      )
+      ),
+
     );
   }
 
@@ -86,7 +100,6 @@ class _SearchScreenState extends State<SearchScreen> {
           itemBuilder: (BuildContext context, int index) {
             return GestureDetector(
               onTap: () {
-                //TODO this is where we switch to the ingredient screen
                 print(_ingredients[index]);
                 Navigator.push(
                     context,
@@ -108,7 +121,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _searchIngredients() {
+  Widget _searchIngredients(){
     _ingredients.clear();
     if(_searchText.isNotEmpty) {
       _ingredients = FastLevenshtein
