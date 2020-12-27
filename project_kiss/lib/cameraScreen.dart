@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -195,7 +196,8 @@ class CameraScreenState extends State<CameraScreen> {
       return Container();
     }
 
-    return Container(
+    return SafeArea(
+    child: Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -280,7 +282,7 @@ class CameraScreenState extends State<CameraScreen> {
                           // maybe fixing rotation
                           //await fixExifRotation(path);
                           File fileImageFromGallery =
-                              File(path); // die Fkt um ein File zu erhalten
+                          await FlutterExifRotation.rotateImage(path: path);//File(path); // die Fkt um ein File zu erhalten
                           final textFromGallery =
                               await FirebaseMLApi.recogniseText(
                                   fileImageFromGallery);
@@ -372,7 +374,7 @@ class CameraScreenState extends State<CameraScreen> {
                         await _controller.takePicture(path);
                         await fixExifRotation(path);
                         File fileImageFromCam =
-                            File(path); // die Fkt um ein File zu erhalten
+                        await FlutterExifRotation.rotateImage(path: path);//File(path);// die Fkt um ein File zu erhalten
                         final textFromCam =
                             await FirebaseMLApi.recogniseText(fileImageFromCam);
                         //List <Ingredient> ingredients = leven.getIndividualItems(textFromCam);
@@ -427,6 +429,7 @@ class CameraScreenState extends State<CameraScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }
