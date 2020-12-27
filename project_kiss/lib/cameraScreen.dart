@@ -37,7 +37,6 @@ class CameraScreenState extends State<CameraScreen> {
   @override
   void initState() {
     super.initState();
-    FastLevenshtein.init();
     //FocusScope.of(context).unfocus();
     //leven = new FastLevenshtein();
     //loadCSV();

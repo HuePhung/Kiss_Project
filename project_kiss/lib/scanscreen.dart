@@ -77,7 +77,7 @@ class DisplayPictureScreen extends StatelessWidget {
   }
 }
 class ScanName extends StatefulWidget{
-  String imagePath;
+  final String imagePath;
   ScanName(this.imagePath);
   @override
   State<StatefulWidget> createState() {
@@ -100,6 +100,7 @@ class ScanNameState extends State<ScanName>{
   Future<SharedPreferences> initPrefs() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> imagePathList = prefs.getStringList("imagePathList");
+    //this is some hard as spaghetti code btw. it would be much better if we had the index as payload for this widget instead of going through all the scans.
     scanIndex = imagePathList.indexOf(imagePath);
     String name = prefs.getString("Scan$scanIndex");
     if(name != null)
@@ -108,7 +109,6 @@ class ScanNameState extends State<ScanName>{
       initialText = "Scan $scanIndex";
       //prefs.setString("Scan$scanIndex", initialText);
     }
-
 
     _editingController = TextEditingController(text: initialText);
     _editingController.selection = new TextSelection(
