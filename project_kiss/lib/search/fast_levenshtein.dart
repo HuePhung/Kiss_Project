@@ -90,8 +90,12 @@ class FastLevenshtein {
     List<Ingredient> list = new List();
     TrieNode node = root.searchNode(word);
     if(node != null){
+      if(root.buildWord(node) == word.toUpperCase() && node.isLeafNode){
+        list.add(node.ingredient);
+      }
       list = _recursiveForAutoComplete(node, list);
     }
+
     return list;
   }
   //function should only get called via autoComplete() func.
