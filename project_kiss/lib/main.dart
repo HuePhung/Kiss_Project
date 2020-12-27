@@ -16,13 +16,13 @@ Future<void> main() async {
   camera = cameras.first;
   FastLevenshtein.init();
   final bool pathExists = await listExists("imagePathList");
-  final bool allergyExists = await listExists("allergyList");
+  final bool allergyPathExists = await listExists("allergyList");
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> list = [];
   if(!pathExists){
     prefs.setStringList("imagePathList", list);
   }
-  if(!allergyExists){
+  if(!allergyPathExists){
     prefs.setStringList("allergyList", list);
   }
 
@@ -31,7 +31,6 @@ Future<void> main() async {
 
 Future<bool> listExists(String name) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setStringList("allergyList", []);
 
   if(prefs.getStringList(name) == null){
     return false;

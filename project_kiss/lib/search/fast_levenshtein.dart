@@ -15,7 +15,7 @@ class FastLevenshtein {
     "lane",
     "tone"
   ];
-  static List allergyNames = [];
+  static List _allergyNames = [];
   static Trie root = new Trie();
   static SharedPreferences prefs;
   static void init(){
@@ -28,9 +28,9 @@ class FastLevenshtein {
   }
   static void _initAllergies() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    allergyNames = prefs.getStringList("allergyList");
-    if(allergyNames.isNotEmpty){
-    for(String name in allergyNames){
+    _allergyNames = prefs.getStringList("allergyList");
+    if(_allergyNames.isNotEmpty){
+    for(String name in _allergyNames){
       TrieNode node = root.searchNode(name);
       node.ingredient.isAllergic = true;
     }

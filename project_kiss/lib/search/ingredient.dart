@@ -5,7 +5,6 @@ class Ingredient{
   String desc;
   String function;
   String date;
-  //this isnt really accurate, if you want to know if someone is allergic to this ingredient, then use getAllergyStatus().
   bool isAllergic = false;
   Ingredient(this.name, this.desc, this.function, this.date);
   Ingredient.onlyFunc(this.name,this.function);

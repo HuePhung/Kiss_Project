@@ -17,6 +17,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool _isSearch = true;
   String _searchText = "";
   List<Ingredient> _ingredients;
+  bool _isInAllergyList = false;
 
   @override
   void initState() {
@@ -60,15 +61,16 @@ class _SearchScreenState extends State<SearchScreen> {
                     {
                       setState(()
                       {
-                        //TODO still doesnt completely work, for example if theres still text in the text field it wont show the ingredients
+                        _isInAllergyList = true;
+                        _searchEdit.text = '';
                         _ingredients = FastLevenshtein.getAllergyList();
+                        FocusScope.of(context).unfocus();
                       });
-
                     },
                     child: const Text('Allergies', style: TextStyle(fontSize: 20)),
                   ),
                   _searchBox(),
-                  _isSearch ? _listView() : _searchIngredients(),
+                  _isSearch ? _listView() : _searchIngredients(_isInAllergyList),
                 ],
               ),
 
@@ -106,10 +108,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     MaterialPageRoute(
                     builder: (context) => DetailScreen(appBarTitle: "Ingredient", ingredient: _ingredients[index],),
                 ),
-                );
+                ).then((value) =>
+                    setState(() {
+                      _ingredients = FastLevenshtein.getAllergyList();
+                      FocusScope.of(context).unfocus();
+                    }));
               },
               child: Card(
-                color: Colors.lightGreenAccent[100],
+                color: _ingredients[index].isAllergic ?  Colors.redAccent[100] : Colors.lightGreenAccent[100],
                 elevation: 5.0,
                 child: Container(
                   margin: EdgeInsets.all(15.0),
@@ -121,13 +127,13 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _searchIngredients(){
-    _ingredients.clear();
-    if(_searchText.isNotEmpty) {
-      _ingredients = FastLevenshtein
-          .autoComplete(_searchText);
-    }
+  Widget _searchIngredients(bool allergy){
+      _ingredients.clear();
 
+      if (_searchText.isNotEmpty) {
+        _ingredients = FastLevenshtein
+            .autoComplete(_searchText);
+      }
     return _listView();
   }
 }
