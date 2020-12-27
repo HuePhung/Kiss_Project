@@ -35,8 +35,7 @@ dependencies:
   firebase_ml_vision: ^0.9.9
   flutter_keyboard_visibility: ^4.0.0
   auto_size_text: ^2.1.0
-  flutter_exif_rotation: ^0.3.2
-  vibration: ^1.7.3
+  intl: ^0.16.1
   url_launcher: ^5.7.10
 
   # The following adds the Cupertino Icons font to your application.
@@ -91,4 +90,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-

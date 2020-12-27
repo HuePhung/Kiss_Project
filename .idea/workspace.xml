@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand />
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="c9b8a319-230a-4b6d-a4c3-c9478958d057" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/executionHistory/executionHistory.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/fileChanges/last-build.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/fileHashes/fileHashes.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/checksums/checksums.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/vcs-1/gc.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_kiss/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/pubspec.lock" afterDir="false" />
+    <list default="true" id="ee2f32d7-67b1-4430-a6bb-70dfd44fb11b" name="Default Changelist" comment="Merged main into branch showRecordDate">
+      <change beforePath="$PROJECT_DIR$/project_kiss/lib/historyScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/lib/historyScreen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +17,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1lC7CfTAbXy3xlSVBrBzCSt2gZR" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -32,6 +27,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/project_kiss" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="SvnConfiguration">
@@ -47,11 +43,31 @@
     </task>
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Merged main into branch showRecordDate" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merged main into branch showRecordDate" />
+  </component>
   <component name="WindowStateProjectService">
     <state x="987" y="370" key="FileChooserDialogImpl" timestamp="1607194966120">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="987" y="370" key="FileChooserDialogImpl/0.0.2560.1400/2560.202.1920.1040@0.0.2560.1400" timestamp="1607194966120" />
     <state x="3300" y="477" key="FileChooserDialogImpl/0.0.2560.1400/2560.202.1920.1040@2560.202.1920.1040" timestamp="1607189073392" />
+    <state x="100" y="23" width="982" height="716" key="SettingsEditor" timestamp="1608147713279">
+      <screen x="0" y="23" width="1280" height="716" />
+    </state>
+    <state x="100" y="23" width="982" height="716" key="SettingsEditor/0.23.1280.716@0.23.1280.716" timestamp="1608147713279" />
   </component>
 </project>

@@ -1,51 +1,31 @@
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:test_final/api/recordDate.dart';
 import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
 import 'package:test_final/search/fast_levenshtein.dart';
+import 'package:test_final/impressumScreen.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:test_final/search/ingredient.dart';
-import 'package:test_final/detailScreen.dart';
-
-import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
-//import 'package:vibration/vibration.dart';
+import 'package:test_final/scanscreen.dart';
 
 class CameraScreen extends StatefulWidget {
   final CameraDescription camera;
 
-  const CameraScreen({
-    Key key, @required this.camera}) : super(key: key);
+  const CameraScreen({Key key, @required this.camera}) : super(key: key);
 
   @override
-  CameraScreenState  createState() => CameraScreenState(camera: camera);
+  CameraScreenState createState() => CameraScreenState(camera: camera);
 }
 
 class CameraScreenState extends State<CameraScreen> {
-//FastLevenshtein leven;
-
-  /*void loadCSV() async {
-    var myCSV = CSV.from(path :'assets/cosing.csv', delimiter: ";", title:false);
-    bool hasData = await myCSV.initFinished;
-    // debugPrint('Step 2, hasData: $hasData');
-    for (var i=0; i < myCSV.data.length; i++){
-      //ingridientsListItems.add(myCSV.data[i][0]);
-      leven.root.add(myCSV.data[i][0], new Ingredient(myCSV.data[i][0], myCSV.data[i][2], myCSV.data[i][3], myCSV.data[i][4]));
-
-
-    }
-    // Test um den String der  Texterkennung zu zerlegen
-    //print(leven.getIndividualItems("HYDROLYZED BEE LARVA EXTRACT ALCOHOL ABALONE EXTRACT"));
-
-
-  }*/
 
   final CameraDescription camera;
   CameraController _controller;
@@ -55,9 +35,8 @@ class CameraScreenState extends State<CameraScreen> {
   var keyboardController = KeyboardVisibilityController();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    FastLevenshtein.init();
     //FocusScope.of(context).unfocus();
     //leven = new FastLevenshtein();
     //loadCSV();
@@ -72,7 +51,7 @@ class CameraScreenState extends State<CameraScreen> {
       // disable audio capturing
       enableAudio: false,
     );
-    
+
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize().then((_) {
       if (!mounted) {
@@ -111,11 +90,11 @@ class CameraScreenState extends State<CameraScreen> {
 
     List<String> prefList = prefs.getStringList("imagePathList");
 
-    if(prefList == null){
+    if (prefList == null) {
       prefList = [];
     }
 
-    if(imagePath != null) {
+    if (imagePath != null) {
       prefList.add(imagePath);
     } else {
       prefList.add("undefined");
@@ -178,7 +157,7 @@ class CameraScreenState extends State<CameraScreen> {
     // or jpg with some compression
     // I choose jpg with 100% quality
     final fixedFile =
-    await originalFile.writeAsBytes(img.encodeJpg(fixedImage));
+        await originalFile.writeAsBytes(img.encodeJpg(fixedImage));
 
     return fixedFile;
   }
@@ -208,96 +187,122 @@ class CameraScreenState extends State<CameraScreen> {
   Widget build(BuildContext context) {
     //if keyboard is still exposed when entering the camera screen, dismiss it
     keyboardController.onChange;
-    if(keyboardController.isVisible){
+    if (keyboardController.isVisible) {
       FocusScope.of(context).unfocus();
     }
 
-    if(!_controller.value.isInitialized){
+    if (!_controller.value.isInitialized) {
       return Container();
     }
 
-    return SafeArea(
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            //expanded fixed the overflow exception with the keyboard
-            Expanded(
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.88,
-                child: AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: FutureBuilder<void>(
-                    future: _initializeControllerFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        // If the Future is complete, display the preview.
-                        return CameraPreview(_controller);
-                      } else {
-                        // Otherwise, display a loading indicator.
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    },
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          //expanded fixed the overflow exception with the keyboard
+          Expanded(
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.88,
+              child: Stack(
+                children: <Widget>[
+                  AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: FutureBuilder<void>(
+                      future: _initializeControllerFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          // If the Future is complete, display the preview.
+                          return CameraPreview(_controller);
+                        } else {
+                          // Otherwise, display a loading indicator.
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
                   ),
-                )
-            ),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.05,
-              child: Scaffold(
-                backgroundColor: Colors.black,
-                floatingActionButton: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    FloatingActionButton.extended(
-                      heroTag: "choose",
-                      // Provide an onPressed callback.
-                      onPressed: () async {
-                        // Take the Picture in a try / catch block. If anything goes wrong,
-                        // catch the error.
-                        try {
-                          // Find the local app directory using the `path_provider` plugin.
-                          final String directoryPath = await _localPath;
-
-                          // Construct the path where the image should be saved using the
-                          // pattern package.
-                          final path = join(
-                            // Store the picture in the local app directory.
-                            directoryPath,
-                            '${DateTime.now()}.png',
-                          );
-
-                          // getting the image using the gallery chooser
-                          // copying the chosen image to local app directory
-                          await getImage(path);
-
-                          if(_image != null) {
-
-                            // saving path to device storage
-                            await addStringToSFList(path);
-
-                            // maybe fixing rotation
-                            //await fixExifRotation(path);
-                            File fileImageFromGallery = await FlutterExifRotation.rotateImage(path: path);//File(path); // die Fkt um ein File zu erhalten
-                            final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
-                            //print(textFromGallery);
-                            //List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
-                            List <Ingredient> ingredients = FastLevenshtein.getIndividualItems(textFromGallery);
-                            //print(ingredients);
-                            // If the picture was chosen, display it on a new screen.
-                            Navigator.push(
+                  Container(
+                    padding: EdgeInsets.only(top: 50, right: 20),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: FloatingActionButton.extended(
+                        onPressed: () {
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    DisplayPictureScreen(
-                                        appBarTitle: 'Selected product',
-                                        imagePath: path,
-                                        ingredients: ingredients), // tempList => list of ingredients per item
-                              ),
-                            );
-                          } else if(_image == null && _noImageChosen) {
-                            /*Navigator.push(
+                                  builder: (context) => ImpressumScreen()));
+                        },
+                        label: Icon(
+                          Icons.info,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.05,
+            child: Scaffold(
+              backgroundColor: Colors.black,
+              floatingActionButton: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  FloatingActionButton.extended(
+                    heroTag: "choose",
+                    // Provide an onPressed callback.
+                    onPressed: () async {
+                      // Take the Picture in a try / catch block. If anything goes wrong,
+                      // catch the error.
+                      try {
+                        // Find the local app directory using the `path_provider` plugin.
+                        final String directoryPath = await _localPath;
+
+                        // Construct the path where the image should be saved using the
+                        // pattern package.
+                        final path = join(
+                          // Store the picture in the local app directory.
+                          directoryPath,
+                          '${DateTime.now()}.png',
+                        );
+
+                        // getting the image using the gallery chooser
+                        // copying the chosen image to local app directory
+                        await getImage(path);
+
+                        if (_image != null) {
+                          // saving path to device storage
+                          await addStringToSFList(path);
+
+                          // maybe fixing rotation
+                          //await fixExifRotation(path);
+                          File fileImageFromGallery =
+                              File(path); // die Fkt um ein File zu erhalten
+                          final textFromGallery =
+                              await FirebaseMLApi.recogniseText(
+                                  fileImageFromGallery);
+                          //print(textFromGallery);
+                          //List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
+                          List<Ingredient> ingredients =
+                              FastLevenshtein.getIndividualItems(
+                                  textFromGallery);
+                          //print(ingredients);
+                          // If the picture was chosen, display it on a new screen.
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DisplayPictureScreen(
+                                  appBarTitle: 'Selected product',
+                                  imagePath: path,
+                                  ingredients:
+                                      ingredients), // tempList => list of ingredients per item
+                            ),
+                          );
+                        } else if (_image == null && _noImageChosen) {
+                          /*Navigator.push(
                                   context,
                                     MaterialPageRoute(builder: (context) =>
                                         AlertDialog(
@@ -314,180 +319,121 @@ class CameraScreenState extends State<CameraScreen> {
                                     ),
                               );*/
 
-                            final snackbar = SnackBar(
-                                content: Text("Error: You have not selected an image."),
-                                backgroundColor: Colors.red,
-                                duration: Duration(seconds: 3),
-                                margin: EdgeInsets.all(18.0),
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(25)))
-                            );
+                          final snackbar = SnackBar(
+                              content: Text(
+                                  "Error: You have not selected an image."),
+                              backgroundColor: Colors.red,
+                              duration: Duration(seconds: 3),
+                              margin: EdgeInsets.all(18.0),
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(25))));
 
-                            Scaffold.of(context).showSnackBar(snackbar);
-                          }
-
-                        } catch (e) {
-                          // If an error occurs, log the error to the console.
-                          print(e);
+                          Scaffold.of(context).showSnackBar(snackbar);
                         }
-                      },
-                      label: Icon(Icons.photo_library, color: Colors.black),
-                      backgroundColor: Colors.white,
-                    ),
-                    FloatingActionButton.extended(
-                      heroTag: "make",
-                      // Provide an onPressed callback.
-                      onPressed: () async {
-                        // Take the Picture in a try / catch block. If anything goes wrong,
-                        // catch the error.
-                        try {
 
-                          /*if (await Vibration.hasVibrator()) {
-                            Vibration.vibrate(amplitude: 10);
-                          }*/
-                          // Ensure that the camera is initialized.
-                          await _initializeControllerFuture;
+                      } catch (e) {
+                        // If an error occurs, log the error to the console.
+                        print(e);
+                      }
+                    },
+                    label: Icon(Icons.photo_library, color: Colors.black),
+                    backgroundColor: Colors.white,
+                  ),
+                  FloatingActionButton.extended(
+                    heroTag: "make",
+                    // Provide an onPressed callback.
+                    onPressed: () async {
+                      // Take the Picture in a try / catch block. If anything goes wrong,
+                      // catch the error.
+                      try {
+                        // Ensure that the camera is initialized.
+                        await _initializeControllerFuture;
 
-                          // Find the local app directory using the `path_provider` plugin.
-                          final String directoryPath = await _localPath;
+                        // Find the local app directory using the `path_provider` plugin.
+                        final String directoryPath = await _localPath;
+                        //alter current date and save as basename
+                          final currentDate = await RecordDate.recordDateNow();
+                          print(currentDate);
+                        // Construct the path where the image should be saved using the
+                        // pattern package.
+                        final path = join(
+                          // Store the picture in the local app directory.
+                          directoryPath,
+                          '${DateTime.now()}' + '.' + currentDate +'.png',
+                        );
 
-                          // Construct the path where the image should be saved using the
-                          // pattern package.
-                          final path = join(
-                            // Store the picture in the local app directory.
-                            directoryPath,
-                            '${DateTime.now()}.png',
-                          );
+                        // saving path to device storage
+                        //await addStringToSF(path);
+                        await addStringToSFList(path);
 
-                          // saving path to device storage
-                          //await addStringToSF(path);
-                          await addStringToSFList(path);
+                        // Attempt to take a picture and log where it's been saved.
+                        await _controller.takePicture(path);
+                        await fixExifRotation(path);
+                        File fileImageFromCam =
+                            File(path); // die Fkt um ein File zu erhalten
+                        final textFromCam =
+                            await FirebaseMLApi.recogniseText(fileImageFromCam);
+                        //List <Ingredient> ingredients = leven.getIndividualItems(textFromCam);
+                        List<Ingredient> ingredients =
+                            FastLevenshtein.getIndividualItems(textFromCam);
+                        // If the picture was taken, display it on a new screen.
+                        //List<Ingredient> testDb = leven.getIndividualItems(textFromCam);
+                        //print(testDb);
+                        if (textFromCam != " ") {
+                          print(textFromCam);
 
-                          // Attempt to take a picture and log where it's been saved.
-                          await _controller.takePicture(path);
-                          //await fixExifRotation(path);
-                          File fileImageFromCam =  await FlutterExifRotation.rotateImage(path: path);//File(path); // die Fkt um ein File zu erhalten
-                          // print(path);
-                          final textFromCam = await FirebaseMLApi.recogniseText(fileImageFromCam);
-
-                          //List <Ingredient> ingredients = leven.getIndividualItems(textFromCam);
-                          List <Ingredient> ingredients = FastLevenshtein.getIndividualItems(textFromCam);
                           // If the picture was taken, display it on a new screen.
-                          //List<Ingredient> testDb = leven.getIndividualItems(textFromCam);
-                          //print(testDb);
-                          if(textFromCam.trim() != "") { //!=
-                            print(textFromCam);
-                            // If the picture was taken, display it on a new screen.
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DisplayPictureScreen(appBarTitle: 'Scanned product', imagePath: path, ingredients: ingredients), // tempList => list of ingredients per item
-                              ),
-                            );
-                          } else {
-                            final snackbarCam = SnackBar(
-                                content: Text("Error: No text was recognized."),
-                                backgroundColor: Colors.red,
-                                duration: Duration(seconds: 3),
-                                margin: EdgeInsets.all(18.0),
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(25)))
-                            );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DisplayPictureScreen(
+                                  appBarTitle: 'Scanned product',
+                                  imagePath: path,
+                                  ingredients:
+                                      ingredients), // tempList => list of ingredients per item
+                            ),
+                          );
+                        } else {
+                          final snackbarCam = SnackBar(
+                              content: Text("Error: No text was recognized."),
+                              backgroundColor: Colors.red,
+                              duration: Duration(seconds: 3),
+                              margin: EdgeInsets.all(18.0),
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(25))));
 
-                            Scaffold.of(context).showSnackBar(snackbarCam);
-                          }
-                        } catch (e) {
-                          // If an error occurs, log the error to the console.
-                          print(e);
+                          Scaffold.of(context).showSnackBar(snackbarCam);
                         }
-                      },
-                      label: Text('Take a picture', style: TextStyle(color: Colors.black)),
-                      icon: Icon(Icons.camera_alt, color: Colors.black),
-                      backgroundColor: Colors.white,
-                    ),
-                  ],
-                ),
-                floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-                //resizeToAvoidBottomInset: true,
-                //resizeToAvoidBottomPadding: true,
+                      } catch (e) {
+                        // If an error occurs, log the error to the console.
+                        print(e);
+                      }
+                    },
+                    label: Text('Take a picture',
+                        style: TextStyle(color: Colors.black)),
+                    icon: Icon(Icons.camera_alt, color: Colors.black),
+                    backgroundColor: Colors.white,
+                  ),
+                ],
               ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
+              //resizeToAvoidBottomInset: true,
+              //resizeToAvoidBottomPadding: true,
             ),
-          ],
-        )
-    ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class DisplayPictureScreen extends StatelessWidget {
-  final String appBarTitle;
-  final String imagePath;
-  final List<Ingredient> ingredients;
-  const DisplayPictureScreen({Key key, @required this.appBarTitle, @required this.imagePath, @required this.ingredients}) : super(key: key);
 
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-            title: Text(appBarTitle),
-            backgroundColor: Colors.black),
-        // The image is stored as a file on the device. Use the `Image.file`
-        // constructor with the given path to display the image.
-        body: Center(
-          child: SingleChildScrollView(scrollDirection: Axis.vertical/*, padding: EdgeInsets.all(20.0)*/ ,child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children:  [
-              Container(
-                  padding: EdgeInsets.all(20.0),
-                  child: Image.file(
-                    File(imagePath),
-                    width: 250,
-                    height: 250,
-                  )
-              ),
-              Text(
-                "Ingredients",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.all(20.0),
-                child: DataTable(
-                    columns: [
-                      DataColumn(label: Text("Name")),
-                      //DataColumn(label: Text("Einstufung")),
-                    ],
-                    rows: ingredients.map((ingredient) => DataRow(cells: [
-                      DataCell(
-                        Text(ingredient.name),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailScreen(appBarTitle: "Ingredient", ingredient: ingredient,),
-                            ),
-                          );
-                        },
-                      ),
-                      //DataCell(Text(ingredient.desc))
-                    ])).toList()
-                ),
-              ),
-            ],
-          )
-          ),
-        ));
-  }
-}
-
-tempList(List<Ingredient> ingredients){
+tempList(List<Ingredient> ingredients) {
   List<Ingredient> temp = ingredients;
 
   return temp;
