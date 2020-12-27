@@ -297,7 +297,7 @@ class CameraScreenState extends State<CameraScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => DisplayPictureScreen(
-                                  appBarTitle: 'Selected product',
+                                  appBarTitle: 'Scanned product',
                                   imagePath: path,
                                   ingredients:
                                       ingredients), // tempList => list of ingredients per item

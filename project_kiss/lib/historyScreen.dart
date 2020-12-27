@@ -227,7 +227,7 @@ class _HistoryScreen extends State<HistoryScreen>
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           DisplayPictureScreen(
-                                              appBarTitle: index.toString(),
+                                              appBarTitle: "Scanned product",
                                               imagePath: imagePath,
                                               ingredients: ingredients)))
                                   .then((value) =>
