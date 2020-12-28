@@ -169,7 +169,7 @@ class FastLevenshtein {
   }
 
   static List<Ingredient> getIndividualItems(String startString){
-  print("ankommender Text:  " + startString);
+  //print("ankommender Text:  " + startString);
     /* if (startString == "No text found in the image"){
       return [];
     } */
