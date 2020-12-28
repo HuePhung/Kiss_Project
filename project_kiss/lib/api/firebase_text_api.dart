@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/search/ingredient.dart';
+import 'package:test_final/search/levenshtein.dart';
 //import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 
 class FirebaseMLApi {
@@ -57,7 +58,9 @@ class FirebaseMLApi {
     } else{
       index= 0;
     }
+
     
+   // int index = Levenshtein.getIndexOfStart(recogTextList);
     String returnText = "";
     for(int i = index  ; i < recogTextList.length; i++){
       returnText = returnText +  recogTextList[i] + " ";
