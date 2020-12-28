@@ -27,12 +27,12 @@ class CameraScreen extends StatefulWidget {
 }
 
 class CameraScreenState extends State<CameraScreen> {
-
   final CameraDescription camera;
   CameraController _controller;
   Future<void> _initializeControllerFuture;
 
   CameraScreenState({Key key, @required this.camera});
+
   var keyboardController = KeyboardVisibilityController();
 
   @override
@@ -41,7 +41,9 @@ class CameraScreenState extends State<CameraScreen> {
     //FocusScope.of(context).unfocus();
     //leven = new FastLevenshtein();
     //loadCSV();
-
+    //print(FastLevenshtein.searchForOneIngredient("AQUA", 1));
+    // print(FastLevenshtein.getIndividualItems(("Alcohol Denat. Aqua Fragrance Linalool Ethylhexyl Methoxycinnamate Diethylamino Hydroxybenzoyl Hexyl Benzoate BHT Limonene Ext. Violet 2 (CI 60730) Red 33 (CI 17200) Blue 1 (CI 42090) Yellow 5 (CI 19140)").toUpperCase()));
+    //print(FastLevenshtein.getIndividualItems("q CANDELILLA CERA AQUA q BEER AQUA AQUA kjhgfdfgh"));
     // To display the current output from the camera,
     // create a CameraController.
     _controller = CameraController(
@@ -197,114 +199,159 @@ class CameraScreenState extends State<CameraScreen> {
     }
 
     return SafeArea(
-    child: Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          //expanded fixed the overflow exception with the keyboard
-          Expanded(
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.88,
-              child: Stack(
-                children: <Widget>[
-                  AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: FutureBuilder<void>(
-                      future: _initializeControllerFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          // If the Future is complete, display the preview.
-                          return CameraPreview(_controller);
-                        } else {
-                          // Otherwise, display a loading indicator.
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      },
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 50, right: 20),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: FloatingActionButton.extended(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ImpressumScreen()));
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            //expanded fixed the overflow exception with the keyboard
+            Expanded(
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.88,
+                child: Stack(
+                  children: <Widget>[
+                    AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: FutureBuilder<void>(
+                        future: _initializeControllerFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            // If the Future is complete, display the preview.
+                            return CameraPreview(_controller);
+                          } else {
+                            // Otherwise, display a loading indicator.
+                            return Center(child: CircularProgressIndicator());
+                          }
                         },
-                        label: Icon(
-                          Icons.info,
-                          color: Colors.black,
-                        ),
-                        backgroundColor: Colors.white,
                       ),
                     ),
-                  ),
-                ],
+                    Container(
+                      padding: EdgeInsets.only(top: 50, right: 20),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: FloatingActionButton.extended(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ImpressumScreen()));
+                          },
+                          label: Icon(
+                            Icons.info,
+                            color: Colors.black,
+                          ),
+                          backgroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.05,
-            child: Scaffold(
-              backgroundColor: Colors.black,
-              floatingActionButton: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  FloatingActionButton.extended(
-                    heroTag: "choose",
-                    // Provide an onPressed callback.
-                    onPressed: () async {
-                      // Take the Picture in a try / catch block. If anything goes wrong,
-                      // catch the error.
-                      try {
-                        // Find the local app directory using the `path_provider` plugin.
-                        final String directoryPath = await _localPath;
+            Container(
+              height: MediaQuery.of(context).size.height * 0.05,
+              child: Scaffold(
+                backgroundColor: Colors.black,
+                floatingActionButton: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    FloatingActionButton.extended(
+                      heroTag: "choose",
+                      // Provide an onPressed callback.
+                      onPressed: () async {
+                        // Take the Picture in a try / catch block. If anything goes wrong,
+                        // catch the error.
+                        try {
+                          // Find the local app directory using the `path_provider` plugin.
+                          final String directoryPath = await _localPath;
 
-                        // Construct the path where the image should be saved using the
-                        // pattern package.
-                        final path = join(
-                          // Store the picture in the local app directory.
-                          directoryPath,
-                          '${DateTime.now()}.png',
-                        );
-
-                        // getting the image using the gallery chooser
-                        // copying the chosen image to local app directory
-                        await getImage(path);
-
-                        if (_image != null) {
-                          // saving path to device storage
-                          await addStringToSFList(path);
-
-                          // maybe fixing rotation
-                          //await fixExifRotation(path);
-                          File fileImageFromGallery =
-                          await FlutterExifRotation.rotateImage(path: path);//File(path); // die Fkt um ein File zu erhalten
-                          final textFromGallery =
-                              await FirebaseMLApi.recogniseText(
-                                  fileImageFromGallery);
-                          //print(textFromGallery);
-                          //List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
-                          List<Ingredient> ingredients =
-                              FastLevenshtein.getIndividualItems(
-                                  textFromGallery);
-                          //print(ingredients);
-                          // If the picture was chosen, display it on a new screen.
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DisplayPictureScreen(
-                                  appBarTitle: 'Scanned product',
-                                  imagePath: path,
-                                  ingredients:
-                                      ingredients), // tempList => list of ingredients per item
-                            ),
+                          // Construct the path where the image should be saved using the
+                          // pattern package.
+                          final path = join(
+                            // Store the picture in the local app directory.
+                            directoryPath,
+                            '${DateTime.now()}.png',
                           );
-                        } else if (_image == null && _noImageChosen) {
-                          /*Navigator.push(
+
+                          // getting the image using the gallery chooser
+                          // copying the chosen image to local app directory
+                          await getImage(path);
+
+                          if (_image != null) {
+                            // saving path to device storage
+                            await addStringToSFList(path);
+
+                            // maybe fixing rotation
+                            //await fixExifRotation(path);
+                            File fileImageFromGallery =
+                                await FlutterExifRotation.rotateImage(
+                                    path:
+                                        path); //File(path); // die Fkt um ein File zu erhalten
+                            final textFromGallery =
+                                await FirebaseMLApi.recogniseText(
+                                    fileImageFromGallery);
+                            //print(textFromGallery);
+                            //List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
+                           /* List<Ingredient> ingredients =
+                                FastLevenshtein.getIndividualItems(
+                                    textFromGallery);*/
+
+                            if (textFromGallery.trim() != "" &&
+                                textFromGallery !=
+                                    "No text found in the image") {
+                              List<Ingredient> ingredients =
+                                  FastLevenshtein.getIndividualItems(
+                                      textFromGallery);
+
+                              print(textFromGallery);
+
+                              if (ingredients.isEmpty) {
+                                final snackbarCam = SnackBar(
+                                    content:
+                                        Text("Error: No matching ingredients."),
+                                    backgroundColor: Colors.red,
+                                    duration: Duration(seconds: 3),
+                                    margin: EdgeInsets.all(18.0),
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(25))));
+
+                                Scaffold.of(context).showSnackBar(snackbarCam);
+                              }
+                              else{
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DisplayPictureScreen(
+                                        appBarTitle: 'Selected product',
+                                        imagePath: path,
+                                        ingredients:
+                                        ingredients), // tempList => list of ingredients per item
+                                  ),
+                                );
+                              }
+                            }
+                            //print(ingredients);
+                            // If the picture was chosen, display it on a new screen.
+                           else{
+
+                              final snackbarCam = SnackBar(
+                                  content:
+                                  Text("Error: No text was recognized."),
+                                  backgroundColor: Colors.red,
+                                  duration: Duration(seconds: 3),
+                                  margin: EdgeInsets.all(18.0),
+                                  behavior: SnackBarBehavior.floating,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(25))));
+
+                              Scaffold.of(context).showSnackBar(snackbarCam);
+                            }
+                          } else if (_image == null && _noImageChosen) {
+                            /*Navigator.push(
                                   context,
                                     MaterialPageRoute(builder: (context) =>
                                         AlertDialog(
@@ -321,120 +368,139 @@ class CameraScreenState extends State<CameraScreen> {
                                     ),
                               );*/
 
-                          final snackbar = SnackBar(
-                              content: Text(
-                                  "Error: You have not selected an image."),
-                              backgroundColor: Colors.red,
-                              duration: Duration(seconds: 3),
-                              margin: EdgeInsets.all(18.0),
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(25))));
+                            final snackbar = SnackBar(
+                                content: Text(
+                                    "Error: You have not selected an image."),
+                                backgroundColor: Colors.red,
+                                duration: Duration(seconds: 3),
+                                margin: EdgeInsets.all(18.0),
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(25))));
 
-                          Scaffold.of(context).showSnackBar(snackbar);
+                            Scaffold.of(context).showSnackBar(snackbar);
+                          }
+                        } catch (e) {
+                          // If an error occurs, log the error to the console.
+                          print(e);
                         }
+                      },
+                      label: Icon(Icons.photo_library, color: Colors.black),
+                      backgroundColor: Colors.white,
+                    ),
+                    FloatingActionButton.extended(
+                      heroTag: "make",
+                      // Provide an onPressed callback.
+                      onPressed: () async {
+                        // Take the Picture in a try / catch block. If anything goes wrong,
+                        // catch the error.
+                        try {
+                          // Ensure that the camera is initialized.
+                          await _initializeControllerFuture;
 
-                      } catch (e) {
-                        // If an error occurs, log the error to the console.
-                        print(e);
-                      }
-                    },
-                    label: Icon(Icons.photo_library, color: Colors.black),
-                    backgroundColor: Colors.white,
-                  ),
-                  FloatingActionButton.extended(
-                    heroTag: "make",
-                    // Provide an onPressed callback.
-                    onPressed: () async {
-                      // Take the Picture in a try / catch block. If anything goes wrong,
-                      // catch the error.
-                      try {
-                        // Ensure that the camera is initialized.
-                        await _initializeControllerFuture;
-
-                        // Find the local app directory using the `path_provider` plugin.
-                        final String directoryPath = await _localPath;
-                        //alter current date and save as basename
+                          // Find the local app directory using the `path_provider` plugin.
+                          final String directoryPath = await _localPath;
+                          //alter current date and save as basename
                           final currentDate = await RecordDate.recordDateNow();
                           print(currentDate);
-                        // Construct the path where the image should be saved using the
-                        // pattern package.
-                        final path = join(
-                          // Store the picture in the local app directory.
-                          directoryPath,
-                          '${DateTime.now()}' + '.' + currentDate +'.png',
-                        );
+                          // Construct the path where the image should be saved using the
+                          // pattern package.
+                          final path = join(
+                            // Store the picture in the local app directory.
+                            directoryPath,
+                            '${DateTime.now()}' + '.' + currentDate + '.png',
+                          );
 
-                        // saving path to device storage
-                        //await addStringToSF(path);
-                        await addStringToSFList(path);
+                          // saving path to device storage
+                          //await addStringToSF(path);
+                          await addStringToSFList(path);
 
-                        // Attempt to take a picture and log where it's been saved.
-                        await _controller.takePicture(path);
-                        await fixExifRotation(path);
-                        File fileImageFromCam =
-                        await FlutterExifRotation.rotateImage(path: path);//File(path);// die Fkt um ein File zu erhalten
-                        final textFromCam =
-                            await FirebaseMLApi.recogniseText(fileImageFromCam);
-                        //List <Ingredient> ingredients = leven.getIndividualItems(textFromCam);
-                        List<Ingredient> ingredients =
-                            FastLevenshtein.getIndividualItems(textFromCam);
-                        // If the picture was taken, display it on a new screen.
-                        //List<Ingredient> testDb = leven.getIndividualItems(textFromCam);
-                        //print(testDb);
-                        if (textFromCam != " ") {
-                          print(textFromCam);
+                          // Attempt to take a picture and log where it's been saved.
+                          await _controller.takePicture(path);
+                          // await fixExifRotation(path);
+                          File fileImageFromCam =
+                              await FlutterExifRotation.rotateImage(
+                                  path:
+                                      path); //File(path);// die Fkt um ein File zu erhalten
+                          final textFromCam = await FirebaseMLApi.recogniseText(
+                              fileImageFromCam);
+                          //List <Ingredient> ingredients = leven.getIndividualItems(textFromCam);
 
                           // If the picture was taken, display it on a new screen.
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DisplayPictureScreen(
-                                  appBarTitle: 'Scanned product',
-                                  imagePath: path,
-                                  ingredients:
-                                      ingredients), // tempList => list of ingredients per item
-                            ),
-                          );
-                        } else {
-                          final snackbarCam = SnackBar(
-                              content: Text("Error: No text was recognized."),
-                              backgroundColor: Colors.red,
-                              duration: Duration(seconds: 3),
-                              margin: EdgeInsets.all(18.0),
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(25))));
+                          //List<Ingredient> testDb = leven.getIndividualItems(textFromCam);
+                          //print(testDb);
+                          if (textFromCam != " " &&
+                              textFromCam != "No text found in the image") {
+                            List<Ingredient> ingredients =
+                                FastLevenshtein.getIndividualItems(textFromCam);
 
-                          Scaffold.of(context).showSnackBar(snackbarCam);
+                            print(textFromCam);
+
+                            if (ingredients.isEmpty) {
+                              final snackbarCam = SnackBar(
+                                  content:
+                                      Text("Error: No matching ingredients."),
+                                  backgroundColor: Colors.red,
+                                  duration: Duration(seconds: 3),
+                                  margin: EdgeInsets.all(18.0),
+                                  behavior: SnackBarBehavior.floating,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(25))));
+
+                              Scaffold.of(context).showSnackBar(snackbarCam);
+                            }
+                            // If the picture was taken, display it on a new screen.
+                            else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DisplayPictureScreen(
+                                      appBarTitle: 'Scanned product',
+                                      imagePath: path,
+                                      ingredients:
+                                          ingredients), // tempList => list of ingredients per item
+                                ),
+                              );
+                            }
+                          } else {
+                            final snackbarCam = SnackBar(
+                                content: Text("Error: No text was recognized."),
+                                backgroundColor: Colors.red,
+                                duration: Duration(seconds: 3),
+                                margin: EdgeInsets.all(18.0),
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(25))));
+
+                            Scaffold.of(context).showSnackBar(snackbarCam);
+                          }
+                        } catch (e) {
+                          // If an error occurs, log the error to the console.
+                          print(e);
                         }
-                      } catch (e) {
-                        // If an error occurs, log the error to the console.
-                        print(e);
-                      }
-                    },
-                    label: Text('Take a picture',
-                        style: TextStyle(color: Colors.black)),
-                    icon: Icon(Icons.camera_alt, color: Colors.black),
-                    backgroundColor: Colors.white,
-                  ),
-                ],
+                      },
+                      label: Text('Take a picture',
+                          style: TextStyle(color: Colors.black)),
+                      icon: Icon(Icons.camera_alt, color: Colors.black),
+                      backgroundColor: Colors.white,
+                    ),
+                  ],
+                ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+                //resizeToAvoidBottomInset: true,
+                //resizeToAvoidBottomPadding: true,
               ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerFloat,
-              //resizeToAvoidBottomInset: true,
-              //resizeToAvoidBottomPadding: true,
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }
 }
-
 
 tempList(List<Ingredient> ingredients) {
   List<Ingredient> temp = ingredients;
