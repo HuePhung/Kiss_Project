@@ -169,6 +169,10 @@ class FastLevenshtein {
   }
 
   static List<Ingredient> getIndividualItems(String startString){
+  print("ankommender Text:  " + startString);
+    /* if (startString == "No text found in the image"){
+      return [];
+    } */
     List<Ingredient> ret = List();
     if (startString.contains(",")){
     //  print("Comma!");
@@ -185,14 +189,8 @@ class FastLevenshtein {
       return ret;
     }
     else {
-     // print("No comma!");
+     // Wenn kein Komma vorhanden ist:
       List <String> spaceDevided = startString.split(" ");
-
-      //for(int i = 0; i < spaceDevided.length; i++){
-      //  if(this.searchForOneWord(spaceDevided[i], 2)[0] != "error"){
-      //    ret.add(this.searchForOneWord(spaceDevided[i], 2));
-      //  }
-     // }
 
       //von vorne:
       int i = 0;
@@ -203,7 +201,8 @@ class FastLevenshtein {
         for (int n = spaceDevided.length; n >= i ; n--){
           //Um aus Liste an einzelnen Wörtern ein String ohne komma zu machen
           String searchString = spaceDevided.sublist(i,n).toString().replaceAll(",", "");
-          Ingredient searchResult = searchForOneIngredient(searchString, 2);
+         //print(searchString); //Um schritte zu sehen
+          Ingredient searchResult = searchForOneIngredient(searchString.toUpperCase(), 2);
          // print(searchString);
           if(searchResult.name != "error"){
             //print("lol ${searchResult.name}");
@@ -216,11 +215,19 @@ class FastLevenshtein {
           //für denn fall das nur errors für ein wort gefunden werden:
           if(i == n && searchResult.name == "error" ){
 
-            i = n ;
+            i = i + 1 ;
+
+            if (i == spaceDevided.length){
+              break;
+            }
           }
+
+
         }
       }
       return ret;
+
     }
+
   }
 }

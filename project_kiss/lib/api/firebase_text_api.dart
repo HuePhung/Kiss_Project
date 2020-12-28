@@ -45,13 +45,15 @@ class FirebaseMLApi {
     for (var i=0; i <recogTextList.length; i++){
       //ingridientsListItems.add(myCSV.data[i][0]);
       //startLeven.root.add(recogTextList[i].toUpperCase(), new Ingredient("dummy", "dummy", "dummy", i.toString()));
-      FastLevenshtein.root.add(recogTextList[i].toUpperCase(), new Ingredient("dummy", "dummy", "dummy", i.toString()));
+      FastLevenshtein.root.add("DUMMY " +recogTextList[i].toUpperCase(), new Ingredient("dummy for search: " + recogTextList[i].toUpperCase(), "dummy", "dummy", i.toString()));
     }
     //Ingredient searchResult = startLeven.searchForOneIngredient("INGREDIENTS", 3);
-    Ingredient searchResult = FastLevenshtein.searchForOneIngredient("INGREDIENTS", 3);
+    Ingredient searchResult = FastLevenshtein.searchForOneIngredient("DUMMY INGREDIENTS", 3);
+    //Ingredient searchResult2 = FastLevenshtein.searchForOneIngredient("INGREDIENTS/SASTOJCI:", 3);
     int index;
-    if (searchResult.date != "error"){
-      index = int.parse(searchResult.date) +1; // +1 da "INGREDIENTS" ausschließen
+    if (searchResult.date != "error" /*|| searchResult2.date != "error" */){
+
+      index = int.parse(searchResult.date) ; // +1 da "INGREDIENTS" ausschließen
     } else{
       index= 0;
     }
