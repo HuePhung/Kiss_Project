@@ -258,7 +258,6 @@ class CameraScreenState extends State<CameraScreen> {
                           final String directoryPath = await _localPath;
                           //alter current date and save as basename
                           final currentDate = await RecordDate.recordDateNow();
-                          print(currentDate);
                           // Construct the path where the image should be saved using the
                           // pattern package.
                           final path = join(
