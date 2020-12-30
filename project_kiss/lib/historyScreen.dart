@@ -79,7 +79,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
   //List items = getDummyList();
   List<String> pathList = ["0"];
   //Future<List<String>> _pathList;
-
+  List<Ingredient> ingredients;
   Future<SharedPreferences> _prefs;
 
   @override
@@ -91,6 +91,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
     debugPrint("in initState");
     //getStringListSF();
     _prefs = getPrefs();
+    ingredients = [];
   }
 
   @override
@@ -156,6 +157,9 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                 return Dismissible(
                   key: Key(imagePathList[index]),
                   background: Container(
+                    color: Colors.white38,
+                  ),
+                  secondaryBackground: Container(
                     color: Colors.red,
                     alignment: AlignmentDirectional.centerEnd,
                     child: Icon(
@@ -163,36 +167,52 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                         color: Colors.white
                     ),
                   ),
-                  confirmDismiss: (DismissDirection direction) async {
-                    return await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text("Bestätigen"),
-                          content: const Text("Bist du sicher, dass du diesen Eintrag löschen möchtest?"),
-                          actions: <Widget>[
-                            FlatButton(
-                                onPressed: () => Navigator.of(context).pop(true),
-                                child: const Text("LÖSCHEN")
-                            ),
-                            FlatButton(
-                              onPressed: () => Navigator.of(context).pop(false),
-                              child: const Text("ABBRECHEN"),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                  confirmDismiss: (direction) async {
+                    if( direction == DismissDirection.endToStart) {
+
+                      final bool res = await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text("Bestätigen"),
+                            content: const Text("Bist du sicher, dass du diesen Eintrag löschen möchtest?"),
+                            actions: <Widget>[
+                              FlatButton(
+                                  onPressed: () => Navigator.of(context).pop(true),
+                                  child: const Text("LÖSCHEN")
+                              ),
+                              FlatButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                child: const Text("ABBRECHEN"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return res;
+                    } else {
+                      return Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyApp()
+                        ),
+                      );
+                    }
+
                   },
                   onDismissed: (direction) async {
-                    String deletePath = imagePathList[index];
-                    setState(() {
-                      imagePathList.removeAt(index);
-                    });
-                    File(deletePath).deleteSync();
-                    await prefs.setStringList("imagePathList", imagePathList);
+                    if(direction == DismissDirection.endToStart) {
+                      String deletePath = imagePathList[index];
+                      setState(() {
+                        imagePathList.removeAt(index);
+                      });
+                      File(deletePath).deleteSync();
+                      await prefs.setStringList("imagePathList", imagePathList);
+                    } else {
+                      Navigator.pop(context);
+                    }
                   },
-                  direction: DismissDirection.endToStart,
+                  //direction: DismissDirection.endToStart,
                   child: InkWell(
                       onTap: () async {
                         // use index
@@ -204,7 +224,7 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DisplayPictureScreen(appBarTitle: index.toString() ,imagePath: imagePath, ingredients: tempList())
+                                  builder: (context) => DisplayPictureScreen(appBarTitle: index.toString() ,imagePath: imagePath, ingredients: ingredients)
                               )
                           );
 
@@ -261,4 +281,5 @@ class _HistoryScreen extends State<HistoryScreen> with AutomaticKeepAliveClientM
     return list;
   }*/
 }
+
 

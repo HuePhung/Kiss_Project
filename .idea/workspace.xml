@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
   <component name="BranchesTreeState">
     <expand />
     <select />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee2f32d7-67b1-4430-a6bb-70dfd44fb11b" name="Default Changelist" comment="Merged main into branch showRecordDate">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project_kiss/lib/historyScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/lib/historyScreen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -14,6 +18,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Ingredients_In_HistoryScreen" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1lC7CfTAbXy3xlSVBrBzCSt2gZR" />
@@ -23,10 +32,11 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/project_kiss" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
@@ -35,12 +45,20 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="c9b8a319-230a-4b6d-a4c3-c9478958d057" name="Default Changelist" comment="" />
+      <changelist id="ee2f32d7-67b1-4430-a6bb-70dfd44fb11b" name="Default Changelist" comment="Merged main into branch showRecordDate" />
       <created>1607089092356</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1607089092356</updated>
     </task>
+    <task id="LOCAL-00001" summary="added DeleteButton into historyScreen">
+      <created>1608148916864</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1608148916864</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -57,7 +75,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Merged main into branch showRecordDate" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merged main into branch showRecordDate" />
+    <MESSAGE value="added DeleteButton into historyScreen" />
+    <option name="LAST_COMMIT_MESSAGE" value="added DeleteButton into historyScreen" />
   </component>
   <component name="WindowStateProjectService">
     <state x="987" y="370" key="FileChooserDialogImpl" timestamp="1607194966120">
@@ -69,5 +88,13 @@
       <screen x="0" y="23" width="1280" height="716" />
     </state>
     <state x="100" y="23" width="982" height="716" key="SettingsEditor/0.23.1280.716@0.23.1280.716" timestamp="1608147713279" />
+    <state x="191" y="119" key="Vcs.Push.Dialog.v2" timestamp="1608148930193">
+      <screen x="0" y="23" width="1280" height="717" />
+    </state>
+    <state x="191" y="119" key="Vcs.Push.Dialog.v2/0.23.1280.717@0.23.1280.717" timestamp="1608148930193" />
+    <state x="393" y="299" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1608559952278">
+      <screen x="0" y="23" width="1280" height="716" />
+    </state>
+    <state x="393" y="299" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1280.716@0.23.1280.716" timestamp="1608559952278" />
   </component>
 </project>
