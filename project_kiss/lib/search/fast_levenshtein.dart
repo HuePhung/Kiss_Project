@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:core';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'csv_reader.dart';
 import 'trie_data_structure.dart';
@@ -14,20 +15,39 @@ class FastLevenshtein {
     "lane",
     "tone"
   ];
+  static List _allergyNames = [];
   static Trie root = new Trie();
+  static SharedPreferences prefs;
   static void init(){
-    loadCSV();
+    //cheap workaround
+    _loadCSV().then((value) => _initAllergies());
+    _initPrefs();
   }
-  static void loadCSV() async {
+  static void _initPrefs() async{
+    prefs = await SharedPreferences.getInstance();
+  }
+  static void _initAllergies() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _allergyNames = prefs.getStringList("allergyList");
+    if(_allergyNames.isNotEmpty){
+    for(String name in _allergyNames){
+      TrieNode node = root.searchNode(name);
+      node.ingredient.isAllergic = true;
+    }
+    }
+  }
+  static Future<bool> _loadCSV() async {
     var myCSV = CSV.from(
         path: 'assets/cosing.csv', delimiter: ";", title: false);
-    bool hasData = await myCSV.initFinished;
-    // debugPrint('Step 2, hasData: $hasData');
-    for (var i = 0; i < myCSV.data.length; i++) {
-      //ingridientsListItems.add(myCSV.data[i][0]);
-      root.add(myCSV.data[i][0], new Ingredient(
-          myCSV.data[i][0], myCSV.data[i][1], myCSV.data[i][3], myCSV.data[i][4]));
+        //hasData does absolutely nothing for me and only returns null which makes this async/await call kinda weird :/
+        bool hasData = await myCSV.initFinished;
+      for (var i = 0; i < myCSV.data.length; i++) {
+        //ingridientsListItems.add(myCSV.data[i][0]);
+        root.add(myCSV.data[i][0], new Ingredient(
+            myCSV.data[i][0], myCSV.data[i][1], myCSV.data[i][3],
+            myCSV.data[i][4]));
     }
+      return Future.value(true);
   }
 
   //returns map with all the words that are similar to the param. word together with the distance
@@ -39,7 +59,7 @@ class FastLevenshtein {
     }
     for(String letter in root.root.children.keys){
       //not sure why results.addAll doesn't work?
-      results = searchRecursive(root.root.children[letter], letter, word, currentRow, results, maxDistance);
+      results = _searchRecursive(root.root.children[letter], letter, word, currentRow, results, maxDistance);
     }
     return results;
   }
@@ -70,23 +90,37 @@ class FastLevenshtein {
     List<Ingredient> list = new List();
     TrieNode node = root.searchNode(word);
     if(node != null){
-      list = recursiveForAutoComplete(node, list);
+      if(root.buildWord(node) == word.toUpperCase() && node.isLeafNode){
+        list.add(node.ingredient);
+      }
+      list = _recursiveForAutoComplete(node, list);
     }
+
     return list;
   }
   //function should only get called via autoComplete() func.
-  static List<Ingredient> recursiveForAutoComplete(TrieNode node, List<Ingredient> list){
+  static List<Ingredient> _recursiveForAutoComplete(TrieNode node, List<Ingredient> list){
     List<Ingredient> ret = list;
     for(TrieNode child in node.children.values){
       if(child.isLeafNode){
         ret.add(child.ingredient);
       }
-      recursiveForAutoComplete(child, ret);
+      _recursiveForAutoComplete(child, ret);
     }
     return ret;
   }
+  //get the list of all the allergy ingredients
+  static List<Ingredient> getAllergyList() {
+    //SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> list = prefs.getStringList("allergyList");
+    List<Ingredient> result = [];
+    for(String name in list){
+      result.add(root.searchNode(name).ingredient);
+    }
+    return result;
+  }
   //function should only get called via search() func.
-  static Map<String,TrieNode> searchRecursive(TrieNode node, String letter, String word, List<int> prevRow, Map<String,TrieNode> results, int maxDistance){ //hier
+  static Map<String,TrieNode> _searchRecursive(TrieNode node, String letter, String word, List<int> prevRow, Map<String,TrieNode> results, int maxDistance){ //hier
     int columns = word.length+1;
     List<int> currRow = [prevRow[0]+1];
 
@@ -114,7 +148,7 @@ class FastLevenshtein {
     //if any entries in the row are less than the maximum cost, then recursively search each branch of the trie
     if(currRow.reduce(min) <= maxDistance){
       for(String letter in node.children.keys){
-        searchRecursive(node.children[letter], letter, word, currRow, results, maxDistance);
+        _searchRecursive(node.children[letter], letter, word, currRow, results, maxDistance);
       }
     }
     return results;
@@ -135,6 +169,10 @@ class FastLevenshtein {
   }
 
   static List<Ingredient> getIndividualItems(String startString){
+  //print("ankommender Text:  " + startString);
+    /* if (startString == "No text found in the image"){
+      return [];
+    } */
     List<Ingredient> ret = List();
     if (startString.contains(",")){
     //  print("Comma!");
@@ -151,14 +189,8 @@ class FastLevenshtein {
       return ret;
     }
     else {
-     // print("No comma!");
+     // Wenn kein Komma vorhanden ist:
       List <String> spaceDevided = startString.split(" ");
-
-      //for(int i = 0; i < spaceDevided.length; i++){
-      //  if(this.searchForOneWord(spaceDevided[i], 2)[0] != "error"){
-      //    ret.add(this.searchForOneWord(spaceDevided[i], 2));
-      //  }
-     // }
 
       //von vorne:
       int i = 0;
@@ -169,7 +201,8 @@ class FastLevenshtein {
         for (int n = spaceDevided.length; n >= i ; n--){
           //Um aus Liste an einzelnen Wörtern ein String ohne komma zu machen
           String searchString = spaceDevided.sublist(i,n).toString().replaceAll(",", "");
-          Ingredient searchResult = searchForOneIngredient(searchString, 2);
+         //print(searchString); //Um schritte zu sehen
+          Ingredient searchResult = searchForOneIngredient(searchString.toUpperCase(), 2);
          // print(searchString);
           if(searchResult.name != "error"){
             //print("lol ${searchResult.name}");
@@ -182,11 +215,19 @@ class FastLevenshtein {
           //für denn fall das nur errors für ein wort gefunden werden:
           if(i == n && searchResult.name == "error" ){
 
-            i = n ;
+            i = i + 1 ;
+
+            if (i == spaceDevided.length){
+              break;
+            }
           }
+
+
         }
       }
       return ret;
+
     }
+
   }
 }

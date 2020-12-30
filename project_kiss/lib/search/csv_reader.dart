@@ -14,7 +14,7 @@ class CSV {
   List<List<String>> data = [];
 
   /// Read from Path
-  CSV.from({this.path, this.delimiter = ",", this.title = false}) {
+  CSV.from({this.path, this.delimiter = ",", this.title = false}){
     _futureDone = _init();
   }
 
