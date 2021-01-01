@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:path/path.dart' as p;
 import 'package:test_final/scanscreen.dart';
+import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
+import 'package:test_final/search/fast_levenshtein.dart';
 
 String imagePath = "";
 List<String> imagePathList = [];
@@ -221,6 +223,15 @@ class _HistoryScreen extends State<HistoryScreen>
                               if (imagePath == null) imagePath = "";
 
                               imagePath = await getStringValueFromListSF(index);
+
+                              File fileImageFromGallery = File(imagePath); // die Fkt um ein File zu erhalten
+
+                              final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
+
+                              List<Ingredient> ingredients =
+                              FastLevenshtein.getIndividualItems(
+                                  textFromGallery);
+
 
                               Navigator.push(
                                   context,

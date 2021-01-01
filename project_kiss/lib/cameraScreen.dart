@@ -103,6 +103,24 @@ class CameraScreenState extends State<CameraScreen> {
     prefs.setStringList("imagePathList", prefList);
   }
 
+  /*addStringToSFListIngredients(String imagePath, List<Ingredient> ingredients) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    List<String> prefList = prefs.getStringList("imagePathList");
+
+    if (prefList == null) {
+      prefList = [];
+    }
+
+    if (imagePath != null) {
+      prefList.add(imagePath);
+    } else {
+      prefList.add("undefined");
+    }
+
+    prefs.setStringList("imagePathList", prefList);
+  }*/
+
   Future<File> fixExifRotation(String imagePath) async {
     debugPrint("in fixExif");
 
@@ -290,6 +308,12 @@ class CameraScreenState extends State<CameraScreen> {
                               FastLevenshtein.getIndividualItems(
                                   textFromGallery);
                           //print(ingredients);
+
+                          // saving the ingredients for the specific product to device
+                          // using the path of the picture as the name of the list on device
+
+
+
                           // If the picture was chosen, display it on a new screen.
                           Navigator.push(
                             context,
