@@ -106,6 +106,15 @@ class CameraScreenState extends State<CameraScreen> {
     prefs.setStringList("imagePathList", prefList);
   }
 
+  removeStringFromSFList (String imagePath) async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> prefList = prefs.getStringList("imagePathList");
+    prefList.removeLast();
+
+    prefs.setStringList("imagePathList", prefList);
+
+  }
   Future<File> fixExifRotation(String imagePath) async {
     debugPrint("in fixExif");
 
@@ -307,6 +316,7 @@ class CameraScreenState extends State<CameraScreen> {
                               print(textFromGallery);
 
                               if (ingredients.isEmpty) {
+                                removeStringFromSFList(path);
                                 final snackbarCam = SnackBar(
                                     content:
                                         Text("Error: No matching ingredients."),
@@ -337,6 +347,7 @@ class CameraScreenState extends State<CameraScreen> {
                             // If the picture was chosen, display it on a new screen.
                            else{
 
+                              removeStringFromSFList(path);
                               final snackbarCam = SnackBar(
                                   content:
                                   Text("Error: No text was recognized."),
@@ -438,6 +449,9 @@ class CameraScreenState extends State<CameraScreen> {
                             print(textFromCam);
 
                             if (ingredients.isEmpty) {
+
+                              removeStringFromSFList(path);
+
                               final snackbarCam = SnackBar(
                                   content:
                                       Text("Error: No matching ingredients."),
@@ -465,6 +479,10 @@ class CameraScreenState extends State<CameraScreen> {
                               );
                             }
                           } else {
+
+                            removeStringFromSFList(path);
+
+
                             final snackbarCam = SnackBar(
                                 content: Text("Error: No text was recognized."),
                                 backgroundColor: Colors.red,

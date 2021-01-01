@@ -19,7 +19,7 @@ class FirebaseMLApi {
         await textRecognizer.close();
 
         final text = extractText(visionText);
-        print(visionText.text);
+        //print(text);
         return text.isEmpty ? 'No text found in the image' : text;
       } catch (error) {
         return error.toString();
@@ -41,9 +41,10 @@ class FirebaseMLApi {
    // print(text);
     //Start nach "Ingredients"
     //FastLevenshtein startLeven = new FastLevenshtein();
-    List<String> recogTextList = text.split(" ");
+    List<String> recogTextList = text.split(' ');
 
     for (var i=0; i <recogTextList.length; i++){
+     // print(recogTextList[i] + "("+i.toString()+")");
       //ingridientsListItems.add(myCSV.data[i][0]);
       //startLeven.root.add(recogTextList[i].toUpperCase(), new Ingredient("dummy", "dummy", "dummy", i.toString()));
       FastLevenshtein.root.add("DUMMY " +recogTextList[i].toUpperCase(), new Ingredient("dummy for search: " + recogTextList[i].toUpperCase(), "dummy", "dummy", i.toString()));
@@ -53,9 +54,11 @@ class FirebaseMLApi {
     //Ingredient searchResult2 = FastLevenshtein.searchForOneIngredient("INGREDIENTS/SASTOJCI:", 3);
     int index;
     if (searchResult.date != "error" /*|| searchResult2.date != "error" */){
-
-      index = int.parse(searchResult.date) ; // +1 da "INGREDIENTS" ausschließen
+      index = int.parse(searchResult.date) + 1; // +1 da "INGREDIENTS" ausschließen
+      print(index);
+      //print("index:" + index.toString());
     } else{
+      print("no INGREDIENTS ");
       index= 0;
     }
 
@@ -63,6 +66,7 @@ class FirebaseMLApi {
    // int index = Levenshtein.getIndexOfStart(recogTextList);
     String returnText = "";
     for(int i = index  ; i < recogTextList.length; i++){
+     // print (recogTextList[i]);
       returnText = returnText +  recogTextList[i] + " ";
     }
     //print(returnText);
@@ -72,6 +76,7 @@ class FirebaseMLApi {
     String finale = text.substring(match.start, match.end);
     text = finale;
     return text;*/
+    //print(returnText);
     return returnText;
 
   }
