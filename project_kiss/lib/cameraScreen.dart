@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:path/path.dart';
@@ -34,10 +35,11 @@ class CameraScreenState extends State<CameraScreen> {
   CameraScreenState({Key key, @required this.camera});
 
   var keyboardController = KeyboardVisibilityController();
-
+ var loading;
   @override
   void initState() {
     super.initState();
+    loading = false;
     //FocusScope.of(context).unfocus();
     //leven = new FastLevenshtein();
     //loadCSV();
@@ -186,6 +188,72 @@ class CameraScreenState extends State<CameraScreen> {
     });
   }
 
+  void processIngredients(List <Ingredient> ingredients,BuildContext context, String path){
+
+    loading = false;
+    if (ingredients.isEmpty) {
+      final snackbarCam = SnackBar(
+          content:
+          Text("Error: No matching ingredients."),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+          margin: EdgeInsets.all(18.0),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                  Radius.circular(25))));
+
+      Scaffold.of(context).showSnackBar(snackbarCam);
+    }
+    else{
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DisplayPictureScreen(
+              appBarTitle: 'Selected product',
+              imagePath: path,
+              ingredients:
+              ingredients), // tempList => list of ingredients per item
+        ),
+      );
+    }
+  }
+
+  void processingAll(String textFromGallery, BuildContext context, String path) async{
+    processIngredients(await FastLevenshtein.getIndividualItems(textFromGallery), context, path);
+  }
+   void processText(String textFromGallery, BuildContext context, String path) async{
+
+    if (textFromGallery.trim() != "" &&
+        textFromGallery !=
+            "No text found in the image") {
+      loading = true;
+      List<Ingredient> ingredients;
+      ingredients = await compute(FastLevenshtein.getIndividualItems, textFromGallery).whenComplete(() => processIngredients(ingredients, context, path));//.then((ingredients) => processIngredients(ingredients, context, path));
+
+
+     //processIngredients(await compute(FastLevenshtein.getIndividualItems, textFromGallery), context, path);
+      //print(textFromGallery);
+    }
+    //print(ingredients);
+    // If the picture was chosen, display it on a new screen.
+    else{
+
+      final snackbarCam = SnackBar(
+          content:
+          Text("Error: No text was recognized."),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+          margin: EdgeInsets.all(18.0),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                  Radius.circular(25))));
+
+      Scaffold.of(context).showSnackBar(snackbarCam);
+    }
+
+    }
   @override
   Widget build(BuildContext context) {
     //if keyboard is still exposed when entering the camera screen, dismiss it
@@ -244,6 +312,20 @@ class CameraScreenState extends State<CameraScreen> {
                         ),
                       ),
                     ),
+
+                    Container(
+                      padding: EdgeInsets.only(top: 50, right: 20),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(),//loading ? LinearProgressIndicator() : Text(""),
+
+                      ),
+                    ),
+
+
+
+
+
                   ],
                 ),
               ),
@@ -257,11 +339,13 @@ class CameraScreenState extends State<CameraScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     FloatingActionButton.extended(
+
                       heroTag: "choose",
                       // Provide an onPressed callback.
                       onPressed: () async {
                         // Take the Picture in a try / catch block. If anything goes wrong,
                         // catch the error.
+
                         try {
                           // Find the local app directory using the `path_provider` plugin.
                           final String directoryPath = await _localPath;
@@ -297,15 +381,19 @@ class CameraScreenState extends State<CameraScreen> {
                                 FastLevenshtein.getIndividualItems(
                                     textFromGallery);*/
 
-                            if (textFromGallery.trim() != "" &&
+                          processText(textFromGallery, context, path);
+
+                            /*if (textFromGallery.trim() != "" &&
                                 textFromGallery !=
                                     "No text found in the image") {
-                              List<Ingredient> ingredients =
+                             loading = true;
+                              List<Ingredient> ingredients = await
                                   FastLevenshtein.getIndividualItems(
                                       textFromGallery);
 
                               print(textFromGallery);
 
+                              loading = false;
                               if (ingredients.isEmpty) {
                                 final snackbarCam = SnackBar(
                                     content:
@@ -349,7 +437,7 @@ class CameraScreenState extends State<CameraScreen> {
                                           Radius.circular(25))));
 
                               Scaffold.of(context).showSnackBar(snackbarCam);
-                            }
+                            } *///ende
                           } else if (_image == null && _noImageChosen) {
                             /*Navigator.push(
                                   context,
@@ -380,7 +468,7 @@ class CameraScreenState extends State<CameraScreen> {
                                         BorderRadius.all(Radius.circular(25))));
 
                             Scaffold.of(context).showSnackBar(snackbar);
-                          }
+                          } //hier ende
                         } catch (e) {
                           // If an error occurs, log the error to the console.
                           print(e);
@@ -432,8 +520,11 @@ class CameraScreenState extends State<CameraScreen> {
                           //print(testDb);
                           if (textFromCam != " " &&
                               textFromCam != "No text found in the image") {
-                            List<Ingredient> ingredients =
-                                FastLevenshtein.getIndividualItems(textFromCam);
+
+
+                            // TODO Wieder Reparieren!
+
+                            List<Ingredient> ingredients = [];// await FastLevenshtein.getIndividualItems(textFromCam);
 
                             print(textFromCam);
 

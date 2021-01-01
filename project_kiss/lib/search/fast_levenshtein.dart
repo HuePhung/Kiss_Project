@@ -168,7 +168,7 @@ class FastLevenshtein {
     return dst.toInt();
   }
 
-  static List<Ingredient> getIndividualItems(String startString){
+  static List<Ingredient> /*Future<List<Ingredient>>*/ getIndividualItems(String startString) /*async*/{
   //print("ankommender Text:  " + startString);
     /* if (startString == "No text found in the image"){
       return [];
@@ -207,6 +207,7 @@ class FastLevenshtein {
           if(searchResult.name != "error"){
             //print("lol ${searchResult.name}");
             ret.add(searchResult);
+            print(searchResult);
             i = n ;
 
             break;
