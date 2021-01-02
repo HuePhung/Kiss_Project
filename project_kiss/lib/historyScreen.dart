@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_final/search/ingredient.dart';
+import 'package:kiss_ui_text/search/ingredient.dart';
 import 'package:path/path.dart' as p;
-import 'package:test_final/scanscreen.dart';
+import 'package:kiss_ui_text/scanscreen.dart';
+import 'package:kiss_ui_text/main.dart';
 
 String imagePath = "";
 List<String> imagePathList = [];
@@ -172,107 +173,122 @@ class _HistoryScreen extends State<HistoryScreen>
                     return Dismissible(
                       key: Key(imagePathList[index]),
                       background: Container(
+                        color: Colors.white38,
+                      ),
+                      secondaryBackground: Container(
                         color: Colors.red,
                         alignment: AlignmentDirectional.centerEnd,
-                        padding: EdgeInsets.only(right: 30),
                         child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
+                            Icons.delete,
+                            color: Colors.white
                         ),
                       ),
-                      confirmDismiss: (DismissDirection direction) async {
-                        return await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Confirm"),
-                              content: const Text(
-                                  "Are you sure you want to delete this entry?"),
-                              actions: <Widget>[
-                                FlatButton(
+                      confirmDismiss: (direction) async {
+                        if( direction == DismissDirection.endToStart) {
+
+                          final bool res = await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text("Confirm"),
+                                content: const Text(
+                                    "Are you sure you want to delete this entry?"),
+                                actions: <Widget>[
+                                  FlatButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(true),
+                                      child: const Text("DELETE")),
+                                  FlatButton(
                                     onPressed: () =>
-                                        Navigator.of(context).pop(true),
-                                    child: const Text("DELETE")),
-                                FlatButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: const Text("CANCEL"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                                        Navigator.of(context).pop(false),
+                                    child: const Text("CANCEL"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return res;
+                        } else {
+                          return Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyApp()
+                            ),
+                          );
+                        }
                       },
                       onDismissed: (direction) async {
-                        String deletePath = imagePathList[index];
-                        setState(() {
-                          imagePathList.removeAt(index);
-                          prefs.remove('Scan$index');
-                        });
-                        File(deletePath).deleteSync();
-                        await prefs.setStringList(
-                            "imagePathList", imagePathList);
+                        if(direction == DismissDirection.endToStart) {
+                          String deletePath = imagePathList[index];
+                          setState(() {
+                            imagePathList.removeAt(index);
+                          });
+                          File(deletePath).deleteSync();
+                          await prefs.setStringList("imagePathList", imagePathList);
+                        } else {
+                          Navigator.pop(context);
+                        }
                       },
-                      direction: DismissDirection.endToStart,
+                      //direction: DismissDirection.endToStart,
                       child: InkWell(
-                          onTap: () async {
-                            // use index
-                            try {
-                              if (imagePath == null) imagePath = "";
+                        onTap: () async {
+                          // use index
+                          try {
+                            if (imagePath == null) imagePath = "";
 
-                              imagePath = await getStringValueFromListSF(index);
+                            imagePath = await getStringValueFromListSF(index);
 
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          DisplayPictureScreen(
-                                              appBarTitle: "Scanned product",
-                                              imagePath: imagePath,
-                                              ingredients: ingredients)))
-                                  .then((value) =>
-                                  setState(() => name = prefs.getString("Scan$index"),
-                                  ));
-                            } catch (e) {
-                              print(e);
-                            }
-                          },
-                          child:
-                          Container(
-                            padding: EdgeInsets.all(20.0),
-                            height: 125,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Image.file(File(imagePathList[index]),
-                                    width: 125, height: 125),
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        DisplayPictureScreen(
+                                            appBarTitle: "Scanned product",
+                                            imagePath: imagePath,
+                                            ingredients: ingredients)))
+                                .then((value) =>
+                                setState(() => name = prefs.getString("Scan$index"),
+                                ));
+                          } catch (e) {
+                            print(e);
+                          }
+                        },
+                        child:
+                        Container(
+                          padding: EdgeInsets.all(20.0),
+                          height: 125,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Image.file(File(imagePathList[index]),
+                                  width: 125, height: 125),
 
-                                Expanded(child: Text(
-                                    name,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    )
-
-                                ),
-                                    ),
-                                Text(
-                                  //text next to the image
-                                  p
-                                      .extension(
-                                      imagePathList[index].toString(), 4)
-                                      .substring(1, 11),
-                                  textAlign: TextAlign.end,
+                              Expanded(child: Text(
+                                  name,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 12),
-                                ),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  )
 
-                              ],
-                            ),
+                              ),
+                              ),
+                              Text(
+                                //text next to the image
+                                p
+                                    .extension(
+                                    imagePathList[index].toString(), 4)
+                                    .substring(1, 11),
+                                textAlign: TextAlign.end,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 12),
+                              ),
+
+                            ],
                           ),
-                    ),
+                        ),
+                      ),
                     );
                   },
                 ),
