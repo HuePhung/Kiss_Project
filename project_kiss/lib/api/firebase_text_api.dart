@@ -26,7 +26,7 @@ class FirebaseMLApi {
       }
     }
   }
-  static extractText(VisionText visionText) {
+  static String extractText(VisionText visionText) {
     String text = '';
 
     for (TextBlock block in visionText.blocks) {
@@ -43,28 +43,35 @@ class FirebaseMLApi {
     //FastLevenshtein startLeven = new FastLevenshtein();
     List<String> recogTextList = text.split(' ');
 
-    for (var i=0; i <recogTextList.length; i++){
+   /* for (var i=0; i <recogTextList.length; i++){
      // print(recogTextList[i] + "("+i.toString()+")");
       //ingridientsListItems.add(myCSV.data[i][0]);
       //startLeven.root.add(recogTextList[i].toUpperCase(), new Ingredient("dummy", "dummy", "dummy", i.toString()));
       FastLevenshtein.root.add("DUMMY " +recogTextList[i].toUpperCase(), new Ingredient("dummy for search: " + recogTextList[i].toUpperCase(), "dummy", "dummy", i.toString()));
     }
     //Ingredient searchResult = startLeven.searchForOneIngredient("INGREDIENTS", 3);
-    Ingredient searchResult = FastLevenshtein.searchForOneIngredient("DUMMY INGREDIENTS", 3);
+    Ingredient searchResult = FastLevenshtein.searchForOneIngredient("DUMMY INGREDIENTS", 3); */
     //Ingredient searchResult2 = FastLevenshtein.searchForOneIngredient("INGREDIENTS/SASTOJCI:", 3);
     int index;
-    if (searchResult.date != "error" /*|| searchResult2.date != "error" */){
+    /*if (searchResult.date != "error" /*|| searchResult2.date != "error" */){
+      //print(searchResult.date);
       index = int.parse(searchResult.date) + 1; // +1 da "INGREDIENTS" ausschließen
-      print(index);
+      //print(index);
       //print("index:" + index.toString());
     } else{
       print("no INGREDIENTS ");
       index= 0;
     }
-
-    
+*/
+    // TODO Alte Einträge löschen, sonst funktioniert erkennung von "INGREDIENT" nicht!
    // int index = Levenshtein.getIndexOfStart(recogTextList);
+    //recogTextList = recogTextList.sublist(index);
     String returnText = "";
+    index = Levenshtein.getIndexOfStart(recogTextList) ;
+    if (index != 0){
+      index +=1 ;
+    }
+    print(index);
     for(int i = index  ; i < recogTextList.length; i++){
      // print (recogTextList[i]);
       returnText = returnText +  recogTextList[i] + " ";
