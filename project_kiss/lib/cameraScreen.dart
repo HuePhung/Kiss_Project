@@ -106,6 +106,15 @@ class CameraScreenState extends State<CameraScreen> {
     prefs.setStringList("imagePathList", prefList);
   }
 
+  removeStringFromSFList (String imagePath) async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> prefList = prefs.getStringList("imagePathList");
+    prefList.removeLast();
+
+    prefs.setStringList("imagePathList", prefList);
+
+  }
   Future<File> fixExifRotation(String imagePath) async {
     debugPrint("in fixExif");
 
@@ -265,13 +274,14 @@ class CameraScreenState extends State<CameraScreen> {
                         try {
                           // Find the local app directory using the `path_provider` plugin.
                           final String directoryPath = await _localPath;
-
+                          //alter current date and save as basename
+                          final currentDate = await RecordDate.recordDateNow();
                           // Construct the path where the image should be saved using the
                           // pattern package.
                           final path = join(
                             // Store the picture in the local app directory.
                             directoryPath,
-                            '${DateTime.now()}.png',
+                            '${DateTime.now()}' + '.' + currentDate +'.png',
                           );
 
                           // getting the image using the gallery chooser
@@ -307,6 +317,7 @@ class CameraScreenState extends State<CameraScreen> {
                               print(textFromGallery);
 
                               if (ingredients.isEmpty) {
+                                removeStringFromSFList(path);
                                 final snackbarCam = SnackBar(
                                     content:
                                         Text("Error: No matching ingredients."),
@@ -337,6 +348,7 @@ class CameraScreenState extends State<CameraScreen> {
                             // If the picture was chosen, display it on a new screen.
                            else{
 
+                              removeStringFromSFList(path);
                               final snackbarCam = SnackBar(
                                   content:
                                   Text("Error: No text was recognized."),
@@ -438,6 +450,9 @@ class CameraScreenState extends State<CameraScreen> {
                             print(textFromCam);
 
                             if (ingredients.isEmpty) {
+
+                              removeStringFromSFList(path);
+
                               final snackbarCam = SnackBar(
                                   content:
                                       Text("Error: No matching ingredients."),
@@ -465,6 +480,10 @@ class CameraScreenState extends State<CameraScreen> {
                               );
                             }
                           } else {
+
+                            removeStringFromSFList(path);
+
+
                             final snackbarCam = SnackBar(
                                 content: Text("Error: No text was recognized."),
                                 backgroundColor: Colors.red,

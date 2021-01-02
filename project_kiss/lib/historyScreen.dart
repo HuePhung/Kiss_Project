@@ -2,10 +2,13 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:kiss_ui_text/search/ingredient.dart';
+import 'package:test_final/search/ingredient.dart';
 import 'package:path/path.dart' as p;
-import 'package:kiss_ui_text/scanscreen.dart';
-import 'package:kiss_ui_text/main.dart';
+import 'package:test_final/main.dart';
+import 'package:test_final/scanscreen.dart';
+import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
+import 'package:test_final/search/fast_levenshtein.dart';
+
 
 String imagePath = "";
 List<String> imagePathList = [];
@@ -31,6 +34,7 @@ Future<String> getStringValueFromListSF(int index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> prefList = prefs.getStringList("imagePathList");
 
+ // prefList = prefList.reversed.toList();
   String path;
 
   if (prefList != null) {
@@ -43,6 +47,7 @@ Future<String> getStringValueFromListSF(int index) async {
 Future<List<String>> getStringListSF() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> prefList = prefs.getStringList("imagePathList");
+  //prefList = prefList.reversed.toList();
   imagePathList = prefList;
 
   return prefList;
@@ -51,6 +56,7 @@ Future<List<String>> getStringListSF() async {
 Future<List<String>> getImagePathList() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> prefList = prefs.getStringList("imagePathList");
+ // prefList = prefList.reversed.toList();
 
   //prefList.forEach((element) {print(element);});
   //debugPrint("what up nigga");
@@ -161,6 +167,7 @@ class _HistoryScreen extends State<HistoryScreen>
                 padding: const EdgeInsets.all(20.0),
                 child: ListView.separated(
                   //shrinkWrap: true,
+                 // reverse: true,
                   separatorBuilder: (context, index) =>
                       Divider(
                         height: 30.0,
@@ -168,6 +175,7 @@ class _HistoryScreen extends State<HistoryScreen>
                       ),
                   itemCount: imagePathList.length, //.compareTo(0),
                   itemBuilder: (context, index) {
+                    index = imagePathList.length - 1 - index ;
                     name = prefs.getString("Scan$index");
                     if (name == null) name = "Scan $index";
                     return Dismissible(
@@ -236,7 +244,42 @@ class _HistoryScreen extends State<HistoryScreen>
                           try {
                             if (imagePath == null) imagePath = "";
 
-                            imagePath = await getStringValueFromListSF(index);
+                              imagePath = await getStringValueFromListSF(index);
+                            
+                              File fileImageFromGallery = File(imagePath); // die Fkt um ein File zu erhalten
+
+                              final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
+
+                              List<Ingredient> ingredients =
+                              FastLevenshtein.getIndividualItems(
+                                  textFromGallery);
+
+
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          DisplayPictureScreen(
+                                              appBarTitle: "Scanned product",
+                                              imagePath: imagePath,
+                                              ingredients: ingredients)))
+                                  .then((value) =>
+                                  setState(() => name = prefs.getString("Scan$index"),
+                                  ));
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
+                          child:
+                          Container(
+                            padding: EdgeInsets.all(20.0),
+                            height: 125,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Image.file(File(imagePathList[index]),
+                                    width: 125, height: 125),
 
                             Navigator.push(
                                 context,
