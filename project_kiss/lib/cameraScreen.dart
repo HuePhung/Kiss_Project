@@ -291,11 +291,6 @@ class CameraScreenState extends State<CameraScreen> {
                                   textFromGallery);
                           //print(ingredients);
 
-                          // saving the ingredients for the specific product to device
-                          // using the path of the picture as the name of the list on device
-
-
-
                           // If the picture was chosen, display it on a new screen.
                           Navigator.push(
                             context,
