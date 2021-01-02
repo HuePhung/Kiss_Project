@@ -123,7 +123,7 @@ class ScanNameState extends State<ScanName>{
     if(name != null)
       initialText = name;
     else{
-      initialText = "$date";
+      initialText = "Scan from $date";
       //prefs.setString("Scan$scanIndex", initialText);
     }
 

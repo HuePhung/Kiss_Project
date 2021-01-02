@@ -189,7 +189,7 @@ class _HistoryScreen extends State<HistoryScreen>
                     //if (name == null) name = "Scan $index";
 
                     name = prefs.getString("Scan$num");
-                    if (name == null) name = " $date";
+                    if (name == null) name = "Scan from $date";
                     return Dismissible(
                       key: Key(imagePathList[index]),
                       background: Container(
@@ -282,7 +282,7 @@ class _HistoryScreen extends State<HistoryScreen>
                                     name,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                     )
 
