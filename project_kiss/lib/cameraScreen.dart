@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:test_final/api/recordDate.dart';
 import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
+import 'package:test_final/historyScreen.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/impressumScreen.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -104,6 +106,12 @@ class CameraScreenState extends State<CameraScreen> {
     }
 
     prefs.setStringList("imagePathList", prefList);
+  }
+
+  //@TODO RETRIEVE AND CONVERT BACK
+  addIngredientToSF(String key, List<Ingredient> ingredients) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(key, jsonEncode(ingredients));
   }
 
   removeStringFromSFList (String imagePath) async {
@@ -315,9 +323,11 @@ class CameraScreenState extends State<CameraScreen> {
                                       textFromGallery);
 
                               print(textFromGallery);
+                              debugPrint("after text");
 
                               if (ingredients.isEmpty) {
                                 removeStringFromSFList(path);
+                                debugPrint("I am not found");
                                 final snackbarCam = SnackBar(
                                     content:
                                         Text("Error: No matching ingredients."),
@@ -332,6 +342,9 @@ class CameraScreenState extends State<CameraScreen> {
                                 Scaffold.of(context).showSnackBar(snackbarCam);
                               }
                               else{
+                                // adding ingredients to sharedpreferences with key: imagePath, value: jsonEncode of Ingredients (Map)
+                                await addIngredientToSF(imagePath, ingredients);
+                                debugPrint("I am here");
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
