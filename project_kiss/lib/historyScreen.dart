@@ -32,6 +32,7 @@ Future<String> getStringValueFromListSF(int index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> prefList = prefs.getStringList("imagePathList");
 
+ // prefList = prefList.reversed.toList();
   String path;
 
   if (prefList != null) {
@@ -44,6 +45,7 @@ Future<String> getStringValueFromListSF(int index) async {
 Future<List<String>> getStringListSF() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> prefList = prefs.getStringList("imagePathList");
+  //prefList = prefList.reversed.toList();
   imagePathList = prefList;
 
   return prefList;
@@ -52,6 +54,7 @@ Future<List<String>> getStringListSF() async {
 Future<List<String>> getImagePathList() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> prefList = prefs.getStringList("imagePathList");
+ // prefList = prefList.reversed.toList();
 
   //prefList.forEach((element) {print(element);});
   //debugPrint("what up nigga");
@@ -162,6 +165,7 @@ class _HistoryScreen extends State<HistoryScreen>
                 padding: const EdgeInsets.all(20.0),
                 child: ListView.separated(
                   //shrinkWrap: true,
+                 // reverse: true,
                   separatorBuilder: (context, index) =>
                       Divider(
                         height: 30.0,
@@ -169,6 +173,7 @@ class _HistoryScreen extends State<HistoryScreen>
                       ),
                   itemCount: imagePathList.length, //.compareTo(0),
                   itemBuilder: (context, index) {
+                    index = imagePathList.length - 1 - index ;
                     name = prefs.getString("Scan$index");
                     if (name == null) name = "Scan $index";
                     return Dismissible(
@@ -238,7 +243,7 @@ class _HistoryScreen extends State<HistoryScreen>
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           DisplayPictureScreen(
-                                              appBarTitle: index.toString(),
+                                              appBarTitle: "Scanned product",
                                               imagePath: imagePath,
                                               ingredients: ingredients)))
                                   .then((value) =>
