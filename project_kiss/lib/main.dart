@@ -19,6 +19,7 @@ Future<void> main() async {
   final bool allergyPathExists = await listExists("allergyList");
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> list = [];
+  prefs.clear();
   if(!pathExists){
     prefs.setStringList("imagePathList", list);
   }

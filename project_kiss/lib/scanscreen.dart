@@ -91,6 +91,7 @@ class ScanNameState extends State<ScanName>{
   TextEditingController _editingController;
   String initialText = "unnamed scan";
   int scanIndex = 0;
+  String num = "0";
   Future<SharedPreferences> _prefs;
   @override
   void initState() {
@@ -100,15 +101,25 @@ class ScanNameState extends State<ScanName>{
   Future<SharedPreferences> initPrefs() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> imagePathList = prefs.getStringList("imagePathList");
+    num = imagePath.substring(imagePath.length - 9, imagePath.length - 4);
+    String date = imagePath.substring(imagePath.length - 19, imagePath.length - 13)+imagePath.substring(imagePath.length - 11, imagePath.length - 9);
+    String name = prefs.getString("Scan$num");
+    if(name != null)
+      initialText = name;
+    else{
+      initialText = "$date";
+      //prefs.setString("Scan$scanIndex", initialText);
+    }
+
     //this is some hard as spaghetti code btw. it would be much better if we had the index as payload for this widget instead of going through all the scans.
-    scanIndex = imagePathList.indexOf(imagePath);
-    String name = prefs.getString("Scan$scanIndex");
+    /*scanIndex = imagePathList.indexOf(imagePath);
+    //String name = prefs.getString("Scan$scanIndex");
     if(name != null)
       initialText = name;
     else{
       initialText = "Scan $scanIndex";
       //prefs.setString("Scan$scanIndex", initialText);
-    }
+    }*/
 
     _editingController = TextEditingController(text: initialText);
     _editingController.selection = new TextSelection(
@@ -137,7 +148,8 @@ class ScanNameState extends State<ScanName>{
             SharedPreferences prefs = await _prefs;
             setState((){
               initialText = newValue;
-              prefs.setString('Scan$scanIndex', newValue);
+
+              prefs.setString('Scan$num', newValue);
               _isEditingText = false;
             });
           },
