@@ -108,7 +108,6 @@ class CameraScreenState extends State<CameraScreen> {
     prefs.setStringList("imagePathList", prefList);
   }
 
-  //@TODO RETRIEVE AND CONVERT BACK
   addIngredientToSF(String key, List<Ingredient> ingredients) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(key, jsonEncode(ingredients));
@@ -323,11 +322,9 @@ class CameraScreenState extends State<CameraScreen> {
                                       textFromGallery);
 
                               print(textFromGallery);
-                              debugPrint("after text");
 
                               if (ingredients.isEmpty) {
                                 removeStringFromSFList(path);
-                                debugPrint("I am not found");
                                 final snackbarCam = SnackBar(
                                     content:
                                         Text("Error: No matching ingredients."),
@@ -342,9 +339,9 @@ class CameraScreenState extends State<CameraScreen> {
                                 Scaffold.of(context).showSnackBar(snackbarCam);
                               }
                               else{
-                                // adding ingredients to sharedpreferences with key: imagePath, value: jsonEncode of Ingredients (Map)
-                                await addIngredientToSF(imagePath, ingredients);
-                                debugPrint("I am here");
+                                // adding ingredients to sharedpreferences with key: path, value: jsonEncode of Ingredients (Map)
+                                debugPrint(path);
+                                await addIngredientToSF(path, ingredients);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -481,6 +478,9 @@ class CameraScreenState extends State<CameraScreen> {
                             }
                             // If the picture was taken, display it on a new screen.
                             else {
+                              // adding ingredients to sharedpreferences with key: path, value: jsonEncode of Ingredients (Map)
+                              await addIngredientToSF(path, ingredients);
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

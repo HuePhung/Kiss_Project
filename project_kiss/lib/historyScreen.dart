@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,6 +71,23 @@ Future<SharedPreferences> getPrefs() async {
   return prefs;
 }
 
+Future<List<Ingredient>> getIngredientsOfProduct(String key) async {
+  List<Ingredient> ingredients = [];
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  debugPrint(prefs.getString(key));
+
+  json
+      .decode(prefs.getString(key))
+      .forEach((map) => ingredients.add(new Ingredient.fromJson(map)));
+
+  if(ingredients.isNotEmpty)
+    return ingredients;
+  else
+    return [];
+}
+
 class HistoryScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -136,6 +154,11 @@ class _HistoryScreen extends State<HistoryScreen>
                                     prefs.remove("Scan$idx");
                                     File(deleteByIdx).deleteSync();
                                   }
+
+                                  imagePathList.forEach((imagePath) {
+                                    prefs.remove(imagePath);
+                                  });
+
                                   setState(() {
                                     imagePathList.clear();
                                   });
@@ -213,6 +236,8 @@ class _HistoryScreen extends State<HistoryScreen>
                         setState(() {
                           imagePathList.removeAt(index);
                           prefs.remove('Scan$index');
+                          // deleting ingredients for this product
+                          prefs.remove(deletePath);
                         });
                         File(deletePath).deleteSync();
                         await prefs.setStringList(
@@ -226,6 +251,8 @@ class _HistoryScreen extends State<HistoryScreen>
                               if (imagePath == null) imagePath = "";
 
                               imagePath = await getStringValueFromListSF(index);
+                              debugPrint(imagePath);
+                              ingredients = await getIngredientsOfProduct(imagePath);
 
                               Navigator.push(
                                   context,
