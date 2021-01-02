@@ -103,24 +103,6 @@ class CameraScreenState extends State<CameraScreen> {
     prefs.setStringList("imagePathList", prefList);
   }
 
-  /*addStringToSFListIngredients(String imagePath, List<Ingredient> ingredients) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    List<String> prefList = prefs.getStringList("imagePathList");
-
-    if (prefList == null) {
-      prefList = [];
-    }
-
-    if (imagePath != null) {
-      prefList.add(imagePath);
-    } else {
-      prefList.add("undefined");
-    }
-
-    prefs.setStringList("imagePathList", prefList);
-  }*/
-
   Future<File> fixExifRotation(String imagePath) async {
     debugPrint("in fixExif");
 
