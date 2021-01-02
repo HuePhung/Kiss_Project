@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_final/detailScreen.dart';
 import 'package:test_final/search/ingredient.dart';
@@ -16,8 +17,10 @@ class DisplayPictureScreen extends StatelessWidget {
         @required this.imagePath,
         @required this.ingredients,})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    String fullDate = imagePath.substring(imagePath.length - 19, imagePath.length - 9);
     return Scaffold(
       appBar: AppBar(title: Text(appBarTitle), backgroundColor: Colors.black),
       // The image is stored as a file on the device. Use the `Image.file`
@@ -30,18 +33,31 @@ class DisplayPictureScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              ScanName(imagePath),
               Container(
-                  padding: EdgeInsets.all(20.0),
+                child: ScanName(imagePath),
+                padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
+              ),
+              Container(
+                child: Text(
+                  fullDate,
+                ),
+                alignment: Alignment.bottomRight,
+                padding: EdgeInsets.fromLTRB(0, 0, 66, 0),
+              ),
+
+              Container(
+                  //padding: EdgeInsets.all(20.0),
                   child: Image.file(
                     File(imagePath),
                     width: 250,
                     height: 250,
                   )),
+
               Text(
                 "Ingredients",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
+
               Container(
                 padding: EdgeInsets.all(20.0),
                 child: DataTable(
@@ -142,42 +158,57 @@ class ScanNameState extends State<ScanName>{
 
   Widget _editTitleTextField(){
     if (_isEditingText)
-        return Center(
-        child: TextField(
-          onSubmitted: (newValue) async{
-            SharedPreferences prefs = await _prefs;
-            setState((){
-              initialText = newValue;
+        return Container(
+              child: Center(
+              child: TextField(
+                onSubmitted: (newValue) async{
+                  SharedPreferences prefs = await _prefs;
+                  setState((){
+                    initialText = newValue;
 
-              prefs.setString('Scan$num', newValue);
-              _isEditingText = false;
-            });
-          },
-          autofocus: true,
-          controller: _editingController,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      );
+                    prefs.setString('Scan$num', newValue);
+                    _isEditingText = false;
+                  });
+                },
+                autofocus: true,
+                controller: _editingController,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+      ),
+        );
     else {
-      return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          initialText,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+      return Center(
+                child: Center(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            _isEditingText = true;
+                          });
+                        },
+                        child: Text(
+                          initialText,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.edit,
+                      ),
+                    ],
+                  ),
+                ),
       );
     }
   }
