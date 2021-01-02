@@ -5,13 +5,15 @@ import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:test_final/detailScreen.dart';
 import 'package:test_final/search/trie_data_structure.dart';
-class SearchScreen extends StatefulWidget{
+import 'package:test_final/impressumScreen.dart';
+
+class SearchScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _SearchScreenState();
   }
-
 }
+
 class _SearchScreenState extends State<SearchScreen> {
   var _searchEdit = new TextEditingController();
   bool _isSearch = true;
@@ -24,6 +26,7 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     _ingredients = new List<Ingredient>();
   }
+
   _SearchScreenState() {
     _searchEdit.addListener(() {
       if (_searchEdit.text.isEmpty) {
@@ -43,54 +46,90 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         FocusScope.of(context).unfocus();
       },
-        child: Scaffold(
-          appBar: AppBar(
-              title: Text("Search for ingredients"),
-              backgroundColor: Colors.black,
-          ),
-          body: Container(
-              margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(height: 30),
-                  RaisedButton(
-                    onPressed: ()
-                    {
-                      setState(()
-                      {
-                        _isInAllergyList = true;
-                        _searchEdit.text = '';
-                        _ingredients = FastLevenshtein.getAllergyList();
-                        FocusScope.of(context).unfocus();
-                      });
-                    },
-                    child: const Text('Allergies', style: TextStyle(fontSize: 20)),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Search for ingredients"),
+          backgroundColor: Colors.grey[700],
+          actions: [
+            IconButton(
+              padding: EdgeInsets.only(right: 20),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ImpressumScreen()));
+              },
+              icon: Icon(
+                Icons.info,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        body: Container(
+          color: Colors.grey[900],
+          padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+          child: Column(
+            children: <Widget>[
+              //FIXME:Does not work :(
+              Row(
+                children: [
+                  Expanded(
+                    child: _searchBox(),
                   ),
-                  _searchBox(),
-                  _isSearch ? _listView() : _searchIngredients(_isInAllergyList),
+                  RaisedButton(
+                    onPressed: () {
+                      setState(
+                        () {
+                          _isInAllergyList = true;
+                          _searchEdit.text = '';
+                          _ingredients = FastLevenshtein.getAllergyList();
+                          FocusScope.of(context).unfocus();
+                        },
+                      );
+                    },
+                    child: const Text(
+                      'Allergies',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                    padding: EdgeInsets.all(13),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    color: Colors.grey[700],
+                  ),
                 ],
               ),
-
-            ),
-
+              _isSearch ? _listView() : _searchIngredients(_isInAllergyList),
+            ],
+          ),
+        ),
       ),
-
     );
   }
 
   Widget _searchBox() {
     return Container(
-      decoration: BoxDecoration(border: Border.all(width: 1.0)),
+      margin: EdgeInsets.all(10),
+      padding: EdgeInsets.only(left: 20),
+      decoration: BoxDecoration(
+        border: Border.all(width: 1.0),
+        borderRadius: BorderRadius.all(Radius.circular(
+            5.0)), //TODO: color search box while typing (maybe use TextFormField)
+        color: Colors.grey[700],
+      ),
       child: TextField(
         controller: _searchEdit,
         decoration: InputDecoration(
+          border: InputBorder.none,
           hintText: "Search",
-          hintStyle: TextStyle(color: Colors.grey[300]),
+          hintStyle: TextStyle(color: Colors.grey[500]),
+          icon: Icon(
+            Icons.search,
+          ),
         ),
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.left,
       ),
     );
   }
@@ -98,42 +137,46 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _listView() {
     return Flexible(
       child: ListView.builder(
-          itemCount: _ingredients?.length,
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: () {
-                print(_ingredients[index]);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                    builder: (context) => DetailScreen(appBarTitle: "Ingredient", ingredient: _ingredients[index],),
+        itemCount: _ingredients?.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () {
+              print(_ingredients[index]);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailScreen(
+                    appBarTitle: "Ingredient",
+                    ingredient: _ingredients[index],
+                  ),
                 ),
-                ).then((value) =>
-                    setState(() {
-                      _ingredients = FastLevenshtein.getAllergyList();
-                      FocusScope.of(context).unfocus();
-                    }));
-              },
-              child: Card(
-                color: _ingredients[index].isAllergic ?  Colors.redAccent[100] : Colors.lightGreenAccent[100],
-                elevation: 5.0,
-                child: Container(
-                  margin: EdgeInsets.all(15.0),
-                  child: Text("${_ingredients[index].name}"),
-                ),
+              ).then((value) => setState(() {
+                    _ingredients = FastLevenshtein.getAllergyList();
+                    FocusScope.of(context).unfocus();
+                  }));
+            },
+            child: Card(
+              color: _ingredients[index].isAllergic
+                  ? Colors.redAccent[100]
+                  : Colors.lightGreenAccent[100],
+              elevation: 5.0,
+              child: Container(
+                margin: EdgeInsets.all(15.0),
+                child: Text("${_ingredients[index].name}"),
               ),
-            );
-          }),
+            ),
+          );
+        },
+      ),
     );
   }
 
-  Widget _searchIngredients(bool allergy){
-      _ingredients.clear();
+  Widget _searchIngredients(bool allergy) {
+    _ingredients.clear();
 
-      if (_searchText.isNotEmpty) {
-        _ingredients = FastLevenshtein
-            .autoComplete(_searchText);
-      }
+    if (_searchText.isNotEmpty) {
+      _ingredients = FastLevenshtein.autoComplete(_searchText);
+    }
     return _listView();
   }
 }

@@ -11,7 +11,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:test_final/api/recordDate.dart';
 import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
 import 'package:test_final/search/fast_levenshtein.dart';
-import 'package:test_final/impressumScreen.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:test_final/scanscreen.dart';
@@ -26,7 +25,6 @@ class CameraScreen extends StatefulWidget {
 }
 
 class CameraScreenState extends State<CameraScreen> {
-
   final CameraDescription camera;
   CameraController _controller;
   Future<void> _initializeControllerFuture;
@@ -203,43 +201,20 @@ class CameraScreenState extends State<CameraScreen> {
           Expanded(
             child: Container(
               height: MediaQuery.of(context).size.height * 0.88,
-              child: Stack(
-                children: <Widget>[
-                  AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: FutureBuilder<void>(
-                      future: _initializeControllerFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          // If the Future is complete, display the preview.
-                          return CameraPreview(_controller);
-                        } else {
-                          // Otherwise, display a loading indicator.
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      },
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 50, right: 20),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: FloatingActionButton.extended(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ImpressumScreen()));
-                        },
-                        label: Icon(
-                          Icons.info,
-                          color: Colors.black,
-                        ),
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+              child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: FutureBuilder<void>(
+                  future: _initializeControllerFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      // If the Future is complete, display the preview.
+                      return CameraPreview(_controller);
+                    } else {
+                      // Otherwise, display a loading indicator.
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
               ),
             ),
           ),
@@ -332,7 +307,6 @@ class CameraScreenState extends State<CameraScreen> {
 
                           Scaffold.of(context).showSnackBar(snackbar);
                         }
-
                       } catch (e) {
                         // If an error occurs, log the error to the console.
                         print(e);
@@ -354,14 +328,14 @@ class CameraScreenState extends State<CameraScreen> {
                         // Find the local app directory using the `path_provider` plugin.
                         final String directoryPath = await _localPath;
                         //alter current date and save as basename
-                          final currentDate = await RecordDate.recordDateNow();
-                          print(currentDate);
+                        final currentDate = await RecordDate.recordDateNow();
+                        print(currentDate);
                         // Construct the path where the image should be saved using the
                         // pattern package.
                         final path = join(
                           // Store the picture in the local app directory.
                           directoryPath,
-                          '${DateTime.now()}' + '.' + currentDate +'.png',
+                          '${DateTime.now()}' + '.' + currentDate + '.png',
                         );
 
                         // saving path to device storage
@@ -431,7 +405,6 @@ class CameraScreenState extends State<CameraScreen> {
     );
   }
 }
-
 
 tempList(List<Ingredient> ingredients) {
   List<Ingredient> temp = ingredients;
