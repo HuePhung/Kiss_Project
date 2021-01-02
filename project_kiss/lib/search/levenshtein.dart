@@ -41,21 +41,27 @@ class Levenshtein{
       return z;
   }
 
-  /*
-  static int getIndexOfStart(List <String>  recogTextList){
+
+  static int getIndexOfStart(List <String>  recogTextList) {
     int minimum = 9223372036854775807;
     int indexMinimum = 0;
 
+    List<String> variants =["INGREDIENTS", "INGREDIENTS/SASTOJCI"];
     for (int i = 0; i < recogTextList.length; i++){
 
-      int distance = findDistance("INGREDIENTS", recogTextList[i]);
+      for (int n=0; n < variants.length; n++){
 
-      if(distance < minimum){
+        int distance = findDistance(variants[n], recogTextList[i].toUpperCase());
 
-        minimum = distance;
-        indexMinimum = i;
+        if(distance < minimum){
 
-        print(i);
+          minimum = distance;
+          indexMinimum = i;
+
+      }
+
+
+       // print(i);
       }
 
     }
@@ -67,6 +73,6 @@ class Levenshtein{
 
       return indexMinimum;
     }
-  }*/
+  }
 
 }

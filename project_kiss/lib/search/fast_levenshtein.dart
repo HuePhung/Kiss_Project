@@ -180,9 +180,11 @@ class FastLevenshtein {
       ingridientsString = startString.split(",");
       //Delete Whitespace:
       for (int i=0; i < ingridientsString.length; i++){
-        ingridientsString[i] = ingridientsString[i].trim();
-        ingridientsString[i] = ingridientsString[i].toUpperCase();
-        Ingredient result = searchForOneIngredient(ingridientsString[i], 2);
+        //ingridientsString[i] = ingridientsString[i].trim();
+       // ingridientsString[i] = ingridientsString[i].toUpperCase();
+
+        Ingredient result = searchForOneIngredient(ingridientsString[i].trim().toUpperCase(), 2);
+       // print(ingridientsString[i].trim().toUpperCase());
         if(result.name != "error")
             ret.add(result);
       }

@@ -19,14 +19,14 @@ class FirebaseMLApi {
         await textRecognizer.close();
 
         final text = extractText(visionText);
-        print(visionText.text);
+        //print(text);
         return text.isEmpty ? 'No text found in the image' : text;
       } catch (error) {
         return error.toString();
       }
     }
   }
-  static extractText(VisionText visionText) {
+  static String extractText(VisionText visionText) {
     String text = '';
 
     for (TextBlock block in visionText.blocks) {
@@ -41,28 +41,39 @@ class FirebaseMLApi {
    // print(text);
     //Start nach "Ingredients"
     //FastLevenshtein startLeven = new FastLevenshtein();
-    List<String> recogTextList = text.split(" ");
+    List<String> recogTextList = text.split(' ');
 
-    for (var i=0; i <recogTextList.length; i++){
+   /* for (var i=0; i <recogTextList.length; i++){
+     // print(recogTextList[i] + "("+i.toString()+")");
       //ingridientsListItems.add(myCSV.data[i][0]);
       //startLeven.root.add(recogTextList[i].toUpperCase(), new Ingredient("dummy", "dummy", "dummy", i.toString()));
       FastLevenshtein.root.add("DUMMY " +recogTextList[i].toUpperCase(), new Ingredient("dummy for search: " + recogTextList[i].toUpperCase(), "dummy", "dummy", i.toString()));
     }
     //Ingredient searchResult = startLeven.searchForOneIngredient("INGREDIENTS", 3);
-    Ingredient searchResult = FastLevenshtein.searchForOneIngredient("DUMMY INGREDIENTS", 3);
+    Ingredient searchResult = FastLevenshtein.searchForOneIngredient("DUMMY INGREDIENTS", 3); */
     //Ingredient searchResult2 = FastLevenshtein.searchForOneIngredient("INGREDIENTS/SASTOJCI:", 3);
     int index;
-    if (searchResult.date != "error" /*|| searchResult2.date != "error" */){
-
-      index = int.parse(searchResult.date) ; // +1 da "INGREDIENTS" ausschließen
+    /*if (searchResult.date != "error" /*|| searchResult2.date != "error" */){
+      //print(searchResult.date);
+      index = int.parse(searchResult.date) + 1; // +1 da "INGREDIENTS" ausschließen
+      //print(index);
+      //print("index:" + index.toString());
     } else{
+      print("no INGREDIENTS ");
       index= 0;
     }
-
-    
+*/
+    // TODO Alte Einträge löschen, sonst funktioniert erkennung von "INGREDIENT" nicht!
    // int index = Levenshtein.getIndexOfStart(recogTextList);
+    //recogTextList = recogTextList.sublist(index);
     String returnText = "";
+    index = Levenshtein.getIndexOfStart(recogTextList) ;
+    if (index != 0){
+      index +=1 ;
+    }
+    print(index);
     for(int i = index  ; i < recogTextList.length; i++){
+     // print (recogTextList[i]);
       returnText = returnText +  recogTextList[i] + " ";
     }
     //print(returnText);
@@ -72,6 +83,7 @@ class FirebaseMLApi {
     String finale = text.substring(match.start, match.end);
     text = finale;
     return text;*/
+    //print(returnText);
     return returnText;
 
   }
