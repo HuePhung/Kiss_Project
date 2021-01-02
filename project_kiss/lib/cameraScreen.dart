@@ -290,7 +290,6 @@ class CameraScreenState extends State<CameraScreen> {
                               FastLevenshtein.getIndividualItems(
                                   textFromGallery);
                           //print(ingredients);
-
                           // If the picture was chosen, display it on a new screen.
                           Navigator.push(
                             context,
