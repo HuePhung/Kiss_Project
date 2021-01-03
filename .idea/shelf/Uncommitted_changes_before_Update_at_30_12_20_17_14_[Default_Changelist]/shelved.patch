@@ -1,0 +1,141 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"c9b8a319-230a-4b6d-a4c3-c9478958d057\" name=\"Default Changelist\" comment=\"\">\n      <change afterPath=\"$PROJECT_DIR$/project_kiss/.gradle/6.5/executionHistory/executionHistory.lock\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/project_kiss/.gradle/6.5/fileChanges/last-build.bin\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/project_kiss/.gradle/6.5/fileHashes/fileHashes.lock\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/project_kiss/.gradle/6.5/gc.properties\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/project_kiss/.gradle/buildOutputCleanup/buildOutputCleanup.lock\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/project_kiss/.gradle/buildOutputCleanup/cache.properties\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/project_kiss/.gradle/checksums/checksums.lock\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/project_kiss/.gradle/vcs-1/gc.properties\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/project_kiss/android/app/build.gradle\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/project_kiss/android/app/build.gradle\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/project_kiss/android/build.gradle\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/project_kiss/android/build.gradle\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/project_kiss/pubspec.lock\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/project_kiss/pubspec.lock\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"ProjectId\" id=\"1lC7CfTAbXy3xlSVBrBzCSt2gZR\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\n    <property name=\"dart.analysis.tool.window.visible\" value=\"false\" />\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$/project_kiss\" />\n    <property name=\"show.migrate.to.gradle.popup\" value=\"false\" />\n  </component>\n  <component name=\"SvnConfiguration\">\n    <configuration />\n  </component>\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"c9b8a319-230a-4b6d-a4c3-c9478958d057\" name=\"Default Changelist\" comment=\"\" />\n      <created>1607089092356</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1607089092356</updated>\n    </task>\n    <servers />\n  </component>\n  <component name=\"WindowStateProjectService\">\n    <state x=\"987\" y=\"370\" key=\"FileChooserDialogImpl\" timestamp=\"1607194966120\">\n      <screen x=\"0\" y=\"0\" width=\"2560\" height=\"1400\" />\n    </state>\n    <state x=\"987\" y=\"370\" key=\"FileChooserDialogImpl/0.0.2560.1400/2560.202.1920.1040@0.0.2560.1400\" timestamp=\"1607194966120\" />\n    <state x=\"3300\" y=\"477\" key=\"FileChooserDialogImpl/0.0.2560.1400/2560.202.1920.1040@2560.202.1920.1040\" timestamp=\"1607189073392\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/workspace.xml	(revision fc2ef4b53e2c0a3345c59a9830ea4094e5bd6d50)
++++ .idea/workspace.xml	(date 1609344281000)
+@@ -1,18 +1,15 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="AutoImportSettings">
++    <option name="autoReloadType" value="NONE" />
++  </component>
++  <component name="BranchesTreeState">
++    <expand />
++    <select />
++  </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="c9b8a319-230a-4b6d-a4c3-c9478958d057" name="Default Changelist" comment="">
+-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/executionHistory/executionHistory.lock" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/fileChanges/last-build.bin" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/fileHashes/fileHashes.lock" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/6.5/gc.properties" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/checksums/checksums.lock" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/project_kiss/.gradle/vcs-1/gc.properties" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/project_kiss/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/android/app/build.gradle" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/project_kiss/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/android/build.gradle" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/project_kiss/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/pubspec.lock" afterDir="false" />
++    <list default="true" id="ee2f32d7-67b1-4430-a6bb-70dfd44fb11b" name="Default Changelist" comment="HistoryScreen dismiss direction right back to Cam_Tab">
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -20,18 +17,26 @@
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+   </component>
+   <component name="Git.Settings">
++    <option name="RECENT_BRANCH_BY_REPOSITORY">
++      <map>
++        <entry key="$PROJECT_DIR$" value="dismiss_BackToCamTab" />
++      </map>
++    </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+   <component name="ProjectId" id="1lC7CfTAbXy3xlSVBrBzCSt2gZR" />
++  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+   <component name="ProjectViewState">
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+   <component name="PropertiesComponent">
++    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
+     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+     <property name="dart.analysis.tool.window.visible" value="false" />
+-    <property name="last_opened_file_path" value="$PROJECT_DIR$/project_kiss" />
++    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
++    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+     <property name="show.migrate.to.gradle.popup" value="false" />
+   </component>
+   <component name="SvnConfiguration">
+@@ -39,19 +44,73 @@
+   </component>
+   <component name="TaskManager">
+     <task active="true" id="Default" summary="Default task">
+-      <changelist id="c9b8a319-230a-4b6d-a4c3-c9478958d057" name="Default Changelist" comment="" />
++      <changelist id="ee2f32d7-67b1-4430-a6bb-70dfd44fb11b" name="Default Changelist" comment="Merged main into branch showRecordDate" />
+       <created>1607089092356</created>
+       <option name="number" value="Default" />
+       <option name="presentableId" value="Default" />
+       <updated>1607089092356</updated>
+     </task>
++    <task id="LOCAL-00001" summary="added DeleteButton into historyScreen">
++      <created>1608148916864</created>
++      <option name="number" value="00001" />
++      <option name="presentableId" value="LOCAL-00001" />
++      <option name="project" value="LOCAL" />
++      <updated>1608148916864</updated>
++    </task>
++    <task id="LOCAL-00002" summary="HistoryScreen dismiss direction right back to Cam_Tab">
++      <created>1609341263318</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1609341263318</updated>
++    </task>
++    <option name="localTasksCounter" value="3" />
+     <servers />
+   </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State />
++          </value>
++        </entry>
++      </map>
++    </option>
++    <option name="oldMeFiltersMigrated" value="true" />
++  </component>
++  <component name="VcsManagerConfiguration">
++    <MESSAGE value="Merged main into branch showRecordDate" />
++    <MESSAGE value="added DeleteButton into historyScreen" />
++    <MESSAGE value="HistoryScreen dismiss direction right back to Cam_Tab" />
++    <option name="LAST_COMMIT_MESSAGE" value="HistoryScreen dismiss direction right back to Cam_Tab" />
++  </component>
+   <component name="WindowStateProjectService">
+     <state x="987" y="370" key="FileChooserDialogImpl" timestamp="1607194966120">
+       <screen x="0" y="0" width="2560" height="1400" />
+     </state>
+     <state x="987" y="370" key="FileChooserDialogImpl/0.0.2560.1400/2560.202.1920.1040@0.0.2560.1400" timestamp="1607194966120" />
+     <state x="3300" y="477" key="FileChooserDialogImpl/0.0.2560.1400/2560.202.1920.1040@2560.202.1920.1040" timestamp="1607189073392" />
++    <state x="174" y="59" key="MergeDialog" timestamp="1609344243248">
++      <screen x="0" y="23" width="1280" height="717" />
++    </state>
++    <state x="174" y="59" key="MergeDialog/0.23.1280.717@0.23.1280.717" timestamp="1609344243248" />
++    <state x="100" y="23" width="982" height="716" key="SettingsEditor" timestamp="1608147713279">
++      <screen x="0" y="23" width="1280" height="716" />
++    </state>
++    <state x="100" y="23" width="982" height="716" key="SettingsEditor/0.23.1280.716@0.23.1280.716" timestamp="1608147713279" />
++    <state x="191" y="120" key="Vcs.Push.Dialog.v2" timestamp="1609341278537">
++      <screen x="0" y="23" width="1280" height="724" />
++    </state>
++    <state x="191" y="119" key="Vcs.Push.Dialog.v2/0.23.1280.717@0.23.1280.717" timestamp="1608148930193" />
++    <state x="191" y="120" key="Vcs.Push.Dialog.v2/0.23.1280.724@0.23.1280.724" timestamp="1609341278537" />
++    <state x="393" y="299" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1608559952278">
++      <screen x="0" y="23" width="1280" height="716" />
++    </state>
++    <state x="393" y="299" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1280.716@0.23.1280.716" timestamp="1608559952278" />
++    <state x="426" y="98" key="git4idea.branch.GitSmartOperationDialog" timestamp="1609343814043">
++      <screen x="0" y="23" width="1280" height="717" />
++    </state>
++    <state x="426" y="98" key="git4idea.branch.GitSmartOperationDialog/0.23.1280.717@0.23.1280.717" timestamp="1609343814043" />
+   </component>
+ </project>
+\ No newline at end of file

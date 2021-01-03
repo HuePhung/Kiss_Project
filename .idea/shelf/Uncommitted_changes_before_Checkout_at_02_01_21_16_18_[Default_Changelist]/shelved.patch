@@ -1,0 +1,58 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"NONE\" />\n  </component>\n  <component name=\"BranchesTreeState\">\n    <expand />\n    <select />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"ee2f32d7-67b1-4430-a6bb-70dfd44fb11b\" name=\"Default Changelist\" comment=\"Merged main into branch showRecordDate\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/project_kiss/lib/historyScreen.dart\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/project_kiss/lib/historyScreen.dart\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"Ingredients_In_HistoryScreen\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"ProjectId\" id=\"1lC7CfTAbXy3xlSVBrBzCSt2gZR\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">\n    <property name=\"Git.Branch.Popup.ShowAllRemotes\" value=\"true\" />\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\n    <property name=\"dart.analysis.tool.window.visible\" value=\"false\" />\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$\" />\n    <property name=\"settings.editor.selected.configurable\" value=\"vcs.Git\" />\n    <property name=\"show.migrate.to.gradle.popup\" value=\"false\" />\n  </component>\n  <component name=\"SvnConfiguration\">\n    <configuration />\n  </component>\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"ee2f32d7-67b1-4430-a6bb-70dfd44fb11b\" name=\"Default Changelist\" comment=\"Merged main into branch showRecordDate\" />\n      <created>1607089092356</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1607089092356</updated>\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"added DeleteButton into historyScreen\">\n      <created>1608148916864</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1608148916864</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"2\" />\n    <servers />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n    <option name=\"oldMeFiltersMigrated\" value=\"true\" />\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"Merged main into branch showRecordDate\" />\n    <MESSAGE value=\"added DeleteButton into historyScreen\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"added DeleteButton into historyScreen\" />\n  </component>\n  <component name=\"WindowStateProjectService\">\n    <state x=\"987\" y=\"370\" key=\"FileChooserDialogImpl\" timestamp=\"1607194966120\">\n      <screen x=\"0\" y=\"0\" width=\"2560\" height=\"1400\" />\n    </state>\n    <state x=\"987\" y=\"370\" key=\"FileChooserDialogImpl/0.0.2560.1400/2560.202.1920.1040@0.0.2560.1400\" timestamp=\"1607194966120\" />\n    <state x=\"3300\" y=\"477\" key=\"FileChooserDialogImpl/0.0.2560.1400/2560.202.1920.1040@2560.202.1920.1040\" timestamp=\"1607189073392\" />\n    <state x=\"100\" y=\"23\" width=\"982\" height=\"716\" key=\"SettingsEditor\" timestamp=\"1608147713279\">\n      <screen x=\"0\" y=\"23\" width=\"1280\" height=\"716\" />\n    </state>\n    <state x=\"100\" y=\"23\" width=\"982\" height=\"716\" key=\"SettingsEditor/0.23.1280.716@0.23.1280.716\" timestamp=\"1608147713279\" />\n    <state x=\"191\" y=\"119\" key=\"Vcs.Push.Dialog.v2\" timestamp=\"1608148930193\">\n      <screen x=\"0\" y=\"23\" width=\"1280\" height=\"717\" />\n    </state>\n    <state x=\"191\" y=\"119\" key=\"Vcs.Push.Dialog.v2/0.23.1280.717@0.23.1280.717\" timestamp=\"1608148930193\" />\n    <state x=\"393\" y=\"299\" key=\"com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2\" timestamp=\"1608559952278\">\n      <screen x=\"0\" y=\"23\" width=\"1280\" height=\"716\" />\n    </state>\n    <state x=\"393\" y=\"299\" key=\"com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1280.716@0.23.1280.716\" timestamp=\"1608559952278\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/workspace.xml	(revision b3d229c309ddc3b76337406f8c7e09effd933d53)
++++ .idea/workspace.xml	(date 1609349388000)
+@@ -8,9 +8,8 @@
+     <select />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="ee2f32d7-67b1-4430-a6bb-70dfd44fb11b" name="Default Changelist" comment="Merged main into branch showRecordDate">
++    <list default="true" id="ee2f32d7-67b1-4430-a6bb-70dfd44fb11b" name="Default Changelist" comment="Anzeige Aufnahmedatum bei Foto aus der Gallerie">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/project_kiss/lib/historyScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/project_kiss/lib/historyScreen.dart" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -20,7 +19,7 @@
+   <component name="Git.Settings">
+     <option name="RECENT_BRANCH_BY_REPOSITORY">
+       <map>
+-        <entry key="$PROJECT_DIR$" value="Ingredients_In_HistoryScreen" />
++        <entry key="$PROJECT_DIR$" value="showRecord_fromGallery" />
+       </map>
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+@@ -84,6 +83,14 @@
+     </state>
+     <state x="987" y="370" key="FileChooserDialogImpl/0.0.2560.1400/2560.202.1920.1040@0.0.2560.1400" timestamp="1607194966120" />
+     <state x="3300" y="477" key="FileChooserDialogImpl/0.0.2560.1400/2560.202.1920.1040@2560.202.1920.1040" timestamp="1607189073392" />
++    <state x="100" y="81" key="MergeDialog" timestamp="1609346139831">
++      <screen x="0" y="23" width="1280" height="717" />
++    </state>
++    <state x="100" y="81" key="MergeDialog/0.23.1280.717@0.23.1280.717" timestamp="1609346139831" />
++    <state x="254" y="146" key="MultipleFileMergeDialog" timestamp="1609346139934">
++      <screen x="0" y="23" width="1280" height="717" />
++    </state>
++    <state x="254" y="146" key="MultipleFileMergeDialog/0.23.1280.717@0.23.1280.717" timestamp="1609346139934" />
+     <state x="100" y="23" width="982" height="716" key="SettingsEditor" timestamp="1608147713279">
+       <screen x="0" y="23" width="1280" height="716" />
+     </state>
+@@ -92,9 +99,10 @@
+       <screen x="0" y="23" width="1280" height="717" />
+     </state>
+     <state x="191" y="119" key="Vcs.Push.Dialog.v2/0.23.1280.717@0.23.1280.717" timestamp="1608148930193" />
+-    <state x="393" y="299" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1608559952278">
+-      <screen x="0" y="23" width="1280" height="716" />
++    <state x="393" y="299" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1609346114705">
++      <screen x="0" y="23" width="1280" height="717" />
+     </state>
+     <state x="393" y="299" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1280.716@0.23.1280.716" timestamp="1608559952278" />
++    <state x="393" y="299" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1280.717@0.23.1280.717" timestamp="1609346114705" />
+   </component>
+ </project>
+\ No newline at end of file

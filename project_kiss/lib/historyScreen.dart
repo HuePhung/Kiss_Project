@@ -182,6 +182,19 @@ class _HistoryScreen extends State<HistoryScreen>
                       key: Key(imagePathList[index]),
                       background: Container(
                         color: Colors.white38,
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.camera_alt_rounded,
+                                color: Colors.black,
+                              ),
+                              Text('  Back to cam', style: TextStyle(color: Colors.black)),
+                            ],
+                          ),
+                        ),
                       ),
                       secondaryBackground: Container(
                         color: Colors.red,
