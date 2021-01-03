@@ -170,11 +170,18 @@ class FastLevenshtein {
 
   static List<Ingredient> getIndividualItems(String startString){
   //print("ankommender Text:  " + startString);
-    /* if (startString == "No text found in the image"){
-      return [];
-    } */
+
+    //Es kann in einem Ingredient auch ein Komma vorkommen
+    //-> wenn ingredients nicht durch kommas getrennt werden, kommt es deswegen zu problemen
+    // deswegen erst ab einer bestimmten anzahl von kommas am Komma trennen (so dass geschwindigkeit nicht beeinflusst wird)
+
+    var regExp = RegExp(",");
+    var numberOfComma = regExp.allMatches(startString).length;
+
+
     List<Ingredient> ret = List();
-    if (startString.contains(",")){
+    if (numberOfComma >= 4){
+    //if (startString.contains(",")){
     //  print("Comma!");
       List<String> ingridientsString;
       ingridientsString = startString.split(",");

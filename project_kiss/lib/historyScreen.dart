@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:path/path.dart' as p;
 import 'package:test_final/scanscreen.dart';
+import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
+import 'package:test_final/search/fast_levenshtein.dart';
 
 String imagePath = "";
 List<String> imagePathList = [];
@@ -129,6 +131,12 @@ class _HistoryScreen extends State<HistoryScreen>
                   .isNotEmpty) {
             SharedPreferences prefs = snapshot.data;
             List<String> imagePathList = prefs.getStringList("imagePathList");
+            /*for(String test in imagePathList) {
+              print('hash ${test.substring(test.length - 19, test.length - 13)+test.substring(test.length - 11, test.length - 9)}');
+            }
+            print("PATH LIST LENGTH  ${imagePathList.length}");
+            */
+
 
             return new Scaffold(
               appBar: AppBar(
@@ -151,7 +159,9 @@ class _HistoryScreen extends State<HistoryScreen>
                                   idx < imagePathList.length;
                                   idx++) {
                                     String deleteByIdx = imagePathList[idx];
-                                    prefs.remove("Scan$idx");
+                                    String num = deleteByIdx.substring(deleteByIdx.length - 9, deleteByIdx.length - 4);
+                                    prefs.remove(num);
+                                    //prefs.remove("Scan$idx");
                                     File(deleteByIdx).deleteSync();
                                   }
 
@@ -195,8 +205,14 @@ class _HistoryScreen extends State<HistoryScreen>
                   itemCount: imagePathList.length, //.compareTo(0),
                   itemBuilder: (context, index) {
                     index = imagePathList.length - 1 - index ;
-                    name = prefs.getString("Scan$index");
-                    if (name == null) name = "Scan $index";
+                    String imgPath = imagePathList[index];
+                    String num = imgPath.substring(imgPath.length - 9, imgPath.length - 4);
+                    String date = imgPath.substring(imgPath.length - 19, imgPath.length - 13)+imgPath.substring(imgPath.length - 11, imgPath.length - 9);
+                    //name = prefs.getString("Scan$index");
+                    //if (name == null) name = "Scan $index";
+
+                    name = prefs.getString("Scan$num");
+                    if (name == null) name = "Scan from $date";
                     return Dismissible(
                       key: Key(imagePathList[index]),
                       background: Container(
@@ -235,9 +251,9 @@ class _HistoryScreen extends State<HistoryScreen>
                         String deletePath = imagePathList[index];
                         setState(() {
                           imagePathList.removeAt(index);
-                          prefs.remove('Scan$index');
                           // deleting ingredients for this product
                           prefs.remove(deletePath);
+                          prefs.remove(num);
                         });
                         File(deletePath).deleteSync();
                         await prefs.setStringList(
@@ -251,8 +267,10 @@ class _HistoryScreen extends State<HistoryScreen>
                               if (imagePath == null) imagePath = "";
 
                               imagePath = await getStringValueFromListSF(index);
+
                               debugPrint(imagePath);
                               ingredients = await getIngredientsOfProduct(imagePath);
+
 
                               Navigator.push(
                                   context,
@@ -263,7 +281,7 @@ class _HistoryScreen extends State<HistoryScreen>
                                               imagePath: imagePath,
                                               ingredients: ingredients)))
                                   .then((value) =>
-                                  setState(() => name = prefs.getString("Scan$index"),
+                                  setState(() => name = prefs.getString("Scan$num"),
                                   ));
                             } catch (e) {
                               print(e);
@@ -284,7 +302,7 @@ class _HistoryScreen extends State<HistoryScreen>
                                     name,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                     )
 
@@ -292,10 +310,7 @@ class _HistoryScreen extends State<HistoryScreen>
                                     ),
                                 Text(
                                   //text next to the image
-                                  p
-                                      .extension(
-                                      imagePathList[index].toString(), 4)
-                                      .substring(1, 11),
+                                  date,
                                   textAlign: TextAlign.end,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontSize: 12),

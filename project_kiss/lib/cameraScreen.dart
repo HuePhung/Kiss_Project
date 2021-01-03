@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -201,10 +202,11 @@ class CameraScreenState extends State<CameraScreen> {
       }
     });
   }
-
+  Random rndScanNum = new Random();
   @override
   Widget build(BuildContext context) {
     //if keyboard is still exposed when entering the camera screen, dismiss it
+    int rndNum = rndScanNum.nextInt(90000)+10000;
     keyboardController.onChange;
     if (keyboardController.isVisible) {
       FocusScope.of(context).unfocus();
@@ -283,12 +285,13 @@ class CameraScreenState extends State<CameraScreen> {
                           final String directoryPath = await _localPath;
                           //alter current date and save as basename
                           final currentDate = await RecordDate.recordDateNow();
+
                           // Construct the path where the image should be saved using the
                           // pattern package.
                           final path = join(
                             // Store the picture in the local app directory.
                             directoryPath,
-                            '${DateTime.now()}' + '.' + currentDate +'.png',
+                            '${DateTime.now()}' + '.' + currentDate + '$rndNum' + '.png',
                           );
 
                           // getting the image using the gallery chooser
@@ -431,7 +434,7 @@ class CameraScreenState extends State<CameraScreen> {
                           final path = join(
                             // Store the picture in the local app directory.
                             directoryPath,
-                            '${DateTime.now()}' + '.' + currentDate + '.png',
+                            '${DateTime.now()}' + '.' + currentDate + '$rndNum'+'.png',
                           );
 
                           // saving path to device storage
