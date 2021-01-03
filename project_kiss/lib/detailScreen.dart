@@ -152,7 +152,7 @@ class CheckBoxWid extends StatefulWidget {
   @override
   _CheckBoxState createState() => _CheckBoxState(ingredient);
 }
-//names of the allergy items are stored in a shared prefrences list.
+//names of the allergy items are stored in a shared preferences list.
 class _CheckBoxState extends State<CheckBoxWid> {
   Ingredient ingredient;
   bool allergyTest = false;
@@ -177,7 +177,9 @@ class _CheckBoxState extends State<CheckBoxWid> {
       setState((){
 
         if(value) {
-          allergyNames.add(ingredient.name);
+          if(!allergyNames.contains(ingredient.name)) {
+            allergyNames.add(ingredient.name);
+          }
         }
         else {
           allergyNames.remove(ingredient.name);
