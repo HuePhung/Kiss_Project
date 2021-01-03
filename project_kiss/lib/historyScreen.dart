@@ -160,7 +160,7 @@ class _HistoryScreen extends State<HistoryScreen>
                                   idx++) {
                                     String deleteByIdx = imagePathList[idx];
                                     String num = deleteByIdx.substring(deleteByIdx.length - 9, deleteByIdx.length - 4);
-                                    prefs.remove(num);
+                                    prefs.remove('Scan$num');
                                     //prefs.remove("Scan$idx");
                                     File(deleteByIdx).deleteSync();
                                   }
@@ -253,7 +253,7 @@ class _HistoryScreen extends State<HistoryScreen>
                           imagePathList.removeAt(index);
                           // deleting ingredients for this product
                           prefs.remove(deletePath);
-                          prefs.remove(num);
+                          prefs.remove('Scan$num');
                         });
                         File(deletePath).deleteSync();
                         await prefs.setStringList(
