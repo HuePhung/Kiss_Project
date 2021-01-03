@@ -10,73 +10,86 @@ class DisplayPictureScreen extends StatelessWidget {
   final String appBarTitle;
   final String imagePath;
   final List<Ingredient> ingredients;
-  const DisplayPictureScreen(
-      {Key key,
-        @required this.appBarTitle,
-        @required this.imagePath,
-        @required this.ingredients,})
-      : super(key: key);
+  const DisplayPictureScreen({
+    Key key,
+    @required this.appBarTitle,
+    @required this.imagePath,
+    @required this.ingredients,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(appBarTitle), backgroundColor: Colors.black),
+      appBar:
+          AppBar(title: Text(appBarTitle), backgroundColor: Colors.grey[700]),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical /*, padding: EdgeInsets.all(20.0)*/,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ScanName(imagePath),
-              Container(
+      body: Container(
+        color: Colors.grey[900],
+        child: Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical /*, padding: EdgeInsets.all(20.0)*/,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ScanName(imagePath),
+                Container(
                   padding: EdgeInsets.all(20.0),
                   child: Image.file(
                     File(imagePath),
                     width: 250,
                     height: 250,
-                  )),
-              Text(
-                "Ingredients",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              Container(
-                padding: EdgeInsets.all(20.0),
-                child: DataTable(
-                    columns: [
-                      DataColumn(label: Text("Name")),
-                      //DataColumn(label: Text("Einstufung")),
-                    ],
-                    rows: ingredients
-                        .map((ingredient) => DataRow(cells: [
-                      DataCell(
-                        Text(ingredient.name),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailScreen(
-                                appBarTitle: "Ingredient",
-                                ingredient: ingredient,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      //DataCell(Text(ingredient.desc))
-                    ]))
-                        .toList()),
-              ),
-            ],
+                  ),
+                ),
+                Text(
+                  "Ingredients",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                Container(
+                  padding: EdgeInsets.all(20.0),
+                  child: DataTable(
+                      columns: [
+                        DataColumn(label: Text("Name")),
+                        //DataColumn(label: Text("Einstufung")),
+                      ],
+                      rows: ingredients
+                          .map((ingredient) => DataRow(cells: [
+                                DataCell(
+                                  Expanded(
+                                    child: Card(
+                                      child: Text(ingredient.name),
+                                      color: ingredient.isAllergic
+                                          ? Colors.redAccent[100]
+                                          : Colors.grey[100],
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailScreen(
+                                          appBarTitle: "Ingredient",
+                                          ingredient: ingredient,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                //DataCell(Text(ingredient.desc))
+                              ]))
+                          .toList()),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
-class ScanName extends StatefulWidget{
+
+class ScanName extends StatefulWidget {
   final String imagePath;
   ScanName(this.imagePath);
   @override
@@ -84,7 +97,8 @@ class ScanName extends StatefulWidget{
     return ScanNameState(imagePath);
   }
 }
-class ScanNameState extends State<ScanName>{
+
+class ScanNameState extends State<ScanName> {
   ScanNameState(this.imagePath);
   String imagePath;
   bool _isEditingText = false;
@@ -97,15 +111,16 @@ class ScanNameState extends State<ScanName>{
     super.initState();
     _prefs = initPrefs();
   }
-  Future<SharedPreferences> initPrefs() async{
+
+  Future<SharedPreferences> initPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> imagePathList = prefs.getStringList("imagePathList");
     //this is some hard as spaghetti code btw. it would be much better if we had the index as payload for this widget instead of going through all the scans.
     scanIndex = imagePathList.indexOf(imagePath);
     String name = prefs.getString("Scan$scanIndex");
-    if(name != null)
+    if (name != null)
       initialText = name;
-    else{
+    else {
       initialText = "Scan $scanIndex";
       //prefs.setString("Scan$scanIndex", initialText);
     }
@@ -117,25 +132,27 @@ class ScanNameState extends State<ScanName>{
     );
     return prefs;
   }
+
   @override
   void dispose() {
     _editingController.dispose();
     super.dispose();
   }
+
   @override
-  Widget build(BuildContext context)=> FutureBuilder(
-    future: _prefs,
-      builder: (context, snapshot){
+  Widget build(BuildContext context) => FutureBuilder(
+      future: _prefs,
+      builder: (context, snapshot) {
         return _editTitleTextField();
       });
 
-  Widget _editTitleTextField(){
+  Widget _editTitleTextField() {
     if (_isEditingText)
-        return Center(
+      return Center(
         child: TextField(
-          onSubmitted: (newValue) async{
+          onSubmitted: (newValue) async {
             SharedPreferences prefs = await _prefs;
-            setState((){
+            setState(() {
               initialText = newValue;
               prefs.setString('Scan$scanIndex', newValue);
               _isEditingText = false;
@@ -145,7 +162,7 @@ class ScanNameState extends State<ScanName>{
           controller: _editingController,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 24.0,
             fontWeight: FontWeight.bold,
           ),
@@ -161,7 +178,7 @@ class ScanNameState extends State<ScanName>{
         child: Text(
           initialText,
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 24.0,
             fontWeight: FontWeight.bold,
           ),

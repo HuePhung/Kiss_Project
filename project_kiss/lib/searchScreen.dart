@@ -72,7 +72,6 @@ class _SearchScreenState extends State<SearchScreen> {
           padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
           child: Column(
             children: <Widget>[
-              //FIXME:Does not work :(
               Row(
                 children: [
                   Expanded(
@@ -158,7 +157,7 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Card(
               color: _ingredients[index].isAllergic
                   ? Colors.redAccent[100]
-                  : Colors.lightGreenAccent[100],
+                  : Colors.grey[100],
               elevation: 5.0,
               child: Container(
                 margin: EdgeInsets.all(15.0),

@@ -16,8 +16,9 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(appBarTitle),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.grey[700],
       ),
+      //TODO: wrap with container for backgroundcolor
       body: Center(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints viewportConstraints) {
