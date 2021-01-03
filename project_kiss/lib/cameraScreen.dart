@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:camera/camera.dart';
@@ -12,6 +13,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:test_final/api/recordDate.dart';
 import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
+import 'package:test_final/historyScreen.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/impressumScreen.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -105,6 +107,11 @@ class CameraScreenState extends State<CameraScreen> {
     }
 
     prefs.setStringList("imagePathList", prefList);
+  }
+
+  addIngredientToSF(String key, List<Ingredient> ingredients) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(key, jsonEncode(ingredients));
   }
 
   removeStringFromSFList (String imagePath) async {
@@ -335,6 +342,9 @@ class CameraScreenState extends State<CameraScreen> {
                                 Scaffold.of(context).showSnackBar(snackbarCam);
                               }
                               else{
+                                // adding ingredients to sharedpreferences with key: path, value: jsonEncode of Ingredients (Map)
+                                debugPrint(path);
+                                await addIngredientToSF(path, ingredients);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -471,6 +481,9 @@ class CameraScreenState extends State<CameraScreen> {
                             }
                             // If the picture was taken, display it on a new screen.
                             else {
+                              // adding ingredients to sharedpreferences with key: path, value: jsonEncode of Ingredients (Map)
+                              await addIngredientToSF(path, ingredients);
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

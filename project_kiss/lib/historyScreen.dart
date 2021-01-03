@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,6 +71,23 @@ Future<SharedPreferences> getPrefs() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   debugPrint("getting prefs");
   return prefs;
+}
+
+Future<List<Ingredient>> getIngredientsOfProduct(String key) async {
+  List<Ingredient> ingredients = [];
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  debugPrint(prefs.getString(key));
+
+  json
+      .decode(prefs.getString(key))
+      .forEach((map) => ingredients.add(new Ingredient.fromJson(map)));
+
+  if(ingredients.isNotEmpty)
+    return ingredients;
+  else
+    return [];
 }
 
 class HistoryScreen extends StatefulWidget {
@@ -146,6 +164,11 @@ class _HistoryScreen extends State<HistoryScreen>
                                     //prefs.remove("Scan$idx");
                                     File(deleteByIdx).deleteSync();
                                   }
+
+                                  imagePathList.forEach((imagePath) {
+                                    prefs.remove(imagePath);
+                                  });
+
                                   setState(() {
                                     imagePathList.clear();
                                   });
@@ -228,8 +251,9 @@ class _HistoryScreen extends State<HistoryScreen>
                         String deletePath = imagePathList[index];
                         setState(() {
                           imagePathList.removeAt(index);
+                          // deleting ingredients for this product
+                          prefs.remove(deletePath);
                           prefs.remove(num);
-                          //prefs.remove('Scan$index');
                         });
                         File(deletePath).deleteSync();
                         await prefs.setStringList(
@@ -243,13 +267,9 @@ class _HistoryScreen extends State<HistoryScreen>
                               if (imagePath == null) imagePath = "";
 
                               imagePath = await getStringValueFromListSF(index);
-                              File fileImageFromGallery = File(imagePath); // die Fkt um ein File zu erhalten
 
-                              final textFromGallery = await FirebaseMLApi.recogniseText(fileImageFromGallery);
-
-                              List<Ingredient> ingredients =
-                              FastLevenshtein.getIndividualItems(
-                                  textFromGallery);
+                              debugPrint(imagePath);
+                              ingredients = await getIngredientsOfProduct(imagePath);
 
 
                               Navigator.push(
