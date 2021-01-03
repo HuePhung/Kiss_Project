@@ -90,6 +90,25 @@ Future<List<Ingredient>> getIngredientsOfProduct(String key) async {
     return [];
 }
 
+Future<List<Ingredient>> checkAllergies(List<Ingredient> ingredients) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  List<String> allergies = prefs.getStringList("allergyList");
+
+  if(allergies.isEmpty) return ingredients;
+  else {
+    allergies.forEach((allergy) {
+        ingredients.forEach((ingredient) {
+          if (ingredient.name == allergy){
+            ingredient.isAllergic = true;
+          }
+        });
+    });
+
+    return ingredients;
+  }
+}
+
 class HistoryScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -271,6 +290,7 @@ class _HistoryScreen extends State<HistoryScreen>
                               debugPrint(imagePath);
                               ingredients = await getIngredientsOfProduct(imagePath);
 
+                              ingredients = await checkAllergies(ingredients);
 
                               Navigator.push(
                                   context,

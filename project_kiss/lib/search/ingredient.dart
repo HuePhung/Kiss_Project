@@ -36,6 +36,7 @@ class Ingredient{
     desc = m['desc'];
     function = m['function'];
     date = m['date'];
+    isAllergic = m["isAllergic"];
   }
 
   Map<String, dynamic> toJson() => {
@@ -43,6 +44,7 @@ class Ingredient{
     'desc': desc,
     'function': function,
     'date': date,
+    'isAllergic': isAllergic,
   };
 
 }
