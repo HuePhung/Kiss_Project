@@ -58,7 +58,6 @@ Future<List<String>> getImagePathList() async {
  // prefList = prefList.reversed.toList();
 
   //prefList.forEach((element) {print(element);});
-  //debugPrint("what up nigga");
 
   //if(prefList == null){
   //  return [];
