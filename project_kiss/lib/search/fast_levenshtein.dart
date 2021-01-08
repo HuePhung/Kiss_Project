@@ -90,8 +90,12 @@ class FastLevenshtein {
     List<Ingredient> list = new List();
     TrieNode node = root.searchNode(word);
     if(node != null){
+      if(root.buildWord(node) == word.toUpperCase() && node.isLeafNode){
+        list.add(node.ingredient);
+      }
       list = _recursiveForAutoComplete(node, list);
     }
+
     return list;
   }
   //function should only get called via autoComplete() func.
@@ -165,30 +169,37 @@ class FastLevenshtein {
   }
 
   static List<Ingredient> getIndividualItems(String startString){
+  //print("ankommender Text:  " + startString);
+
+    //Es kann in einem Ingredient auch ein Komma vorkommen
+    //-> wenn ingredients nicht durch kommas getrennt werden, kommt es deswegen zu problemen
+    // deswegen erst ab einer bestimmten anzahl von kommas am Komma trennen (so dass geschwindigkeit nicht beeinflusst wird)
+
+    var regExp = RegExp(",");
+    var numberOfComma = regExp.allMatches(startString).length;
+
+
     List<Ingredient> ret = List();
-    if (startString.contains(",")){
+    if (numberOfComma >= 4){
+    //if (startString.contains(",")){
     //  print("Comma!");
       List<String> ingridientsString;
       ingridientsString = startString.split(",");
       //Delete Whitespace:
       for (int i=0; i < ingridientsString.length; i++){
-        ingridientsString[i] = ingridientsString[i].trim();
-        ingridientsString[i] = ingridientsString[i].toUpperCase();
-        Ingredient result = searchForOneIngredient(ingridientsString[i], 2);
+        //ingridientsString[i] = ingridientsString[i].trim();
+       // ingridientsString[i] = ingridientsString[i].toUpperCase();
+
+        Ingredient result = searchForOneIngredient(ingridientsString[i].trim().toUpperCase(), 2);
+       // print(ingridientsString[i].trim().toUpperCase());
         if(result.name != "error")
             ret.add(result);
       }
       return ret;
     }
     else {
-     // print("No comma!");
+     // Wenn kein Komma vorhanden ist:
       List <String> spaceDevided = startString.split(" ");
-
-      //for(int i = 0; i < spaceDevided.length; i++){
-      //  if(this.searchForOneWord(spaceDevided[i], 2)[0] != "error"){
-      //    ret.add(this.searchForOneWord(spaceDevided[i], 2));
-      //  }
-     // }
 
       //von vorne:
       int i = 0;
@@ -199,7 +210,8 @@ class FastLevenshtein {
         for (int n = spaceDevided.length; n >= i ; n--){
           //Um aus Liste an einzelnen Wörtern ein String ohne komma zu machen
           String searchString = spaceDevided.sublist(i,n).toString().replaceAll(",", "");
-          Ingredient searchResult = searchForOneIngredient(searchString, 2);
+         //print(searchString); //Um schritte zu sehen
+          Ingredient searchResult = searchForOneIngredient(searchString.toUpperCase(), 2);
          // print(searchString);
           if(searchResult.name != "error"){
             //print("lol ${searchResult.name}");
@@ -212,11 +224,19 @@ class FastLevenshtein {
           //für denn fall das nur errors für ein wort gefunden werden:
           if(i == n && searchResult.name == "error" ){
 
-            i = n ;
+            i = i + 1 ;
+
+            if (i == spaceDevided.length){
+              break;
+            }
           }
+
+
         }
       }
       return ret;
+
     }
+
   }
 }

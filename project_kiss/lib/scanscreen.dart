@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_final/detailScreen.dart';
 import 'package:test_final/search/ingredient.dart';
@@ -16,72 +17,81 @@ class DisplayPictureScreen extends StatelessWidget {
     @required this.imagePath,
     @required this.ingredients,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    String fullDate =
+        imagePath.substring(imagePath.length - 19, imagePath.length - 9);
     return Scaffold(
       appBar:
           AppBar(title: Text(appBarTitle), backgroundColor: Colors.grey[700]),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Container(
-        color: Colors.grey[900],
-        child: Center(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical /*, padding: EdgeInsets.all(20.0)*/,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ScanName(imagePath),
-                Container(
-                  padding: EdgeInsets.all(20.0),
-                  child: Image.file(
-                    File(imagePath),
-                    width: 250,
-                    height: 250,
-                  ),
+      body: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical /*, padding: EdgeInsets.all(20.0)*/,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                child: ScanName(imagePath),
+                padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
+              ),
+              Container(
+                child: Text(
+                  fullDate,
                 ),
-                Text(
-                  "Ingredients",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                alignment: Alignment.bottomRight,
+                padding: EdgeInsets.fromLTRB(0, 0, 66, 0),
+              ),
+              Container(
+                //padding: EdgeInsets.all(20.0),
+                child: Image.file(
+                  File(imagePath),
+                  width: 250,
+                  height: 250,
                 ),
-                Container(
-                  padding: EdgeInsets.all(20.0),
-                  child: DataTable(
-                      columns: [
-                        DataColumn(label: Text("Name")),
-                        //DataColumn(label: Text("Einstufung")),
-                      ],
-                      rows: ingredients
-                          .map((ingredient) => DataRow(cells: [
-                                DataCell(
-                                  Expanded(
-                                    child: Card(
-                                      child: Text(ingredient.name),
-                                      color: ingredient.isAllergic
-                                          ? Colors.redAccent[100]
-                                          : Colors.grey[100],
-                                    ),
+              ),
+              Text(
+                "Ingredients",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              Container(
+                padding: EdgeInsets.all(20.0),
+                child: DataTable(
+                    columns: [
+                      DataColumn(label: Text("Name")),
+                      //DataColumn(label: Text("Einstufung")),
+                    ],
+                    rows: ingredients
+                        .map((ingredient) => DataRow(
+                          cells: [
+                              DataCell(
+                                Card(
+                                    child: Text(ingredient.name),
+                                    color: ingredient.isAllergic
+                                        ? Colors.redAccent[100]
+                                        : Colors.grey[100],
                                   ),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => DetailScreen(
-                                          appBarTitle: "Ingredient",
-                                          ingredient: ingredient,
-                                        ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailScreen(
+                                        appBarTitle: "Ingredient",
+                                        ingredient: ingredient,
                                       ),
-                                    );
-                                  },
-                                ),
-                                //DataCell(Text(ingredient.desc))
-                              ]))
-                          .toList()),
-                ),
-              ],
-            ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              //DataCell(Text(ingredient.desc))
+                            ]))
+                        .toList()),
+              ),
+            ],
           ),
         ),
       ),
@@ -105,6 +115,7 @@ class ScanNameState extends State<ScanName> {
   TextEditingController _editingController;
   String initialText = "unnamed scan";
   int scanIndex = 0;
+  String num = "0";
   Future<SharedPreferences> _prefs;
   @override
   void initState() {
@@ -115,15 +126,27 @@ class ScanNameState extends State<ScanName> {
   Future<SharedPreferences> initPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> imagePathList = prefs.getStringList("imagePathList");
-    //this is some hard as spaghetti code btw. it would be much better if we had the index as payload for this widget instead of going through all the scans.
-    scanIndex = imagePathList.indexOf(imagePath);
-    String name = prefs.getString("Scan$scanIndex");
+    num = imagePath.substring(imagePath.length - 9, imagePath.length - 4);
+    String date =
+        imagePath.substring(imagePath.length - 19, imagePath.length - 13) +
+            imagePath.substring(imagePath.length - 11, imagePath.length - 9);
+    String name = prefs.getString("Scan$num");
     if (name != null)
+      initialText = name;
+    else {
+      initialText = "Scan from $date";
+      //prefs.setString("Scan$scanIndex", initialText);
+    }
+
+    //this is some hard as spaghetti code btw. it would be much better if we had the index as payload for this widget instead of going through all the scans.
+    /*scanIndex = imagePathList.indexOf(imagePath);
+    //String name = prefs.getString("Scan$scanIndex");
+    if(name != null)
       initialText = name;
     else {
       initialText = "Scan $scanIndex";
       //prefs.setString("Scan$scanIndex", initialText);
-    }
+    }*/
 
     _editingController = TextEditingController(text: initialText);
     _editingController.selection = new TextSelection(
@@ -148,39 +171,55 @@ class ScanNameState extends State<ScanName> {
 
   Widget _editTitleTextField() {
     if (_isEditingText)
-      return Center(
-        child: TextField(
-          onSubmitted: (newValue) async {
-            SharedPreferences prefs = await _prefs;
-            setState(() {
-              initialText = newValue;
-              prefs.setString('Scan$scanIndex', newValue);
-              _isEditingText = false;
-            });
-          },
-          autofocus: true,
-          controller: _editingController,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
+      return Container(
+        child: Center(
+          child: TextField(
+            onSubmitted: (newValue) async {
+              SharedPreferences prefs = await _prefs;
+              setState(() {
+                initialText = newValue;
+
+                prefs.setString('Scan$num', newValue);
+                _isEditingText = false;
+              });
+            },
+            autofocus: true,
+            controller: _editingController,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       );
     else {
-      return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          initialText,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
+      return Center(
+        child: Center(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    _isEditingText = true;
+                  });
+                },
+                child: Text(
+                  initialText,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.edit,
+              ),
+            ],
           ),
         ),
       );

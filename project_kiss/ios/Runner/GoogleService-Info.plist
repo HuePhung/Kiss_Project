@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>585492969085-64sdgbj3mvnnuihhrqtmpg43q77t6g7v.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.585492969085-64sdgbj3mvnnuihhrqtmpg43q77t6g7v</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC3K0Ootf757H3f5z7of_jLzsmcW954frM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>585492969085</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>de.projectKiss</string>
+	<key>PROJECT_ID</key>
+	<string>kisstest-1bb88</string>
+	<key>STORAGE_BUCKET</key>
+	<string>kisstest-1bb88.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:585492969085:ios:fcd9625b0bb4a815512314</string>
+	<key>DATABASE_URL</key>
+	<string>https://kisstest-1bb88.firebaseio.com</string>
+</dict>
+</plist>
