@@ -115,7 +115,9 @@ class FastLevenshtein {
     List<String> list = prefs.getStringList("allergyList");
     List<Ingredient> result = [];
     for(String name in list){
-      result.add(root.searchNode(name).ingredient);
+      Ingredient ing = root.searchNode(name).ingredient;
+      if(!ing.isAllergic) ing.isAllergic = true;
+      result.add(ing);
     }
     return result;
   }
