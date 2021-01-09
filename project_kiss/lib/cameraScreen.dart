@@ -215,7 +215,8 @@ class CameraScreenState extends State<CameraScreen> {
       return Container();
     }
 
-    return Container(
+    return SafeArea(
+        child: Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -500,6 +501,7 @@ class CameraScreenState extends State<CameraScreen> {
               ),
             ),
           ],
+        ),
         ),
       );
   }
