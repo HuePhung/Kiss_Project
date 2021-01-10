@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_final/detailScreen.dart';
 import 'package:test_final/search/ingredient.dart';
@@ -23,76 +24,90 @@ class DisplayPictureScreen extends StatelessWidget {
     String fullDate =
         imagePath.substring(imagePath.length - 19, imagePath.length - 9);
     return Scaffold(
+      backgroundColor: Colors.grey[900],
       appBar:
           AppBar(title: Text(appBarTitle), backgroundColor: Colors.grey[700]),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical /*, padding: EdgeInsets.all(20.0)*/,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                child: ScanName(imagePath),
-                padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-              ),
-              Container(
-                child: Text(
-                  fullDate,
-                ),
-                alignment: Alignment.bottomRight,
-                padding: EdgeInsets.fromLTRB(0, 0, 66, 0),
-              ),
-              Container(
-                //padding: EdgeInsets.all(20.0),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              child: ScanName(imagePath),
+              alignment: Alignment.topCenter,
+            ),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
                 child: Image.file(
                   File(imagePath),
-                  width: 250,
+                  width: 140,
                   height: 250,
+                  fit: BoxFit.cover,
                 ),
               ),
-              Text(
-                "Ingredients",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            Container(
+              child: Text(
+                fullDate,
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
               ),
-              Container(
-                padding: EdgeInsets.all(20.0),
-                child: DataTable(
-                    columns: [
-                      DataColumn(label: Text("Name")),
-                      //DataColumn(label: Text("Einstufung")),
-                    ],
-                    rows: ingredients
-                        .map((ingredient) => DataRow(
-                          cells: [
-                              DataCell(
-                                Card(
-                                    child: Text(ingredient.name),
-                                    color: ingredient.isAllergic
-                                        ? Colors.redAccent[100]
-                                        : Colors.grey[100],
-                                  ),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => DetailScreen(
-                                        appBarTitle: "Ingredient",
-                                        ingredient: ingredient,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              //DataCell(Text(ingredient.desc))
-                            ]))
-                        .toList()),
+            ),
+            /*Text(
+                  "Ingredients",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),*/
+            Container(
+              padding: EdgeInsets.fromLTRB(
+                10,
+                20.0,
+                10,
+                20,
               ),
-            ],
-          ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                physics: const ClampingScrollPhysics(),
+                itemCount: ingredients.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailScreen(
+                            appBarTitle: "Ingredient",
+                            ingredient: ingredients[index],
+                          ),
+                        ),
+                      ).then((value) => () {
+                            FocusScope.of(context).unfocus();
+                          });
+                    },
+                    child: Card(
+                      color: ingredients[index].isAllergic
+                          ? Colors.redAccent[100]
+                          : Colors.grey[700],
+                      elevation: 5.0,
+                      child: Container(
+                        margin: EdgeInsets.all(15.0),
+                        child: Text(
+                          ingredients[index].name,
+                          style: TextStyle(color: Colors.grey[50]),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -172,55 +187,71 @@ class ScanNameState extends State<ScanName> {
   Widget _editTitleTextField() {
     if (_isEditingText)
       return Container(
-        child: Center(
-          child: TextField(
-            onSubmitted: (newValue) async {
-              SharedPreferences prefs = await _prefs;
-              setState(() {
-                initialText = newValue;
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.only(left: 20),
+        decoration: BoxDecoration(
+          border: Border.all(width: 1.0),
+          borderRadius: BorderRadius.all(Radius.circular(
+              5.0)), //TODO: color search box while typing (maybe use TextFormField)
+          color: Colors.grey[700],
+        ),
+        child: TextField(
+          controller: _editingController,
+          autofocus: true,
+          onSubmitted: (newValue) async {
+            SharedPreferences prefs = await _prefs;
+            setState(() {
+              initialText = newValue;
 
-                prefs.setString('Scan$num', newValue);
-                _isEditingText = false;
-              });
-            },
-            autofocus: true,
-            controller: _editingController,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 24.0,
-              fontWeight: FontWeight.bold,
+              prefs.setString('Scan$num', newValue);
+              _isEditingText = false;
+            });
+          },
+          style: TextStyle(color: Colors.grey[50]),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintStyle: TextStyle(color: Colors.grey[50]),
+            suffixIcon: Icon(
+              Icons.edit,
+              color: Colors.white,
             ),
           ),
+          textAlign: TextAlign.center,
         ),
       );
     else {
       return Center(
-        child: Center(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _isEditingText = true;
-                  });
-                },
-                child: Text(
-                  initialText,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _isEditingText = true;
+                });
+              },
+              child: Text(
+                initialText,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              Icon(
+            ),
+            IconButton(
+              icon: Icon(
                 Icons.edit,
+                color: Colors.white,
               ),
-            ],
-          ),
+              onPressed: () {
+                setState(() {
+                  _isEditingText = true;
+                });
+              },
+            )
+          ],
         ),
       );
     }

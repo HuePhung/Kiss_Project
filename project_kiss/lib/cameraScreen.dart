@@ -113,15 +113,14 @@ class CameraScreenState extends State<CameraScreen> {
     prefs.setString(key, jsonEncode(ingredients));
   }
 
-  removeStringFromSFList (String imagePath) async {
-
+  removeStringFromSFList(String imagePath) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> prefList = prefs.getStringList("imagePathList");
     prefList.removeLast();
 
     prefs.setStringList("imagePathList", prefList);
-
   }
+
   Future<File> fixExifRotation(String imagePath) async {
     debugPrint("in fixExif");
 
@@ -201,11 +200,12 @@ class CameraScreenState extends State<CameraScreen> {
       }
     });
   }
+
   Random rndScanNum = new Random();
   @override
   Widget build(BuildContext context) {
     //if keyboard is still exposed when entering the camera screen, dismiss it
-    int rndNum = rndScanNum.nextInt(90000)+10000;
+    int rndNum = rndScanNum.nextInt(90000) + 10000;
     keyboardController.onChange;
     if (keyboardController.isVisible) {
       FocusScope.of(context).unfocus();
@@ -215,30 +215,32 @@ class CameraScreenState extends State<CameraScreen> {
       return Container();
     }
 
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          //expanded fixed the overflow exception with the keyboard
-          Expanded(
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.88,
-              child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: FutureBuilder<void>(
-                  future: _initializeControllerFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      // If the Future is complete, display the preview.
-                      return CameraPreview(_controller);
-                    } else {
-                      // Otherwise, display a loading indicator.
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  },
+    return SafeArea(
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            //expanded fixed the overflow exception with the keyboard
+            Expanded(
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.88,
+                child: AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: FutureBuilder<void>(
+                    future: _initializeControllerFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        // If the Future is complete, display the preview.
+                        return CameraPreview(_controller);
+                      } else {
+                        // Otherwise, display a loading indicator.
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
                 ),
               ),
-            ),),
+            ),
             Container(
               height: MediaQuery.of(context).size.height * 0.05,
               child: Scaffold(
@@ -264,7 +266,11 @@ class CameraScreenState extends State<CameraScreen> {
                           final path = join(
                             // Store the picture in the local app directory.
                             directoryPath,
-                            '${DateTime.now()}' + '.' + currentDate + '$rndNum' + '.png',
+                            '${DateTime.now()}' +
+                                '.' +
+                                currentDate +
+                                '$rndNum' +
+                                '.png',
                           );
 
                           // getting the image using the gallery chooser
@@ -286,7 +292,7 @@ class CameraScreenState extends State<CameraScreen> {
                                     fileImageFromGallery);
                             //print(textFromGallery);
                             //List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
-                           /* List<Ingredient> ingredients =
+                            /* List<Ingredient> ingredients =
                                 FastLevenshtein.getIndividualItems(
                                     textFromGallery);*/
 
@@ -313,8 +319,7 @@ class CameraScreenState extends State<CameraScreen> {
                                             Radius.circular(25))));
 
                                 Scaffold.of(context).showSnackBar(snackbarCam);
-                              }
-                              else{
+                              } else {
                                 // adding ingredients to sharedpreferences with key: path, value: jsonEncode of Ingredients (Map)
                                 debugPrint(path);
                                 await addIngredientToSF(path, ingredients);
@@ -325,19 +330,18 @@ class CameraScreenState extends State<CameraScreen> {
                                         appBarTitle: 'Selected product',
                                         imagePath: path,
                                         ingredients:
-                                        ingredients), // tempList => list of ingredients per item
+                                            ingredients), // tempList => list of ingredients per item
                                   ),
                                 );
                               }
                             }
                             //print(ingredients);
                             // If the picture was chosen, display it on a new screen.
-                           else{
-
+                            else {
                               removeStringFromSFList(path);
                               final snackbarCam = SnackBar(
                                   content:
-                                  Text("Error: No text was recognized."),
+                                      Text("Error: No text was recognized."),
                                   backgroundColor: Colors.red,
                                   duration: Duration(seconds: 3),
                                   margin: EdgeInsets.all(18.0),
@@ -407,7 +411,11 @@ class CameraScreenState extends State<CameraScreen> {
                           final path = join(
                             // Store the picture in the local app directory.
                             directoryPath,
-                            '${DateTime.now()}' + '.' + currentDate + '$rndNum'+'.png',
+                            '${DateTime.now()}' +
+                                '.' +
+                                currentDate +
+                                '$rndNum' +
+                                '.png',
                           );
 
                           // saving path to device storage
@@ -436,7 +444,6 @@ class CameraScreenState extends State<CameraScreen> {
                             print(textFromCam);
 
                             if (ingredients.isEmpty) {
-
                               removeStringFromSFList(path);
 
                               final snackbarCam = SnackBar(
@@ -469,9 +476,7 @@ class CameraScreenState extends State<CameraScreen> {
                               );
                             }
                           } else {
-
                             removeStringFromSFList(path);
-
 
                             final snackbarCam = SnackBar(
                                 content: Text("Error: No text was recognized."),
@@ -501,7 +506,8 @@ class CameraScreenState extends State<CameraScreen> {
             ),
           ],
         ),
-      );
+      ),
+    );
   }
 }
 

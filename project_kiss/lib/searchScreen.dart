@@ -120,6 +120,7 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       child: TextField(
         controller: _searchEdit,
+        style: TextStyle(color: Colors.grey[50]),
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: "Search",
@@ -157,11 +158,14 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Card(
               color: _ingredients[index].isAllergic
                   ? Colors.redAccent[100]
-                  : Colors.grey[100],
+                  : Colors.grey[700],
               elevation: 5.0,
               child: Container(
                 margin: EdgeInsets.all(15.0),
-                child: Text("${_ingredients[index].name}"),
+                child: Text(
+                  "${_ingredients[index].name}",
+                  style: TextStyle(color: Colors.grey[50]),
+                ),
               ),
             ),
           );
