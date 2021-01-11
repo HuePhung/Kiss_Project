@@ -52,7 +52,7 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text("Search for ingredients"),
-          backgroundColor: Colors.grey[700],
+          backgroundColor: Colors.grey[800],
           actions: [
             IconButton(
               padding: EdgeInsets.only(right: 20),
@@ -68,7 +68,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ],
         ),
         body: Container(
-          color: Colors.grey[900],
+          color: Colors.grey[850],
           padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
           child: Column(
             children: <Widget>[
@@ -157,16 +157,29 @@ class _SearchScreenState extends State<SearchScreen> {
             },
             child: Card(
               color: _ingredients[index].isAllergic
-                  ? Colors.redAccent[100]
-                  : Colors.grey[700],
+                  ? const Color(0xff9B3535)
+                  : Colors.grey[800],
               elevation: 5.0,
-              child: Container(
-                margin: EdgeInsets.all(15.0),
-                child: Text(
-                  "${_ingredients[index].name}",
-                  style: TextStyle(color: Colors.grey[50]),
+              child: Row(children: [
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.all(15),
+                    child: Text(
+                      "${_ingredients[index].name}",
+                      style: TextStyle(color: Colors.grey[50]),
+                    ),
+                  ),
                 ),
-              ),
+                Container(
+                  padding: EdgeInsets.only(
+                    right: 5,
+                  ),
+                  child: Icon(
+                    Icons.chevron_right,
+                    color: Colors.grey[50],
+                  ),
+                ),
+              ]),
             ),
           );
         },

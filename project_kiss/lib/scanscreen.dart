@@ -24,9 +24,9 @@ class DisplayPictureScreen extends StatelessWidget {
     String fullDate =
         imagePath.substring(imagePath.length - 19, imagePath.length - 9);
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.grey[850],
       appBar:
-          AppBar(title: Text(appBarTitle), backgroundColor: Colors.grey[700]),
+          AppBar(title: Text(appBarTitle), backgroundColor: Colors.grey[800]),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
       body: SingleChildScrollView(
@@ -37,7 +37,7 @@ class DisplayPictureScreen extends StatelessWidget {
           children: [
             Container(
               child: ScanName(imagePath),
-              alignment: Alignment.topCenter,
+              margin: EdgeInsets.all(15),
             ),
             Container(
               padding: EdgeInsets.all(10.0),
@@ -55,14 +55,22 @@ class DisplayPictureScreen extends StatelessWidget {
               child: Text(
                 fullDate,
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: Colors.grey[400],
                 ),
               ),
             ),
-            /*Text(
-                  "Ingredients",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),*/
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(top:10,left:20,) ,
+              child: Text(
+                "Ingredients",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.grey[300],
+                ),
+              ),
+            ),
             Container(
               padding: EdgeInsets.fromLTRB(
                 10,
@@ -92,15 +100,34 @@ class DisplayPictureScreen extends StatelessWidget {
                     },
                     child: Card(
                       color: ingredients[index].isAllergic
-                          ? Colors.redAccent[100]
+                          ? const Color(0xff9B3535)
                           : Colors.grey[700],
                       elevation: 5.0,
                       child: Container(
-                        margin: EdgeInsets.all(15.0),
-                        child: Text(
-                          ingredients[index].name,
-                          style: TextStyle(color: Colors.grey[50]),
-                        ),
+                        margin: EdgeInsets.all(10.0),
+                        child: Row(children: [
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                left: 5,
+                                right: 15,
+                              ),
+                              child: Text(
+                                ingredients[index].name,
+                                style: TextStyle(color: Colors.grey[50]),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(
+                              right: 5,
+                            ),
+                            child: Icon(
+                              Icons.chevron_right,
+                              color: Colors.grey[50],
+                            ),
+                          ),
+                        ]),
                       ),
                     ),
                   );
