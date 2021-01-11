@@ -147,12 +147,14 @@ class DetailScreen extends StatelessWidget {
     }
   }
 }
+
 class CheckBoxWid extends StatefulWidget {
   final Ingredient ingredient;
   CheckBoxWid(this.ingredient);
   @override
   _CheckBoxState createState() => _CheckBoxState(ingredient);
 }
+
 //names of the allergy items are stored in a shared preferences list.
 class _CheckBoxState extends State<CheckBoxWid> {
   Ingredient ingredient;
@@ -162,34 +164,34 @@ class _CheckBoxState extends State<CheckBoxWid> {
   SharedPreferences prefs;
   _CheckBoxState(this.ingredient);
   @override
-  void initState(){
+  void initState() {
     super.initState();
-     _initPrefs();
+    _initPrefs();
   }
-  void _initPrefs() async{
+
+  void _initPrefs() async {
     prefs = await SharedPreferences.getInstance();
   }
-  Widget build(BuildContext context){
+
+  Widget build(BuildContext context) {
     return Center(
-        child: Checkbox(
+      child: Checkbox(
         value: ingredient.isAllergic,
         onChanged: (value) {
           allergyNames = prefs.getStringList("allergyList");
-      setState((){
-
-        if(value) {
-          if(!allergyNames.contains(ingredient.name)) {
-            allergyNames.add(ingredient.name);
-          }
-        }
-        else {
-          allergyNames.remove(ingredient.name);
-        }
-        ingredient.isAllergic = value;
-      });
+          setState(() {
+            if (value) {
+              if (!allergyNames.contains(ingredient.name)) {
+                allergyNames.add(ingredient.name);
+              }
+            } else {
+              allergyNames.remove(ingredient.name);
+            }
+            ingredient.isAllergic = value;
+          });
           prefs.setStringList("allergyList", allergyNames);
-    },
-    ),
+        },
+      ),
     );
   }
   /*@override

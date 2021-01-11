@@ -61,7 +61,10 @@ class DisplayPictureScreen extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.centerLeft,
-              padding: EdgeInsets.only(top:10,left:20,) ,
+              padding: EdgeInsets.only(
+                top: 10,
+                left: 20,
+              ),
               child: Text(
                 "Ingredients",
                 style: TextStyle(
