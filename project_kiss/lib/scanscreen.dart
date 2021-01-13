@@ -255,18 +255,21 @@ class ScanNameState extends State<ScanName> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            InkWell(
-              onTap: () {
-                setState(() {
-                  _isEditingText = true;
-                });
-              },
-              child: Text(
-                initialText,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    _isEditingText = true;
+                  });
+                },
+                child: Text(
+                  initialText,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
