@@ -20,118 +20,147 @@ class DetailScreen extends StatelessWidget {
       ),
       //TODO: wrap with container for backgroundcolor
       body: Center(
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints viewportConstraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints:
-                    BoxConstraints(minHeight: viewportConstraints.maxHeight),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      //height: MediaQuery.of(context).size.height * 0.1,
-                      //width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(20.0),
-                      child: Text(
-                        ingredient.name,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+        child: Container(
+          color: Colors.grey[850],
+          child: LayoutBuilder(
+            builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints:
+                      BoxConstraints(minHeight: viewportConstraints.maxHeight),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        //height: MediaQuery.of(context).size.height * 0.1,
+                        //width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.fromLTRB(20.0,30,20,0),
+                        child: Text(
+                          ingredient.name,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.grey[50],
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      //height: MediaQuery.of(context).size.height * 0.7,
-                      // width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(20.0),
-                      child: Table(
-                        defaultVerticalAlignment:
-                            TableCellVerticalAlignment.top,
-                        children: [
-                          TableRow(
+                      Card(
+                        color: Colors.grey[800],
+                        margin: EdgeInsets.all(15),
+                        child: Container(
+                          //height: MediaQuery.of(context).size.height * 0.7,
+                          // width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(20.0),
+                          child: Table(
+                            columnWidths: {
+                              0: FlexColumnWidth(1),
+                              1: FlexColumnWidth(2),
+                            },
+                            defaultVerticalAlignment:
+                                TableCellVerticalAlignment.top,
                             children: [
-                              Text("Description"),
-                              Text(ingredient.desc != ""
-                                  ? ingredient.desc
-                                  : "No description found"),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Divider(
-                                color: Colors.grey[600],
-                                height: 15,
+                              TableRow(
+                                children: [
+                                  Text("Description",
+                                      style: TextStyle(
+                                        color: Colors.grey[50],
+                                      ),),
+                                  Text(
+                                      ingredient.desc != ""
+                                          ? ingredient.desc
+                                          : "No description found",
+                                      style: TextStyle(
+                                        color: Colors.grey[50],
+                                      ),),
+                                ],
                               ),
-                              Divider(
-                                color: Colors.grey[600],
-                                height: 15,
+                              TableRow(
+                                children: [
+                                  Divider(
+                                    color: Colors.grey[50],
+                                    height: 15,
+                                  ),
+                                  Divider(
+                                    color: Colors.grey[50],
+                                    height: 15,
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Text("Function"),
-                              Text(ingredient.function),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Divider(
-                                color: Colors.grey[600],
-                                height: 15,
+                              TableRow(
+                                children: [
+                                  Text("Function",
+                                      style: TextStyle(
+                                        color: Colors.grey[50],
+                                      ),),
+                                  Text(ingredient.function,
+                                      style: TextStyle(
+                                        color: Colors.grey[50],
+                                      ),),
+                                ],
                               ),
-                              Divider(
-                                color: Colors.grey[600],
-                                height: 15,
+                              TableRow(
+                                children: [
+                                  Divider(
+                                    color: Colors.grey[50],
+                                    height: 15,
+                                  ),
+                                  Divider(
+                                    color: Colors.grey[50],
+                                    height: 15,
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Text("Allergic"),
-                              Container(
-                                child: Column(
-                                  children: [
-                                    CheckBoxWid(ingredient),
-                                    Text(
-                                      "Click this button if you are allergic to this substance",
-                                      style: TextStyle(color: Colors.red),
+                              TableRow(
+                                children: [
+                                  Text("Allergic",
+                                      style: TextStyle(
+                                        color: Colors.grey[50],
+                                      )),
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        CheckBoxWid(ingredient,),
+                                        Text(
+                                          "Click this button if you are allergic to this substance",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      //  height: MediaQuery.of(context).size.height * 0.1,
-                      // width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.only(left: 100, right: 100),
-                      child: ElevatedButton(
-                        child: Row(children: <Widget>[
-                          Icon(Icons.search),
-                          Text("Web search")
-                        ]),
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.black),
                         ),
-                        onPressed: () {
-                          _launchURL();
-                        },
                       ),
-                    ),
-                  ],
+                      Container(
+                        //  height: MediaQuery.of(context).size.height * 0.1,
+                        // width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.only(left: 100, right: 100),
+                        child: ElevatedButton(
+                          child: Row(children: <Widget>[
+                            Icon(Icons.search),
+                            Text("Web search")
+                          ]),
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.grey[700],),
+                          ),
+                          onPressed: () {
+                            _launchURL();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
