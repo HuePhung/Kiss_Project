@@ -125,7 +125,7 @@ class DetailScreen extends StatelessWidget {
                                       children: [
                                         CheckBoxWid(ingredient,),
                                         Text(
-                                          "Click this button if you are allergic to this substance",
+                                          "Check this box if you are allergic to this substance",
                                           style: TextStyle(color: Colors.red),
                                         ),
                                       ],
