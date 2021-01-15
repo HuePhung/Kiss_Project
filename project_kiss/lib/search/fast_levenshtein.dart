@@ -166,8 +166,12 @@ class FastLevenshtein {
   }
 
   static int calcDistance(String word){
-    var dst = (word.length / 4);
-    return dst.toInt();
+    var distance = 0;
+    if(word.length>=4 && word.length < 7) 
+      distance++;
+    if(word.length>=7) 
+      distance += (word.length~/3.5);
+    return distance;
   }
 
   static List<Ingredient> getIndividualItems(String startString){
@@ -191,8 +195,8 @@ class FastLevenshtein {
       for (int i=0; i < ingridientsString.length; i++){
         //ingridientsString[i] = ingridientsString[i].trim();
        // ingridientsString[i] = ingridientsString[i].toUpperCase();
-
-        Ingredient result = searchForOneIngredient(ingridientsString[i].trim().toUpperCase(), 2);
+        String res = ingridientsString[i].trim().toUpperCase();
+        Ingredient result = searchForOneIngredient(res, calcDistance(res));
        // print(ingridientsString[i].trim().toUpperCase());
         if(result.name != "error")
             ret.add(result);
@@ -213,7 +217,8 @@ class FastLevenshtein {
           //Um aus Liste an einzelnen Wörtern ein String ohne komma zu machen
           String searchString = spaceDevided.sublist(i,n).toString().replaceAll(",", "");
          //print(searchString); //Um schritte zu sehen
-          Ingredient searchResult = searchForOneIngredient(searchString.toUpperCase(), 2);
+          String res = searchString.toUpperCase();
+          Ingredient searchResult = searchForOneIngredient(res, calcDistance(res));
          // print(searchString);
           if(searchResult.name != "error"){
             //print("lol ${searchResult.name}");
