@@ -220,7 +220,6 @@ class ScanNameState extends State<ScanName> {
         margin: EdgeInsets.all(10),
         padding: EdgeInsets.only(left: 20),
         decoration: BoxDecoration(
-          border: Border.all(width: 1.0),
           borderRadius: BorderRadius.all(Radius.circular(
               5.0)), //TODO: color search box while typing (maybe use TextFormField)
           color: Colors.grey[700],
@@ -264,6 +263,7 @@ class ScanNameState extends State<ScanName> {
                 },
                 child: Text(
                   initialText,
+                  textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.white,

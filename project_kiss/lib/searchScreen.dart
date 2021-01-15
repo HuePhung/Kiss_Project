@@ -113,7 +113,6 @@ class _SearchScreenState extends State<SearchScreen> {
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
-        border: Border.all(width: 1.0),
         borderRadius: BorderRadius.all(Radius.circular(
             5.0)), //TODO: color search box while typing (maybe use TextFormField)
         color: Colors.grey[700],
@@ -122,6 +121,8 @@ class _SearchScreenState extends State<SearchScreen> {
         controller: _searchEdit,
         style: TextStyle(color: Colors.grey[50]),
         decoration: InputDecoration(
+          fillColor: Colors.green,
+          focusColor: Colors.redAccent,
           border: InputBorder.none,
           hintText: "Search",
           hintStyle: TextStyle(color: Colors.grey[500]),

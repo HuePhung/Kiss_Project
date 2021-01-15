@@ -269,7 +269,6 @@ class _HistoryScreen extends State<HistoryScreen>
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Container(
                               padding: EdgeInsets.all(20),
@@ -304,8 +303,6 @@ class _HistoryScreen extends State<HistoryScreen>
                                   Text(
                                     //text next to the image
                                     date,
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.grey[200],
@@ -315,7 +312,7 @@ class _HistoryScreen extends State<HistoryScreen>
                               ),
                             ),
                             Align(
-                              alignment: Alignment.topRight,
+                              alignment: Alignment.topCenter,
                               child: IconButton(
                                 padding: EdgeInsets.all(15),
                                 icon: new Icon(
