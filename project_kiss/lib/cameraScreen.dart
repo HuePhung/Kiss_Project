@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:math';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:path/path.dart';
@@ -18,6 +20,8 @@ import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:test_final/scanscreen.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:test_final/search/isolate.dart';
 
 class CameraScreen extends StatefulWidget {
   final CameraDescription camera;
@@ -40,6 +44,7 @@ class CameraScreenState extends State<CameraScreen> {
   @override
   void initState() {
     super.initState();
+
     //FocusScope.of(context).unfocus();
     //leven = new FastLevenshtein();
     //loadCSV();
@@ -201,6 +206,75 @@ class CameraScreenState extends State<CameraScreen> {
       }
     });
   }
+
+  void _pressed(String string) async {
+
+   // Future<List<Ingredient>> ingredients =  compute(FastLevenshtein.getIndividualItems, string);
+
+
+    //List<Ingredient> ingredients =
+  //var ll = FastLevenshtein.testMethod(string);//await compute(FastLevenshtein.testMethod, string );//FastLevenshtein.getIndividualItems(string);
+  //  print("This was in compute:" + ll.toString());
+
+    /*
+    var ingredients = await compute(FastLevenshtein.getIndividualItems, string);
+    print("This was in compute:" + ingredients);*/
+
+   /* computeIng(string).then((value){
+      print(value.toString());
+    });*/
+  }
+/*
+Future<List<Ingredient>> computeIng (String string) async{
+    return  compute(FastLevenshtein.getIndividualItems(startString), string);
+}*/
+
+
+Future createIsolate(String string) async{
+
+    ReceivePort receivePort = ReceivePort();
+    Isolate.spawn(isolateFunction, receivePort.sendPort);
+
+    SendPort childSendPort = await receivePort.first;
+
+    ReceivePort responsePort = ReceivePort();
+
+    childSendPort.send([string, responsePort.sendPort]);
+
+
+    var response = await responsePort.first;
+
+    print(response.toString());
+
+
+    
+    return null;
+}
+
+static void isolateFunction(SendPort mainSendPort) async{
+
+  ReceivePort childReceivePort = ReceivePort();
+  mainSendPort.send(childReceivePort.sendPort);
+
+  await for (var message in childReceivePort) {
+
+    String ingredientString = message[0];
+    SendPort replyPort = message[1];
+    //FastLevenshtein fastlev = message[2];
+
+    //print("Ankommender String in Isolate: "+ ingredientString);
+    FastLevenshtein.init();
+    //SharedPreferences prefs = await SharedPreferences.getInstance();
+  // var response = await FastLevenshtein.testMethod("AQUA");
+
+    var response = await FastLevenshtein.getIndividualItems(ingredientString). then((value) => replyPort.send(value));
+    //print(response.toString());
+   // print(await FastLevenshtein.testMethod(ingredientString));
+    // replyPort.send(response);
+
+  }
+}
+
   Random rndScanNum = new Random();
   @override
   Widget build(BuildContext context) {
@@ -239,7 +313,14 @@ class CameraScreenState extends State<CameraScreen> {
                   },
                 ),
               ),
-            ),),
+            ),
+          ),
+            Container(
+              child: Align(
+                alignment: Alignment.center,
+                child: CircularProgressIndicator()
+              ),
+            ),
             Container(
               height: MediaQuery.of(context).size.height * 0.05,
               child: Scaffold(
@@ -294,9 +375,11 @@ class CameraScreenState extends State<CameraScreen> {
                             if (textFromGallery.trim() != "" &&
                                 textFromGallery !=
                                     "No text found in the image") {
-                              List<Ingredient> ingredients =
-                                  FastLevenshtein.getIndividualItems(
-                                      textFromGallery);
+                              List<Ingredient> ingredients = [];
+                              _pressed(textFromGallery);
+
+                                 // FastLevenshtein.getIndividualItems(
+                                  //    textFromGallery);
 
                               print(textFromGallery);
 
@@ -431,8 +514,11 @@ class CameraScreenState extends State<CameraScreen> {
                           //print(testDb);
                           if (textFromCam != " " &&
                               textFromCam != "No text found in the image") {
-                            List<Ingredient> ingredients =
-                                FastLevenshtein.getIndividualItems(textFromCam);
+                            List<Ingredient> ingredients = [];
+                            //_pressed(textFromCam);
+                            //createIsolate(textFromCam);
+                            SearchIsolate.useIsolate(textFromCam);
+                                //FastLevenshtein.getIndividualItems(textFromCam);
 
                             print(textFromCam);
 

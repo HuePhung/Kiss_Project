@@ -1,10 +1,14 @@
 import 'dart:math';
-import 'dart:core';
+
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_final/search/ingredient.dart';
+import 'package:test_final/search/trie_data_structure.dart';
+
 import 'csv_reader.dart';
-import 'trie_data_structure.dart';
-class FastLevenshtein {
+import 'ingredient.dart';
+
+class NonAsyncLev{
+
   List<String> testList = [
     "joe",
     "john",
@@ -18,36 +22,27 @@ class FastLevenshtein {
   static List _allergyNames = [];
   static Trie root = new Trie();
   static SharedPreferences prefs;
-  static void init(){
+  static bool loaded = false;
+  static void init() {
     //cheap workaround
-    _loadCSV().then((value) => _initAllergies());
-    _initPrefs();
+     _loadCSV().then((value) => {print("loaded csv")
+    });
+    loaded = true;
   }
-  static void _initPrefs() async{
-    prefs = await SharedPreferences.getInstance();
-  }
-  static void _initAllergies() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _allergyNames = prefs.getStringList("allergyList");
-    if(_allergyNames.isNotEmpty){
-    for(String name in _allergyNames){
-      TrieNode node = root.searchNode(name);
-      node.ingredient.isAllergic = true;
-    }
-    }
-  }
+
+
   static Future<bool> _loadCSV() async {
     var myCSV = CSV.from(
         path: 'assets/cosing.csv', delimiter: ";", title: false);
-        //hasData does absolutely nothing for me and only returns null which makes this async/await call kinda weird :/
-        bool hasData = await myCSV.initFinished;
-      for (var i = 0; i < myCSV.data.length; i++) {
-        //ingridientsListItems.add(myCSV.data[i][0]);
-        root.add(myCSV.data[i][0], new Ingredient(
-            myCSV.data[i][0], myCSV.data[i][1], myCSV.data[i][3],
-            myCSV.data[i][4]));
+    //hasData does absolutely nothing for me and only returns null which makes this async/await call kinda weird :/
+    bool hasData = await myCSV.initFinished;
+    for (var i = 0; i < myCSV.data.length; i++) {
+      //ingridientsListItems.add(myCSV.data[i][0]);
+      root.add(myCSV.data[i][0], new Ingredient(
+          myCSV.data[i][0], myCSV.data[i][1], myCSV.data[i][3],
+          myCSV.data[i][4]));
     }
-      return Future.value(true);
+    return Future.value(true);
   }
 
   //returns map with all the words that are similar to the param. word together with the distance
@@ -56,7 +51,7 @@ class FastLevenshtein {
     Map<String,TrieNode> results = new Map(); //hier
     for(int j=0;j<currentRow.length;j++){
       currentRow[j] = j;
-     //DAS LETZTE WAS FUNKTIONIERt?? print(j);
+      //DAS LETZTE WAS FUNKTIONIERt?? print(j);
     }
     for(String letter in root.root.children.keys){
       //not sure why results.addAll doesn't work?
@@ -111,15 +106,7 @@ class FastLevenshtein {
     return ret;
   }
   //get the list of all the allergy ingredients
-  static List<Ingredient> getAllergyList() {
-    //SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> list = prefs.getStringList("allergyList");
-    List<Ingredient> result = [];
-    for(String name in list){
-      result.add(root.searchNode(name).ingredient);
-    }
-    return result;
-  }
+
   //function should only get called via search() func.
   static Map<String,TrieNode> _searchRecursive(TrieNode node, String letter, String word, List<int> prevRow, Map<String,TrieNode> results, int maxDistance){ //hier
     int columns = word.length+1;
@@ -144,8 +131,8 @@ class FastLevenshtein {
       node.distance = currRow[currRow.length-1];
       results.putIfAbsent(root.buildWord(node), () => node );
     }
-      //node.distance = currRow[currRow.length-1];
-      //results.putIfAbsent(root.buildWord(node), () => node );
+    //node.distance = currRow[currRow.length-1];
+    //results.putIfAbsent(root.buildWord(node), () => node );
     //if any entries in the row are less than the maximum cost, then recursively search each branch of the trie
     if(currRow.reduce(min) <= maxDistance){
       for(String letter in node.children.keys){
@@ -182,26 +169,26 @@ class FastLevenshtein {
 
     List<Ingredient> ret = List();
     if (numberOfComma >= 4){
-    //if (startString.contains(",")){
-    //  print("Comma!");
+      //if (startString.contains(",")){
+      //  print("Comma!");
       List<String> ingridientsString;
       ingridientsString = startString.split(",");
       //Delete Whitespace:
       for (int i=0; i < ingridientsString.length; i++){
         //ingridientsString[i] = ingridientsString[i].trim();
-       // ingridientsString[i] = ingridientsString[i].toUpperCase();
+        // ingridientsString[i] = ingridientsString[i].toUpperCase();
 
         Ingredient result = searchForOneIngredient(ingridientsString[i].trim().toUpperCase(), 2);
         //print("ankommender Text:  " + searchForOneIngredient(ingridientsString[i].trim().toUpperCase(), 2).toString());
-       // print(ingridientsString[i].trim().toUpperCase());
+        // print(ingridientsString[i].trim().toUpperCase());
         if(result.name != "error")
           print(result);
-            ret.add(result);
+        ret.add(result);
       }
       return ret;
     }
     else {
-     // Wenn kein Komma vorhanden ist:
+      // Wenn kein Komma vorhanden ist:
       List <String> spaceDevided = startString.split(" ");
 
       //von vorne:
@@ -213,9 +200,9 @@ class FastLevenshtein {
         for (int n = spaceDevided.length; n >= i ; n--){
           //Um aus Liste an einzelnen Wörtern ein String ohne komma zu machen
           String searchString = spaceDevided.sublist(i,n).toString().replaceAll(",", "");
-         //print(searchString); //Um schritte zu sehen
+          //print(searchString); //Um schritte zu sehen
           Ingredient searchResult = searchForOneIngredient(searchString.toUpperCase(), 2);
-         // print(searchString);
+          // print(searchString);
           if(searchResult.name != "error"){
             //print("lol ${searchResult.name}");
             ret.add(searchResult);
@@ -265,11 +252,11 @@ class FastLevenshtein {
         return [Ingredient("This", "is", "not a", "prime!")];
 
       }
-        for (int i= 2; i < number2; i++ ){
-          if(number2%i==0){
-            return [Ingredient("This", "is", "not a", "prime!")];
-          }
+      for (int i= 2; i < number2; i++ ){
+        if(number2%i==0){
+          return [Ingredient("This", "is", "not a", "prime!")];
         }
+      }
 
     }
 
@@ -281,4 +268,5 @@ class FastLevenshtein {
     });*/
     return [Ingredient("This", "is", "a", "prime!")];
   }
+
 }

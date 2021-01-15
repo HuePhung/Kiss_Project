@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
+import 'package:test_final/search/isolate.dart';
 import 'historyScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'searchScreen.dart';
@@ -15,6 +16,7 @@ Future<void> main() async {
   List<CameraDescription> cameras = await availableCameras();
   camera = cameras.first;
   FastLevenshtein.init();
+  SearchIsolate.init();
   final bool pathExists = await listExists("imagePathList");
   final bool allergyPathExists = await listExists("allergyList");
   SharedPreferences prefs = await SharedPreferences.getInstance();
