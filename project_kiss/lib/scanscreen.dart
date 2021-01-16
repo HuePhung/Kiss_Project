@@ -74,75 +74,100 @@ class DisplayPictureScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.fromLTRB(
-                10,
-                20.0,
-                10,
-                20,
-              ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                physics: const ClampingScrollPhysics(),
-                itemCount: ingredients.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailScreen(
-                            appBarTitle: "Ingredient",
-                            ingredient: ingredients[index],
-                          ),
-                        ),
-                      ).then((value) => () {
-                            FocusScope.of(context).unfocus();
-                          });
-                    },
-                    child: Card(
-                      color: ingredients[index].isAllergic
-                          ? const Color(0xff9B3535)
-                          : Colors.grey[700],
-                      elevation: 5.0,
-                      child: Container(
-                        margin: EdgeInsets.all(10.0),
-                        child: Row(children: [
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(
-                                left: 5,
-                                right: 15,
-                              ),
-                              child: Text(
-                                ingredients[index].name,
-                                style: TextStyle(color: Colors.grey[50]),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(
-                              right: 5,
-                            ),
-                            child: Icon(
-                              Icons.chevron_right,
-                              color: Colors.grey[50],
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+            ListWid(ingredients),
           ],
         ),
       ),
     );
   }
 }
+
+class ListWid extends StatefulWidget {
+  final List ingredients;
+  ListWid(this.ingredients);
+  @override
+  State<StatefulWidget> createState() {
+    return ListState(ingredients);
+  }
+}
+
+class ListState extends State<ListWid> {
+
+  final List ingredients;
+  ListState(this.ingredients);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        10,
+        20.0,
+        10,
+        20,
+      ),
+      child: ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        physics: const ClampingScrollPhysics(),
+        itemCount: ingredients.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailScreen(
+                    appBarTitle: "Ingredient",
+                    ingredient: ingredients[index],
+                  ),
+                ),
+              ).then((value) => setState(
+                    () => FocusScope.of(context).unfocus(),
+              ));
+            },
+            child: Card(
+              color: ingredients[index].isAllergic
+                  ? const Color(0xff9B3535)
+                  : Colors.grey[700],
+              elevation: 5.0,
+              child: Container(
+                margin: EdgeInsets.all(10.0),
+                child: Row(children: [
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        left: 5,
+                        right: 15,
+                      ),
+                      child: Text(
+                        ingredients[index].name,
+                        style: TextStyle(color: Colors.grey[50]),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      right: 5,
+                    ),
+                    child: Icon(
+                      Icons.chevron_right,
+                      color: Colors.grey[50],
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+
+
+
+
 
 class ScanName extends StatefulWidget {
   final String imagePath;
