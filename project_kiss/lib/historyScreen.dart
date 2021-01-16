@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,7 +34,7 @@ Future<String> getStringValueFromListSF(int index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> prefList = prefs.getStringList("imagePathList");
 
- // prefList = prefList.reversed.toList();
+  // prefList = prefList.reversed.toList();
   String path;
 
   if (prefList != null) {
@@ -55,7 +56,7 @@ Future<List<String>> getStringListSF() async {
 Future<List<String>> getImagePathList() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> prefList = prefs.getStringList("imagePathList");
- // prefList = prefList.reversed.toList();
+  // prefList = prefList.reversed.toList();
 
   //prefList.forEach((element) {print(element);});
 
@@ -83,7 +84,7 @@ Future<List<Ingredient>> getIngredientsOfProduct(String key) async {
       .decode(prefs.getString(key))
       .forEach((map) => ingredients.add(new Ingredient.fromJson(map)));
 
-  if(ingredients.isNotEmpty)
+  if (ingredients.isNotEmpty)
     return ingredients;
   else
     return [];
@@ -94,14 +95,15 @@ Future<List<Ingredient>> checkAllergies(List<Ingredient> ingredients) async {
 
   List<String> allergies = prefs.getStringList("allergyList");
 
-  if(allergies.isEmpty) return ingredients;
+  if (allergies.isEmpty)
+    return ingredients;
   else {
     allergies.forEach((allergy) {
-        ingredients.forEach((ingredient) {
-          if (ingredient.name == allergy){
-            ingredient.isAllergic = true;
-          }
-        });
+      ingredients.forEach((ingredient) {
+        if (ingredient.name == allergy) {
+          ingredient.isAllergic = true;
+        }
+      });
     });
 
     return ingredients;
@@ -139,14 +141,11 @@ class _HistoryScreen extends State<HistoryScreen>
   String name;
 
   @override
-  Widget build(BuildContext context) =>
-      FutureBuilder(
+  Widget build(BuildContext context) => FutureBuilder(
         future: _prefs,
         builder: (context, snapshot) {
           if (snapshot.hasData &&
-              snapshot.data
-                  .getStringList("imagePathList")
-                  .isNotEmpty) {
+              snapshot.data.getStringList("imagePathList").isNotEmpty) {
             SharedPreferences prefs = snapshot.data;
             List<String> imagePathList = prefs.getStringList("imagePathList");
             /*for(String test in imagePathList) {
@@ -154,7 +153,6 @@ class _HistoryScreen extends State<HistoryScreen>
             }
             print("PATH LIST LENGTH  ${imagePathList.length}");
             */
-
 
             return new Scaffold(
               appBar: AppBar(
@@ -174,10 +172,12 @@ class _HistoryScreen extends State<HistoryScreen>
                               FlatButton(
                                 onPressed: () async {
                                   for (int idx = 0;
-                                  idx < imagePathList.length;
-                                  idx++) {
+                                      idx < imagePathList.length;
+                                      idx++) {
                                     String deleteByIdx = imagePathList[idx];
-                                    String num = deleteByIdx.substring(deleteByIdx.length - 9, deleteByIdx.length - 4);
+                                    String num = deleteByIdx.substring(
+                                        deleteByIdx.length - 9,
+                                        deleteByIdx.length - 4);
                                     prefs.remove('Scan$num');
                                     //prefs.remove("Scan$idx");
                                     File(deleteByIdx).deleteSync();
@@ -208,90 +208,45 @@ class _HistoryScreen extends State<HistoryScreen>
                     },
                   )
                 ],
-                backgroundColor: Colors.black,
+                backgroundColor: Colors.grey[800],
               ),
               body: Container(
-                padding: const EdgeInsets.all(20.0),
-                child: ListView.separated(
+                color: Colors.grey[850],
+                //padding: const EdgeInsets.all(20.0),
+                child: ListView.builder(
                   //shrinkWrap: true,
-                 // reverse: true,
-                  separatorBuilder: (context, index) =>
-                      Divider(
-                        height: 30.0,
-                        color: Colors.black,
-                      ),
+                  // reverse: true,
+
                   itemCount: imagePathList.length, //.compareTo(0),
                   itemBuilder: (context, index) {
-                    index = imagePathList.length - 1 - index ;
+                    index = imagePathList.length - 1 - index;
                     String imgPath = imagePathList[index];
-                    String num = imgPath.substring(imgPath.length - 9, imgPath.length - 4);
-                    String date = imgPath.substring(imgPath.length - 19, imgPath.length - 13)+imgPath.substring(imgPath.length - 11, imgPath.length - 9);
+                    String num = imgPath.substring(
+                        imgPath.length - 9, imgPath.length - 4);
+                    String date = imgPath.substring(
+                            imgPath.length - 19, imgPath.length - 13) +
+                        imgPath.substring(
+                            imgPath.length - 11, imgPath.length - 9);
                     //name = prefs.getString("Scan$index");
                     //if (name == null) name = "Scan $index";
 
                     name = prefs.getString("Scan$num");
                     if (name == null) name = "Scan from $date";
-                    return Dismissible(
-                      key: Key(imagePathList[index]),
-                      background: Container(
-                        color: Colors.red,
-                        alignment: AlignmentDirectional.centerEnd,
-                        padding: EdgeInsets.only(right: 30),
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                      ),
-                      confirmDismiss: (DismissDirection direction) async {
-                        return await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Confirm"),
-                              content: const Text(
-                                  "Are you sure you want to delete this entry?"),
-                              actions: <Widget>[
-                                FlatButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(true),
-                                    child: const Text("DELETE")),
-                                FlatButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: const Text("CANCEL"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      onDismissed: (direction) async {
-                        String deletePath = imagePathList[index];
-                        setState(() {
-                          imagePathList.removeAt(index);
-                          // deleting ingredients for this product
-                          prefs.remove(deletePath);
-                          prefs.remove('Scan$num');
-                        });
-                        File(deletePath).deleteSync();
-                        await prefs.setStringList(
-                            "imagePathList", imagePathList);
-                      },
-                      direction: DismissDirection.endToStart,
-                      child: InkWell(
-                          onTap: () async {
-                            // use index
-                            try {
-                              if (imagePath == null) imagePath = "";
+                    return InkWell(
+                      onTap: () async {
+                        // use index
+                        try {
+                          if (imagePath == null) imagePath = "";
 
-                              imagePath = await getStringValueFromListSF(index);
+                          imagePath = await getStringValueFromListSF(index);
 
-                              debugPrint(imagePath);
-                              ingredients = await getIngredientsOfProduct(imagePath);
+                          debugPrint(imagePath);
+                          ingredients =
+                              await getIngredientsOfProduct(imagePath);
 
-                              ingredients = await checkAllergies(ingredients);
+                          ingredients = await checkAllergies(ingredients);
 
-                              Navigator.push(
+                          Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
@@ -299,46 +254,112 @@ class _HistoryScreen extends State<HistoryScreen>
                                               appBarTitle: "Scanned product",
                                               imagePath: imagePath,
                                               ingredients: ingredients)))
-                                  .then((value) =>
-                                  setState(() => name = prefs.getString("Scan$num"),
+                              .then((value) => setState(
+                                    () => name = prefs.getString("Scan$num"),
                                   ));
-                            } catch (e) {
-                              print(e);
-                            }
-                          },
-                          child:
-                          Container(
-                            padding: EdgeInsets.all(20.0),
-                            height: 125,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Image.file(File(imagePathList[index]),
-                                    width: 125, height: 125),
-
-                                Expanded(child: Text(
-                                    name,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    )
-
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                      child: Card(
+                        margin: EdgeInsets.fromLTRB(15, 15, 15, 0),
+                        color: Colors.grey[700],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.file(
+                                  File(
+                                    imagePathList[index],
+                                  ),
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
                                 ),
-                                    ),
-                                Text(
-                                  //text next to the image
-                                  date,
-                                  textAlign: TextAlign.end,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 12),
-                                ),
-
-                              ],
+                              ),
                             ),
-                          ),
-                    ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      name,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[50],
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    //text next to the image
+                                    date,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey[200],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: IconButton(
+                                padding: EdgeInsets.all(15),
+                                icon: new Icon(
+                                  Icons.delete,
+                                  color: Colors.grey[50],
+                                ),
+                                onPressed: () async {
+                                  return await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text("Confirm"),
+                                        content: const Text(
+                                            "Are you sure you want to delete this entry?"),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context)
+                                                      .pop(true),
+                                              child: const Text("CANCEL")),
+                                          FlatButton(
+                                            onPressed: () async {
+                                              String deletePath =
+                                                  imagePathList[index];
+                                              setState(() {
+                                                imagePathList.removeAt(index);
+                                                // deleting ingredients for this product
+                                                prefs.remove(deletePath);
+                                                prefs.remove('Scan$num');
+                                              });
+                                              File(deletePath).deleteSync();
+                                              await prefs.setStringList(
+                                                  "imagePathList",
+                                                  imagePathList);
+                                              Navigator.of(context).pop(true);
+                                            },
+                                            child: const Text("DELETE"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -351,19 +372,18 @@ class _HistoryScreen extends State<HistoryScreen>
                 backgroundColor: Colors.black,
               ),
               body: Container(
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height,
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
                 color: Colors.white,
                 alignment: Alignment.center,
-                child: new Text("You haven't scanned any products yet.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 17)),
+                child: new Text(
+                  "You haven't scanned any products yet.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Colors.grey[50],
+                  ),
+                ),
               ),
             );
           }
