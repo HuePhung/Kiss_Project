@@ -87,6 +87,18 @@ class _SearchScreenState extends State<SearchScreen> {
                           FocusScope.of(context).unfocus();
                         },
                       );
+
+                      if(_ingredients.isEmpty){
+                        final snackbarAllergies = SnackBar(
+                            content: Text("Error: No allergies saved."),
+                            backgroundColor: Colors.red,
+                            duration: Duration(seconds: 3),
+                            margin: EdgeInsets.all(18.0),
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25)))
+                        );
+                        Scaffold.of(context).showSnackBar(snackbarAllergies);
+                      }
                     },
                     child: const Text(
                       'Allergies',
