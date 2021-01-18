@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,11 +13,109 @@ class DetailScreen extends StatelessWidget {
   DetailScreen(
       {Key key, @required this.appBarTitle, @required this.ingredient});
 
+
+
+
+  Widget getFunctionCards(Ingredient ingredient)
+  {
+    List<String> strings = ingredient.function.split(",");
+
+    List<Widget> list = new List<Widget>();
+    for(var i = 0; i < strings.length; i++){
+
+
+      String path = 'assets/icons/'+ strings[i].trim() +'.png';
+      //print(strings[i].trim());
+
+      if(!File(path).existsSync()){
+
+        print("doesnt exists");
+        //path = 'assets/icons/PLACEHOLDER.png';
+
+      }
+
+
+
+      list.add(
+          new Card(
+            color: Colors.grey[800],
+
+
+          child: Container(
+            padding: EdgeInsets.all(10),
+            height: 140,
+            width: 125,
+
+            child:Column(
+              children:[
+
+                Image(
+                image: AssetImage(path),
+                height: 65,
+                  width: 65,
+              ),
+               Expanded(child: Text(
+                  //this.split(" ").map((str) => str.capitalize).join(" ")
+                  //"${this[0].toUpperCase()}${this.substring(1)}"
+                    //(strings[i].toLowerCase()).split(" ").map((str) => capitalize(str)).join(" "),
+                  strings[i],
+
+                  style: TextStyle(
+
+                      color: Colors.white),
+
+                    textAlign: TextAlign.center)
+                ,
+          ),
+              ]
+          ),
+          ),
+      )
+      );
+    }
+
+/*
+    //List<Widget> colum
+      return new GridView.count(
+
+          //primary: true, //scrolling
+          crossAxisCount: 2,
+          children: list,
+          shrinkWrap: true,
+
+      );*/
+
+    return new Column(
+      children: toColumns(list),
+
+    );
+
+  }
+
+  List<Widget> toColumns(List<Widget> cards){
+    List <Widget> rows = new  List<Widget>();
+
+    List<Widget> row =  new  List<Widget>();
+    for(int i=0; i<cards.length;i++){
+      
+      row.add(cards[i]);
+      if(row.length == 2 || i == cards.length-1){
+        rows.add(new Row(
+            children: row,
+          mainAxisAlignment: MainAxisAlignment.center,)
+        );
+        row =[];
+      }
+      
+    }
+
+    return rows;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(appBarTitle),
+        title: Text("Details"),
         backgroundColor: Colors.grey[700],
       ),
       //TODO: wrap with container for backgroundcolor
@@ -33,6 +133,7 @@ class DetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
+
                     children: <Widget>[
                       Container(
                         //height: MediaQuery.of(context).size.height * 0.1,
@@ -48,9 +149,14 @@ class DetailScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      Container(
+                        alignment: Alignment.center,
+                          // margin: EdgeInsets.fromLTRB(15.0,30,15,0),
+                        child: getFunctionCards(ingredient)
+                      ),
                       Card(
                         color: Colors.grey[800],
-                        margin: EdgeInsets.all(15),
+                        margin: EdgeInsets.fromLTRB(15,0,15,15),
                         child: Container(
                           //height: MediaQuery.of(context).size.height * 0.7,
                           // width: MediaQuery.of(context).size.width,
@@ -78,7 +184,7 @@ class DetailScreen extends StatelessWidget {
                                       ),),
                                 ],
                               ),
-                              TableRow(
+                             /* TableRow(
                                 children: [
                                   Divider(
                                     color: Colors.grey[50],
@@ -101,7 +207,7 @@ class DetailScreen extends StatelessWidget {
                                         color: Colors.grey[50],
                                       ),),
                                 ],
-                              ),
+                              ),*/
                               TableRow(
                                 children: [
                                   Divider(
