@@ -158,6 +158,7 @@ class _HistoryScreen extends State<HistoryScreen>
             return new Scaffold(
               appBar: AppBar(
                 title: Text("History"),
+                backgroundColor: Colors.grey[800],
                 actions: <Widget>[
                   IconButton(
                     icon: new Icon(Icons.delete),
@@ -209,7 +210,6 @@ class _HistoryScreen extends State<HistoryScreen>
                     },
                   )
                 ],
-                backgroundColor: Colors.grey[800],
               ),
               body: Container(
                 color: Colors.grey[850],
@@ -370,12 +370,12 @@ class _HistoryScreen extends State<HistoryScreen>
             return Scaffold(
               appBar: AppBar(
                 title: Text("History"),
-                backgroundColor: Colors.black,
+                backgroundColor: Colors.grey[800],
               ),
               body: Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-                color: Colors.white,
+                color: Colors.grey[850],
                 alignment: Alignment.center,
                 child: new Text(
                   "You haven't scanned any products yet.",
