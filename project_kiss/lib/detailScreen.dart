@@ -1,5 +1,6 @@
 import 'dart:io';
 
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,16 +21,25 @@ class DetailScreen extends StatelessWidget {
   {
     List<String> strings = ingredient.function.split(",");
 
+    List<String> existingIcons = ["ANTIMICROBIAL","PERFUMING" ,"ANTIOXIDANT","PLACEHOLDER",
+    "ANTISTATIC","SKIN CONDITIONING - EMOLLIENT",
+    "BINDING",			"SKIN CONDITIONING",
+    "CLEANSING",		"SKIN PROTECTING",
+    "FILM FORMING",		"SURFACTANT - CLEANSING",
+    "FRAGRANCE",			"SURFACTANT - EMULSIFYING",
+    "HAIR CONDITIONING"	,	"SURFACTANT - FOAM BOOSTING",
+    "HAIR DYEING"		,	"VISCOSITY CONTROLLING",
+    "HUMECTANT"];
     List<Widget> list = new List<Widget>();
     for(var i = 0; i < strings.length; i++){
 
 
-      String path = 'assets/icons/'+ strings[i].trim() +'.png';
+      String path = 'assets/icons/PLACEHOLDER.png';
       //print(strings[i].trim());
 
-      if(!File(path).existsSync()){
+      if(existingIcons.contains(strings[i].trim())){
 
-        print("doesnt exists");
+        path = 'assets/icons/'+ strings[i].trim() +'.png';
         //path = 'assets/icons/PLACEHOLDER.png';
 
       }
@@ -39,34 +49,38 @@ class DetailScreen extends StatelessWidget {
       list.add(
           new Card(
             color: Colors.grey[800],
+          
+
 
 
           child: Container(
             padding: EdgeInsets.all(10),
-            height: 140,
-            width: 125,
+            height: 120,
+            width: 100,
 
             child:Column(
               children:[
 
-                Image(
-                image: AssetImage(path),
-                height: 65,
-                  width: 65,
-              ),
-               Expanded(child: Text(
-                  //this.split(" ").map((str) => str.capitalize).join(" ")
-                  //"${this[0].toUpperCase()}${this.substring(1)}"
-                    //(strings[i].toLowerCase()).split(" ").map((str) => capitalize(str)).join(" "),
-                  strings[i],
+                Container(
+                    height: 55,
 
-                  style: TextStyle(
-
-                      color: Colors.white),
-
-                    textAlign: TextAlign.center)
+                    width: 55,
+                child: Image(
+                  image: AssetImage(path),
+                 // fit: BoxFit.fill,
+                ),)
                 ,
-          ),
+
+               Container(
+                 height: 45,
+               child: Align(
+                 alignment: Alignment.center,
+                 child:
+               FittedBox(
+                 fit: BoxFit.fitWidth,
+                 child: getTextRight(strings[i])
+                ,
+          ),),),
               ]
           ),
           ),
@@ -74,16 +88,6 @@ class DetailScreen extends StatelessWidget {
       );
     }
 
-/*
-    //List<Widget> colum
-      return new GridView.count(
-
-          //primary: true, //scrolling
-          crossAxisCount: 2,
-          children: list,
-          shrinkWrap: true,
-
-      );*/
 
     return new Column(
       children: toColumns(list),
@@ -92,6 +96,37 @@ class DetailScreen extends StatelessWidget {
 
   }
 
+  Widget getTextRight(String string){
+
+    List <Widget> columnList = new List<Widget>();
+    List<String> list = (string.trim()).split(" ");
+    list.remove("-");
+    /*if(!(list.length == 1)){
+      list.remove("SURFACTANT");
+
+    }*/
+
+    list.forEach((element) {
+
+      columnList.add(Text(
+
+          element,
+
+          style: TextStyle(
+
+              color: Colors.white),
+
+          textAlign: TextAlign.center)
+      );
+
+
+    });
+
+
+
+    return new Column(children: columnList);
+
+  }
   List<Widget> toColumns(List<Widget> cards){
     List <Widget> rows = new  List<Widget>();
 
@@ -99,7 +134,7 @@ class DetailScreen extends StatelessWidget {
     for(int i=0; i<cards.length;i++){
       
       row.add(cards[i]);
-      if(row.length == 2 || i == cards.length-1){
+      if(row.length == 3 || i == cards.length-1){
         rows.add(new Row(
             children: row,
           mainAxisAlignment: MainAxisAlignment.center,)
@@ -151,12 +186,12 @@ class DetailScreen extends StatelessWidget {
                       ),
                       Container(
                         alignment: Alignment.center,
-                          // margin: EdgeInsets.fromLTRB(15.0,30,15,0),
+                           margin: EdgeInsets.fromLTRB(0,15,0,0),
                         child: getFunctionCards(ingredient)
                       ),
                       Card(
                         color: Colors.grey[800],
-                        margin: EdgeInsets.fromLTRB(15,0,15,15),
+                        margin: EdgeInsets.fromLTRB(15,15,15,15),
                         child: Container(
                           //height: MediaQuery.of(context).size.height * 0.7,
                           // width: MediaQuery.of(context).size.width,
@@ -227,13 +262,13 @@ class DetailScreen extends StatelessWidget {
                                         color: Colors.grey[50],
                                       )),
                                   Container(
-                                    child: Column(
+                                    child: Row(
                                       children: [
                                         CheckBoxWid(ingredient,),
-                                        Text(
+                                        Expanded(child: Text(
                                           "Check this box if you are allergic to this substance",
                                           style: TextStyle(color: Colors.red),
-                                        ),
+                                        ),),
                                       ],
                                     ),
                                   ),
