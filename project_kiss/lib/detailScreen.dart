@@ -19,7 +19,17 @@ class DetailScreen extends StatelessWidget {
 
   Widget getFunctionCards(Ingredient ingredient)
   {
-    List<String> strings = ingredient.function.split(",");
+    List<String> strings = new List<String>();
+    if(!(ingredient.function==""|| ingredient.function==" ")){
+
+      strings = ingredient.function.split(",");
+    }
+
+    else{
+
+      strings = ["NOT REPORTED"];
+    }
+
 
     List<String> existingIcons = ["ANTIMICROBIAL","PERFUMING" ,"ANTIOXIDANT","PLACEHOLDER",
     "ANTISTATIC","SKIN CONDITIONING - EMOLLIENT",
@@ -29,7 +39,7 @@ class DetailScreen extends StatelessWidget {
     "FRAGRANCE",			"SURFACTANT - EMULSIFYING",
     "HAIR CONDITIONING"	,	"SURFACTANT - FOAM BOOSTING",
     "HAIR DYEING"		,	"VISCOSITY CONTROLLING",
-    "HUMECTANT", "EMULSION STABILISING", "FOAMING", "ANTI-SEBUM"];
+    "HUMECTANT", "EMULSION STABILISING", "FOAMING", "ANTI-SEBUM", "SOLVENT", "ABRASIVE"];
     List<Widget> list = new List<Widget>();
     for(var i = 0; i < strings.length; i++){
 
