@@ -97,14 +97,25 @@ Future<List<Ingredient>> checkAllergies(List<Ingredient> ingredients) async {
 
   if (allergies.isEmpty)
     return ingredients;
-  else {
+  /*else {
     allergies.forEach((allergy) {
       ingredients.forEach((ingredient) {
         if (ingredient.name == allergy) {
           ingredient.isAllergic = true;
         }
       });
-    });
+    });*/
+
+    else{
+      ingredients.forEach((ingredient) {
+        var found = false;
+          allergies.forEach((allergy) {
+            if(allergy == ingredient.name){
+              found = true;
+            }
+          });
+        ingredient.isAllergic = found;
+      });
 
     return ingredients;
   }
