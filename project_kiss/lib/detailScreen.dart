@@ -1,3 +1,6 @@
+import 'dart:io';
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,11 +14,153 @@ class DetailScreen extends StatelessWidget {
   DetailScreen(
       {Key key, @required this.appBarTitle, @required this.ingredient});
 
+
+
+
+  Widget getFunctionCards(Ingredient ingredient)
+  {
+    List<String> strings = new List<String>();
+    if(!(ingredient.function==""|| ingredient.function==" ")){
+
+      strings = ingredient.function.split(",");
+    }
+
+    else{
+
+      strings = ["NOT REPORTED"];
+    }
+
+
+    List<String> existingIcons = ["ANTIMICROBIAL","PERFUMING" ,"ANTIOXIDANT","PLACEHOLDER",
+    "ANTISTATIC","SKIN CONDITIONING - EMOLLIENT",
+    "BINDING",			"SKIN CONDITIONING",
+    "CLEANSING",		"SKIN PROTECTING",
+    "FILM FORMING",		"SURFACTANT - CLEANSING",
+    "FRAGRANCE",			"SURFACTANT - EMULSIFYING",
+    "HAIR CONDITIONING"	,	"SURFACTANT - FOAM BOOSTING",
+    "HAIR DYEING"		,	"VISCOSITY CONTROLLING",
+    "HUMECTANT", "EMULSION STABILISING", "FOAMING", "ANTI-SEBUM", "SOLVENT", "ABRASIVE"];
+    List<Widget> list = new List<Widget>();
+    for(var i = 0; i < strings.length; i++){
+
+
+      String path = 'assets/icons/PLACEHOLDER.png';
+      //print(strings[i].trim());
+
+      if(existingIcons.contains(strings[i].trim())){
+
+        path = 'assets/icons/'+ strings[i].trim() +'.png';
+        //path = 'assets/icons/PLACEHOLDER.png';
+
+      }
+
+
+
+      list.add(
+          new Card(
+            color: Colors.grey[800],
+          
+
+
+
+          child: Container(
+            padding: EdgeInsets.all(10),
+            height: 120,
+            width: 100,
+
+            child:Column(
+              children:[
+
+                Container(
+                    height: 55,
+
+                    width: 55,
+                child: Image(
+                  image: AssetImage(path),
+                 // fit: BoxFit.fill,
+                ),)
+                ,
+
+               Container(
+                 height: 45,
+               child: Align(
+                 alignment: Alignment.center,
+                 child:
+               FittedBox(
+                 fit: BoxFit.fitWidth,
+                 child: getTextRight(strings[i])
+                ,
+          ),),),
+              ]
+          ),
+          ),
+      )
+      );
+    }
+
+
+    return new Column(
+      children: toColumns(list),
+
+    );
+
+  }
+
+  Widget getTextRight(String string){
+
+    List <Widget> columnList = new List<Widget>();
+    List<String> list = (string.trim()).split(" ");
+    list.remove("-");
+    /*if(!(list.length == 1)){
+      list.remove("SURFACTANT");
+
+    }*/
+
+    list.forEach((element) {
+
+      columnList.add(Text(
+
+          element,
+
+          style: TextStyle(
+
+              color: Colors.white),
+
+          textAlign: TextAlign.center)
+      );
+
+
+    });
+
+
+
+    return new Column(children: columnList);
+
+  }
+  List<Widget> toColumns(List<Widget> cards){
+    List <Widget> rows = new  List<Widget>();
+
+    List<Widget> row =  new  List<Widget>();
+    for(int i=0; i<cards.length;i++){
+      
+      row.add(cards[i]);
+      if(row.length == 3 || i == cards.length-1){
+        rows.add(new Row(
+            children: row,
+          mainAxisAlignment: MainAxisAlignment.center,)
+        );
+        row =[];
+      }
+      
+    }
+
+    return rows;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(appBarTitle),
+        title: Text("Details"),
         backgroundColor: Colors.grey[700],
       ),
       //TODO: wrap with container for backgroundcolor
@@ -33,6 +178,7 @@ class DetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
+
                     children: <Widget>[
                       Container(
                         //height: MediaQuery.of(context).size.height * 0.1,
@@ -48,9 +194,14 @@ class DetailScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      Container(
+                        alignment: Alignment.center,
+                           margin: EdgeInsets.fromLTRB(0,15,0,0),
+                        child: getFunctionCards(ingredient)
+                      ),
                       Card(
                         color: Colors.grey[800],
-                        margin: EdgeInsets.all(15),
+                        margin: EdgeInsets.fromLTRB(15,15,15,15),
                         child: Container(
                           //height: MediaQuery.of(context).size.height * 0.7,
                           // width: MediaQuery.of(context).size.width,
@@ -78,7 +229,7 @@ class DetailScreen extends StatelessWidget {
                                       ),),
                                 ],
                               ),
-                              TableRow(
+                             /* TableRow(
                                 children: [
                                   Divider(
                                     color: Colors.grey[50],
@@ -101,7 +252,7 @@ class DetailScreen extends StatelessWidget {
                                         color: Colors.grey[50],
                                       ),),
                                 ],
-                              ),
+                              ),*/
                               TableRow(
                                 children: [
                                   Divider(
@@ -121,13 +272,13 @@ class DetailScreen extends StatelessWidget {
                                         color: Colors.grey[50],
                                       )),
                                   Container(
-                                    child: Column(
+                                    child: Row(
                                       children: [
                                         CheckBoxWid(ingredient,),
-                                        Text(
+                                        Expanded(child: Text(
                                           "Check this box if you are allergic to this substance",
                                           style: TextStyle(color: Colors.red),
-                                        ),
+                                        ),),
                                       ],
                                     ),
                                   ),
