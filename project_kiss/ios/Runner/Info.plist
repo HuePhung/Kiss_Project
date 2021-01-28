@@ -40,13 +40,13 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>Die App verwendet die Kamera für die Texterkennung</string>
+	<string>App uses Camera for Text Recognition</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Bilder aus Gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Bilder aus Gallery</string>
+	<string>Appcan use pictures from library to scan for ingredients</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>--</string>
 </dict>
