@@ -306,6 +306,16 @@ class DetailScreen extends StatelessWidget {
                           },
                         ),
                       ),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        child: Text(
+                          '''Data provided by CosIng Database (European Commission)
+''',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.normal, color: Colors.grey[700]),
+                        ),
+                      ),
                     ],
                   ),
                 ),
