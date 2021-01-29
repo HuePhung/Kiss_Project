@@ -15,19 +15,24 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  var _searchEdit = new TextEditingController();
+  var _searchEdit;
   bool _isSearch = true;
   String _searchText = "";
   List<Ingredient> _ingredients;
   bool _isInAllergyList = false;
 
   @override
-  void initState() {
-    super.initState();
-    _ingredients = new List<Ingredient>();
+  void dispose() {
+    _searchEdit.dispose();
+    super.dispose();
   }
 
-  _SearchScreenState() {
+  @override
+  void initState() {
+    super.initState();
+    _ingredients = List<Ingredient>();
+
+    _searchEdit = TextEditingController();
     _searchEdit.addListener(() {
       if (_searchEdit.text.isEmpty) {
         setState(() {

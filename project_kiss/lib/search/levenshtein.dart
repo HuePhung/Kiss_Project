@@ -3,7 +3,6 @@ class Levenshtein{
 
   static int findDistance(String a, String b){
     var d = List.generate(a.length+1, (index) => List(b.length+1), growable: false);
-
     // Initialising first column
     for(int i=0;i<= a.length;i++){
       d[i][0] = i;
@@ -27,9 +26,7 @@ class Levenshtein{
         }
       }
     }
-
     return d[a.length][b.length];
-
   }
 
   static int findMin(int x, int y, int z){
