@@ -1,7 +1,10 @@
 # KISS
 
-Kiss is a mobile application which allows you to scan, manage and analyze cosmetic products. All you have to do is take a picture of the product and kiss will do the rest.
-Kiss is intended for people who want to be more concious about their cosmetic products. Kiss keeps track of your allergies and warns you whenever you scan a product with an allergic ingredient in it. Kiss runs on both IOS and Android and doens’t require an internet connection after the initial download.
+Kiss is a mobile application which allows you to scan, manage and analyze cosmetic products. 
+All you have to do is take a picture of the product and kiss will do the rest.
+Kiss is intended for people who want to be more concious about their cosmetic products. 
+Kiss keeps track of your allergies and warns you whenever you scan a product with an allergic ingredient in it. 
+Kiss runs on both IOS and Android and doens’t require an internet connection after the initial download.
 
 
 This is a project of the International Media and Computing Course of Studies at the HTW Berlin in the WiSe20.
