@@ -13,7 +13,6 @@ Data provided by the European Commission from the CosIng database: https://data.
 Information of how the Google Firebase ML Kit uses the data: https://cloud.google.com/vision/docs/data-usage
 
 ## Built With
-Software
 * [Flutter](https://flutter.dev/)
 * [Firebase ML Kit](https://developers.google.com/ml-kit)
 
