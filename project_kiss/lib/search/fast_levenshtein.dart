@@ -39,7 +39,6 @@ class FastLevenshtein {
   static Future<bool> _loadCSV() async {
     var myCSV = CSV.from(
         path: 'assets/cosing.csv', delimiter: ";", title: false);
-        bool hasData = await myCSV.initFinished;
       for (var i = 0; i < myCSV.data.length; i++) {
         root.add(myCSV.data[i][0], new Ingredient(
             myCSV.data[i][0], myCSV.data[i][1], myCSV.data[i][3],

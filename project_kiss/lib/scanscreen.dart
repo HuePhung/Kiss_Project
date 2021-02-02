@@ -192,7 +192,6 @@ class ScanNameState extends State<ScanName> {
 
   Future<SharedPreferences> initPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> imagePathList = prefs.getStringList("imagePathList");
     num = imagePath.substring(imagePath.length - 9, imagePath.length - 4);
     String date =
         imagePath.substring(imagePath.length - 19, imagePath.length - 13) +
