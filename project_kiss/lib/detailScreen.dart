@@ -1,6 +1,3 @@
-import 'dart:io';
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,12 +42,10 @@ class DetailScreen extends StatelessWidget {
 
 
       String path = 'assets/icons/PLACEHOLDER.png';
-      //print(strings[i].trim());
 
       if(existingIcons.contains(strings[i].trim())){
 
         path = 'assets/icons/'+ strings[i].trim() +'.png';
-        //path = 'assets/icons/PLACEHOLDER.png';
 
       }
 
@@ -111,10 +106,6 @@ class DetailScreen extends StatelessWidget {
     List <Widget> columnList = new List<Widget>();
     List<String> list = (string.trim()).split(" ");
     list.remove("-");
-    /*if(!(list.length == 1)){
-      list.remove("SURFACTANT");
-
-    }*/
 
     list.forEach((element) {
 
@@ -163,7 +154,6 @@ class DetailScreen extends StatelessWidget {
         title: Text("Details"),
         backgroundColor: Colors.grey[700],
       ),
-      //TODO: wrap with container for backgroundcolor
       body: Center(
         child: Container(
           color: Colors.grey[850],
@@ -229,30 +219,6 @@ class DetailScreen extends StatelessWidget {
                                       ),),
                                 ],
                               ),
-                             /* TableRow(
-                                children: [
-                                  Divider(
-                                    color: Colors.grey[50],
-                                    height: 15,
-                                  ),
-                                  Divider(
-                                    color: Colors.grey[50],
-                                    height: 15,
-                                  ),
-                                ],
-                              ),
-                              TableRow(
-                                children: [
-                                  Text("Function",
-                                      style: TextStyle(
-                                        color: Colors.grey[50],
-                                      ),),
-                                  Text(ingredient.function,
-                                      style: TextStyle(
-                                        color: Colors.grey[50],
-                                      ),),
-                                ],
-                              ),*/
                               TableRow(
                                 children: [
                                   Divider(
@@ -384,32 +350,5 @@ class _CheckBoxState extends State<CheckBoxWid> {
       ),
     );
   }
-  /*@override
-  Widget build(BuildContext context) => FutureBuilder(
-      future: ingredient.getAllergyStatus(),
-      builder: (context, snapshot){
-        if(snapshot.hasData){
-          allergyTest = snapshot.data;
-          //SharedPreferences prefs = snapshot.data;
-        }
-        return Center(
-          child: Checkbox(
-            value: allergyTest,
-            onChanged: (value) {
-              setState((){
-                if(value) {
-                  ingredient.setAllergy(value);
-                  allergyNames.add(ingredient.name);
-                }
-                else {
-                  ingredient.isAllergic = value;
-                  ingredient.removeAllergyFromPrefs();
-                  allergyNames.remove(ingredient.name);
-                }
-                prefs.setStringList("allergyList", allergyNames);
-              });
-            },
-          ),
-        );
-      });*/
+
 }

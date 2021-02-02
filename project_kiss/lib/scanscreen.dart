@@ -1,9 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_final/detailScreen.dart';
 import 'package:test_final/search/ingredient.dart';
@@ -205,19 +202,7 @@ class ScanNameState extends State<ScanName> {
       initialText = name;
     else {
       initialText = "Scan from $date";
-      //prefs.setString("Scan$scanIndex", initialText);
     }
-
-    //this is some hard as spaghetti code btw. it would be much better if we had the index as payload for this widget instead of going through all the scans.
-    /*scanIndex = imagePathList.indexOf(imagePath);
-    //String name = prefs.getString("Scan$scanIndex");
-    if(name != null)
-      initialText = name;
-    else {
-      initialText = "Scan $scanIndex";
-      //prefs.setString("Scan$scanIndex", initialText);
-    }*/
-
     _editingController = TextEditingController(text: initialText);
     _editingController.selection = new TextSelection(
       baseOffset: 0,
@@ -246,7 +231,7 @@ class ScanNameState extends State<ScanName> {
         padding: EdgeInsets.only(left: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(
-              5.0)), //TODO: color search box while typing (maybe use TextFormField)
+              5.0)),
           color: Colors.grey[700],
         ),
         child: TextField(

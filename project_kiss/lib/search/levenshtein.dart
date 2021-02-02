@@ -56,9 +56,6 @@ class Levenshtein{
           indexMinimum = i;
 
       }
-
-
-       // print(i);
       }
 
     }

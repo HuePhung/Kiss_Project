@@ -1,8 +1,7 @@
 import 'dart:core';
-
 import 'package:test_final/search/ingredient.dart';
 
-
+//simple node object
 class TrieNode {
   Ingredient ingredient;
 
@@ -17,7 +16,7 @@ class TrieNode {
   toString() => "($char, $children)";
   int distance;
 }
-
+//trie data structure that manages the single nodes
 class Trie {
   TrieNode root;
   Trie() {

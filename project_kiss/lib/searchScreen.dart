@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:test_final/search/ingredient.dart';
 import 'package:test_final/detailScreen.dart';
-import 'package:test_final/search/trie_data_structure.dart';
 import 'package:test_final/impressumScreen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -131,7 +129,7 @@ class _SearchScreenState extends State<SearchScreen> {
       padding: EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(
-            5.0)), //TODO: color search box while typing (maybe use TextFormField)
+            5.0)),
         color: Colors.grey[700],
       ),
       child: TextField(

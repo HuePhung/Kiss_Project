@@ -1,14 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_final/search/ingredient.dart';
-import 'package:path/path.dart' as p;
 import 'package:test_final/scanscreen.dart';
-import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
-import 'package:test_final/search/fast_levenshtein.dart';
 
 String imagePath = "";
 List<String> imagePathList = [];
@@ -24,7 +20,6 @@ Future<void> main() async {
 
 Future<String> getStringValuesSF() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  // Return String
 
   String stringValue = prefs.getString("testImagePath");
   return stringValue;
@@ -34,7 +29,6 @@ Future<String> getStringValueFromListSF(int index) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> prefList = prefs.getStringList("imagePathList");
 
-  // prefList = prefList.reversed.toList();
   String path;
 
   if (prefList != null) {
@@ -47,7 +41,6 @@ Future<String> getStringValueFromListSF(int index) async {
 Future<List<String>> getStringListSF() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> prefList = prefs.getStringList("imagePathList");
-  //prefList = prefList.reversed.toList();
   imagePathList = prefList;
 
   return prefList;
@@ -56,15 +49,7 @@ Future<List<String>> getStringListSF() async {
 Future<List<String>> getImagePathList() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> prefList = prefs.getStringList("imagePathList");
-  // prefList = prefList.reversed.toList();
-
-  //prefList.forEach((element) {print(element);});
-
-  //if(prefList == null){
-  //  return [];
-  //} else {
   return prefList;
-  //}
 }
 
 Future<SharedPreferences> getPrefs() async {
@@ -97,14 +82,6 @@ Future<List<Ingredient>> checkAllergies(List<Ingredient> ingredients) async {
 
   if (allergies.isEmpty)
     return ingredients;
-  /*else {
-    allergies.forEach((allergy) {
-      ingredients.forEach((ingredient) {
-        if (ingredient.name == allergy) {
-          ingredient.isAllergic = true;
-        }
-      });
-    });*/
 
     else{
       ingredients.forEach((ingredient) {
@@ -130,10 +107,8 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreen extends State<HistoryScreen>
     with AutomaticKeepAliveClientMixin<HistoryScreen> {
-  //List items = getDummyList();
   List<String> pathList = ["0"];
 
-  //Future<List<String>> _pathList;
   List<Ingredient> ingredients;
   Future<SharedPreferences> _prefs;
 
@@ -144,7 +119,6 @@ class _HistoryScreen extends State<HistoryScreen>
   void initState() {
     super.initState();
     debugPrint("in initState");
-    //getStringListSF();
     _prefs = getPrefs();
     ingredients = [];
   }
@@ -159,11 +133,6 @@ class _HistoryScreen extends State<HistoryScreen>
               snapshot.data.getStringList("imagePathList").isNotEmpty) {
             SharedPreferences prefs = snapshot.data;
             List<String> imagePathList = prefs.getStringList("imagePathList");
-            /*for(String test in imagePathList) {
-              print('hash ${test.substring(test.length - 19, test.length - 13)+test.substring(test.length - 11, test.length - 9)}');
-            }
-            print("PATH LIST LENGTH  ${imagePathList.length}");
-            */
 
             return new Scaffold(
               appBar: AppBar(
@@ -223,10 +192,7 @@ class _HistoryScreen extends State<HistoryScreen>
               ),
               body: Container(
                 color: Colors.grey[850],
-                //padding: const EdgeInsets.all(20.0),
                 child: ListView.builder(
-                  //shrinkWrap: true,
-                  // reverse: true,
 
                   itemCount: imagePathList.length, //.compareTo(0),
                   itemBuilder: (context, index) {
@@ -238,8 +204,6 @@ class _HistoryScreen extends State<HistoryScreen>
                             imgPath.length - 19, imgPath.length - 13) +
                         imgPath.substring(
                             imgPath.length - 11, imgPath.length - 9);
-                    //name = prefs.getString("Scan$index");
-                    //if (name == null) name = "Scan $index";
 
                     name = prefs.getString("Scan$num");
                     if (name == null) name = "Scan from $date";

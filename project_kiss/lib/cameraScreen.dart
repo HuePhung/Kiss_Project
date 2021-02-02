@@ -12,8 +12,7 @@ import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:test_final/api/recordDate.dart';
-import 'package:test_final/api/firebase_text_api.dart'; // vorher -> 'package:test_final/api/firebase_ml_api.dart', gibt Fehler @TODO abklären
-import 'package:test_final/historyScreen.dart';
+import 'package:test_final/api/firebase_text_api.dart';
 import 'package:test_final/search/fast_levenshtein.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:test_final/search/ingredient.dart';
@@ -40,13 +39,6 @@ class CameraScreenState extends State<CameraScreen> {
   @override
   void initState() {
     super.initState();
-    //FocusScope.of(context).unfocus();
-    //leven = new FastLevenshtein();
-    //loadCSV();
-    //print(FastLevenshtein.searchForOneIngredient("AQUA", 1));
-    // print(FastLevenshtein.getIndividualItems(("Alcohol Denat. Aqua Fragrance Linalool Ethylhexyl Methoxycinnamate Diethylamino Hydroxybenzoyl Hexyl Benzoate BHT Limonene Ext. Violet 2 (CI 60730) Red 33 (CI 17200) Blue 1 (CI 42090) Yellow 5 (CI 19140)").toUpperCase()));
-    //print(FastLevenshtein.getIndividualItems("q CANDELILLA CERA AQUA q BEER AQUA AQUA kjhgfdfgh"));
-    // To display the current output from the camera,
     // create a CameraController.
     _controller = CameraController(
       // Get a specific camera from the list of available cameras.
@@ -72,18 +64,6 @@ class CameraScreenState extends State<CameraScreen> {
     _controller.dispose();
     super.dispose();
   }
-
-  /* addStringToSF(String imagePath) async {
-    if(imagePath != null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("testImagePath", imagePath);
-    }
-    else if(imagePath == null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("testImagePath", "");
-    }
-  }*/
-
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
 
@@ -149,25 +129,6 @@ class CameraScreenState extends State<CameraScreen> {
 
     if (height < width) {
       debugPrint('Rotating image necessary');
-
-      /* exifData.keys.forEach((element){
-        debugPrint(element);
-      });
-
-      debugPrint(exifData["ComponentsConfiguration"].toString());*/
-
-      // rotate
-      /*if (exifData['Image Orientation'].printable.contains('Horizontal')) {
-        fixedImage = img.copyRotate(originalImage, 90);
-      } else if (exifData['Image Orientation'].printable.contains('180')) {
-        fixedImage = img.copyRotate(originalImage, -90);
-      } else if (exifData['Image Orientation'].printable.contains('CCW')) {
-        fixedImage = img.copyRotate(originalImage, 180);
-      } else {
-        fixedImage = img.copyRotate(originalImage, 0);
-      }*/
-
-      // TODO in the final build on devices check for right orientation
       fixedImage = img.copyRotate(originalImage, 90);
     }
 
@@ -190,8 +151,9 @@ class CameraScreenState extends State<CameraScreen> {
     setState(() {
       if (pickedFile != null) {
         File(pickedFile.path).copy(newPath);
-        _image = File(newPath); // hier wird das Bild zum File
-        //
+        // image becomes file
+        _image = File(newPath);
+
         _noImageChosen = false;
       } else {
         debugPrint('No image selected.');
@@ -286,15 +248,10 @@ class CameraScreenState extends State<CameraScreen> {
                             File fileImageFromGallery =
                                 await FlutterExifRotation.rotateImage(
                                     path:
-                                        path); //File(path); // die Fkt um ein File zu erhalten
+                                        path);
                             final textFromGallery =
                                 await FirebaseMLApi.recogniseText(
                                     fileImageFromGallery);
-                            //print(textFromGallery);
-                            //List <Ingredient> ingredients = leven.getIndividualItems(textFromGallery);
-                            /* List<Ingredient> ingredients =
-                                FastLevenshtein.getIndividualItems(
-                                    textFromGallery);*/
 
                             if (textFromGallery.trim() != "" &&
                                 textFromGallery !=
@@ -335,7 +292,6 @@ class CameraScreenState extends State<CameraScreen> {
                                 );
                               }
                             }
-                            //print(ingredients);
                             // If the picture was chosen, display it on a new screen.
                             else {
                               removeStringFromSFList(path);
@@ -353,23 +309,6 @@ class CameraScreenState extends State<CameraScreen> {
                               Scaffold.of(context).showSnackBar(snackbarCam);
                             }
                           } else if (_image == null && _noImageChosen) {
-                            /*Navigator.push(
-                                  context,
-                                    MaterialPageRoute(builder: (context) =>
-                                        AlertDialog(
-                                          title: Text("Fehler: Es wurde kein Bild ausgewählt."),
-                                          actions: [
-                                            FlatButton(
-                                              child: Text("OK"),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                },
-                                            ),
-                                          ],
-                                        )
-                                    ),
-                              );*/
-
                             final snackbar = SnackBar(
                                 content: Text(
                                     "Error: You have not selected an image."),
@@ -419,23 +358,18 @@ class CameraScreenState extends State<CameraScreen> {
                           );
 
                           // saving path to device storage
-                          //await addStringToSF(path);
                           await addStringToSFList(path);
 
                           // Attempt to take a picture and log where it's been saved.
                           await _controller.takePicture(path);
-                          // await fixExifRotation(path);
                           File fileImageFromCam =
                               await FlutterExifRotation.rotateImage(
                                   path:
-                                      path); //File(path);// die Fkt um ein File zu erhalten
+                                      path);
                           final textFromCam = await FirebaseMLApi.recogniseText(
                               fileImageFromCam);
-                          //List <Ingredient> ingredients = leven.getIndividualItems(textFromCam);
 
                           // If the picture was taken, display it on a new screen.
-                          //List<Ingredient> testDb = leven.getIndividualItems(textFromCam);
-                          //print(testDb);
                           if (textFromCam != " " &&
                               textFromCam != "No text found in the image") {
                             List<Ingredient> ingredients =
@@ -471,7 +405,7 @@ class CameraScreenState extends State<CameraScreen> {
                                       appBarTitle: 'Scanned product',
                                       imagePath: path,
                                       ingredients:
-                                          ingredients), // tempList => list of ingredients per item
+                                          ingredients),
                                 ),
                               );
                             }
@@ -510,24 +444,3 @@ class CameraScreenState extends State<CameraScreen> {
     );
   }
 }
-
-tempList(List<Ingredient> ingredients) {
-  List<Ingredient> temp = ingredients;
-
-  return temp;
-}
-
-/*class Ingredient {
-  String name;
-  String rating;
-
-  Ingredient({this.name, this.rating});
-}*/
-
-/*return DataRow(
-        cells: [
-          DataCell(Text(key)),
-          DataCell(Text(value)),
-        ],
-      );
-    });*/
