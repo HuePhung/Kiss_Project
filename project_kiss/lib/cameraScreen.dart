@@ -8,6 +8,7 @@ import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:test_final/api/recordDate.dart';
@@ -122,7 +123,7 @@ class CameraScreenState extends State<CameraScreen> {
     // We'll use the exif package to read exif data
     // This is map of several exif properties
     // Let's check 'Image Orientation'
-    //final exifData = await readExifFromBytes(imageBytes);
+    final exifData = await readExifFromBytes(imageBytes);
 
     img.Image fixedImage;
 
