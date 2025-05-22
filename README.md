@@ -8,7 +8,7 @@ Kiss runs on both IOS and Android and doens’t require an internet connection a
 
 
 This is a project of the International Media and Computing Course of Studies at the HTW Berlin in the WiSe20.
-The official link to the website: https://showtime.f4.htw-berlin.de/
+The official link to the website: [https://showtime.f4.htw-berlin.de/](https://showtime.f4.htw-berlin.de/ws20/bachelor/b1-kiss/)
 
 
 Data provided by the European Commission from the CosIng database: https://data.europa.eu/euodp/de/data/dataset/cosmetic-ingredient-database-ingredients-and-fragrance-inventory
